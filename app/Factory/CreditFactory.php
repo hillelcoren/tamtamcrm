@@ -17,8 +17,12 @@ class CreditFactory
         $credit->account_id = $account_id;
         $credit->total = $total;
         $credit->user_id = $user_id;
+        $credit->footer = '';
+        $credit->terms = '';
         $credit->public_notes = '';
         $credit->private_notes = '';
+        $credit->tax_rate_name = '';
+        $credit->tax_rate = 0;
         return $credit;
     }
 }

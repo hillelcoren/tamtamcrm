@@ -381,7 +381,7 @@ export default class Payments extends Component {
                         columnMapping={{ customer_id: 'Customer' }}
                         ignore={this.state.ignoredColumns}
                         disableSorting={['id', 'invoice_id']}
-                        defaultColumn='amount'
+                        defaultColumn='number'
                         userList={this.customerList}
                         fetchUrl={fetchUrl}
                         updateState={this.updateCustomers}
@@ -391,9 +391,12 @@ export default class Payments extends Component {
 
             <ViewEntity
                 ignore={['paymentables', 'id', 'customer', 'invoice_id', 'applied', 'deleted_at', 'customer_id', 'refunded', 'task_id', 'company_id']}
-                toggle={this.toggleViewedEntity} title={view.title}
+                toggle={this.toggleViewedEntity}
+                title={view.title}
                 viewed={view.viewMode}
-                entity={view.viewedId}/>
+                entity={view.viewedId}
+                entity_type="Payment"
+            />
         </div>
     }
 }

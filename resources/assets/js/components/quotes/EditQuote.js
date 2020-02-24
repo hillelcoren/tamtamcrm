@@ -44,6 +44,7 @@ class EditInvoice extends Component {
             is_recurring: false,
             due_date: this.props.invoice && this.props.invoice.due_date && this.props.invoice.due_date.length ? moment(this.props.invoice.due_date).format('YYYY-MM-DD') : moment(new Date()).format('YYYY-MM-DD'),
             quantity: '',
+            tax_rate_name: '',
             finance_type: this.props.finance_type ? this.props.finance_type : 1,
             lines: [],
             invitations: this.props.invoice && this.props.invoice.invitations && this.props.invoice.invitations.length ? this.props.invoice.invitations : [],
@@ -188,13 +189,13 @@ class EditInvoice extends Component {
         if (e.target.name === 'customer_id') {
             const index = this.state.customers.findIndex(customer => customer.id === parseInt(e.target.value))
             const customer = this.state.customers[index]
+
             const contacts = customer.contacts ? customer.contacts : []
+
             this.setState({
                 customerName: customer.name,
                 contacts: contacts
             }, () => localStorage.setItem('quoteForm', JSON.stringify(this.state)))
-
-            console.log('customer', customer)
 
             if (customer.billing) {
                 const address = customer.billing
@@ -206,6 +207,18 @@ class EditInvoice extends Component {
                 }
                 this.setState({ address: objAddress }, () => localStorage.setItem('quoteForm', JSON.stringify(this.state)))
             }
+        }
+
+        if (e.target.name === 'tax') {
+            const name = e.target.options[e.target.selectedIndex].getAttribute('data-name')
+            const rate = e.target.options[e.target.selectedIndex].getAttribute('data-rate')
+
+            this.setState({
+                tax: rate,
+                tax_rate_name: name
+            }, () => localStorage.setItem('quoteForm', JSON.stringify(this.state)))
+
+            return
         }
 
         this.setState({
@@ -324,6 +337,8 @@ class EditInvoice extends Component {
             if (!this.state.modal) {
                 this.setState({
                     public_notes: '',
+                    tax: null,
+                    tax_rate_name: '',
                     private_notes: '',
                     terms: '',
                     footer: '',
@@ -393,7 +408,7 @@ class EditInvoice extends Component {
             discount_total: discount_total,
             tax_total: tax_total,
             sub_total: sub_total
-        }, () => localStorage.setItem('invoiceForm', JSON.stringify(this.state)))
+        }, () => localStorage.setItem('quoteForm', JSON.stringify(this.state)))
     }
 
     updatePriceData (index) {
@@ -434,7 +449,7 @@ class EditInvoice extends Component {
 
         currentRow.sub_total = total
 
-        this.setState({ data: data }, () => localStorage.setItem('invoiceForm', JSON.stringify(this.state)))
+        this.setState({ data: data }, () => localStorage.setItem('quoteForm', JSON.stringify(this.state)))
     }
 
     handleFieldChange (data, row) {
@@ -491,6 +506,8 @@ class EditInvoice extends Component {
 
     getFormData () {
         const data = {
+            tax_rate: this.state.tax,
+            tax_rate_name: this.state.tax_rate_name,
             is_recurring: this.state.is_recurring,
             invoice_id: this.state.invoice_id,
             task_id: this.props.task_id,

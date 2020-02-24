@@ -49,10 +49,8 @@ class InvoiceSum
 
     public function build()
     {
-        $this->calculateLineItems()
-             ->calculateDiscount()
-            //->calculateInvoiceTaxes()
-             ->setTaxMap()->calculateTotals()->calculateBalance()->calculatePartial();
+        $this->calculateLineItems()->calculateDiscount()->calculateInvoiceTaxes()->setTaxMap()->calculateTotals()
+             ->calculateBalance()->calculatePartial();
         return $this;
     }
 
@@ -69,15 +67,11 @@ class InvoiceSum
 
     private function calculateInvoiceTaxes()
     {
-        if ($this->invoice->unit_tax > 0) {
-            $tax = $this->taxer($this->total, $this->invoice->unit_tax);
-
+        if ($this->invoice->tax_rate > 0) {
+            $tax = $this->taxer($this->total, $this->invoice->tax_rate);
             $this->total_taxes += $tax;
-
-            $this->total_tax_map[] = [
-                'name' => $this->invoice->tax_rate_name . ' ' . $this->invoice->unit_tax . '%',
-                'total' => $tax
-            ];
+            $this->total_tax_map[] =
+                ['name' => $this->invoice->tax_rate_name . ' ' . $this->invoice->tax_rate . '%', 'total' => $tax];
         }
 
         return $this;

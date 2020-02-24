@@ -132,15 +132,9 @@ class User extends Authenticatable implements JWTSubject
      */
     public function getAccount()
     {
-        if($this->account) {
-             return $this->account;
+        if ($this->account) {
+            return $this->account;
         }
-
-         $account = Account::find($this->account);
-
-         if($account) {
-             return $account;
-         }
     }
 
     /**
@@ -187,12 +181,12 @@ class User extends Authenticatable implements JWTSubject
      *
      * @return bool
      */
-    public function isAdmin() : bool
+    public function isAdmin(): bool
     {
         return $this->account_user->is_admin;
     }
 
-    public function isOwner() : bool
+    public function isOwner(): bool
     {
         return $this->account_user->is_owner;
     }
@@ -247,12 +241,13 @@ class User extends Authenticatable implements JWTSubject
     {
         //todo need to return the company channel here for hosted users
         //else the env variable for selfhosted
-        if(config('taskmanager.environment') == 'selfhosted')
+        if (config('taskmanager.environment') == 'selfhosted') {
             return config('taskmanager.notification.slack');
+        }
 
-        return $this->account()->settings->system_notifications_slack;
-
-        
+        if ($this->account()) {
+            return $this->account()->settings->system_notifications_slack;
+        }
     }
 
 

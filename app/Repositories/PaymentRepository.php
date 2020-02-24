@@ -138,7 +138,7 @@ class PaymentRepository extends BaseRepository implements PaymentRepositoryInter
                 $credit = Credit::whereId($paid_credit['credit_id'])->first();
 
                 if ($credit) {
-                    ApplyCreditPayment::dispatchNow($credit, $payment, $paid_credit['amount'], $credit->account);
+                    ApplyCreditPayment::dispatchNow($credit, $payment, $paid_credit['amount']);
                 }
             }
 

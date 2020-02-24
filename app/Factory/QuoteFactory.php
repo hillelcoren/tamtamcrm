@@ -25,6 +25,8 @@ class QuoteFactory
         $quote->terms = '';
         $quote->public_notes = '';
         $quote->private_notes = '';
+        $quote->tax_rate_name = '';
+        $quote->tax_rate = 0;
         $quote->number = null;
         $quote->date = null;
         $quote->partial_due_date = null;

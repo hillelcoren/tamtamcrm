@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Helpers\Invoice;
 
 use App\Helpers\Invoice\Balancer;
@@ -36,10 +37,11 @@ class InvoiceSumInclusive
     private $total_tax_map;
 
     private $sub_total;
+
     /**
      * Constructs the object with Invoice and Settings object
      *
-     * @param      \App\Models\Invoice  $invoice   The invoice
+     * @param \App\Models\Invoice $invoice The invoice
      */
     public function __construct($invoice)
     {
@@ -51,14 +53,11 @@ class InvoiceSumInclusive
 
     public function build()
     {
-        $this->calculateLineItems()
-             ->calculateDiscount()
-             //->calculateCustomValues()
-             ->calculateInvoiceTaxes()
-             ->setTaxMap()
-			 //->calculateTotals()
-             ->calculateBalance()
-             ->calculatePartial();
+        $this->calculateLineItems()->calculateDiscount()
+            //->calculateCustomValues()
+             ->calculateInvoiceTaxes()->setTaxMap()
+            //->calculateTotals()
+             ->calculateBalance()->calculatePartial();
 
         return $this;
     }
@@ -84,16 +83,20 @@ class InvoiceSumInclusive
 
     private function calculateCustomValues()
     {
-        $this->total_taxes += $this->valuerTax($this->invoice->custom_surcharge1, $this->invoice->custom_surcharge_taxes1);
+        $this->total_taxes += $this->valuerTax($this->invoice->custom_surcharge1,
+            $this->invoice->custom_surcharge_taxes1);
         $this->total_custom_values += $this->valuer($this->invoice->custom_surcharge1);
 
-        $this->total_taxes += $this->valuerTax($this->invoice->custom_surcharge2, $this->invoice->custom_surcharge_taxes2);
+        $this->total_taxes += $this->valuerTax($this->invoice->custom_surcharge2,
+            $this->invoice->custom_surcharge_taxes2);
         $this->total_custom_values += $this->valuer($this->invoice->custom_surcharge2);
 
-        $this->total_taxes += $this->valuerTax($this->invoice->custom_surcharge3, $this->invoice->custom_surcharge_taxes3);
+        $this->total_taxes += $this->valuerTax($this->invoice->custom_surcharge3,
+            $this->invoice->custom_surcharge_taxes3);
         $this->total_custom_values += $this->valuer($this->invoice->custom_surcharge3);
 
-        $this->total_taxes += $this->valuerTax($this->invoice->custom_surcharge4, $this->invoice->custom_surcharge_taxes4);
+        $this->total_taxes += $this->valuerTax($this->invoice->custom_surcharge4,
+            $this->invoice->custom_surcharge_taxes4);
         $this->total_custom_values += $this->valuer($this->invoice->custom_surcharge4);
 
         $this->total += $this->total_custom_values;
@@ -111,7 +114,8 @@ class InvoiceSumInclusive
         }
 
         if ($this->invoice->discount_total > 0 && !$this->invoice->is_amount_discount) {
-            $amount = $this->formatValue(($this->sub_total - ($this->sub_total * ($this->invoice->total_discount/100))), 2);
+            $amount =
+                $this->formatValue(($this->sub_total - ($this->sub_total * ($this->invoice->total_discount / 100))), 2);
         }
 
         if ($this->invoice->tax_rate > 0) {
@@ -119,7 +123,8 @@ class InvoiceSumInclusive
 
             $this->total_taxes += $tax;
 
-            $this->total_tax_map[] = ['name' => $this->invoice->tax_rate_name . ' ' . $this->invoice->tax_total.'%', 'total' => $tax];
+            $this->total_tax_map[] =
+                ['name' => $this->invoice->tax_rate_name . ' ' . $this->invoice->tax_rate . '%', 'total' => $tax];
         }
 
         return $this;
@@ -141,7 +146,8 @@ class InvoiceSumInclusive
     private function calculatePartial()
     {
         if (!isset($this->invoice->id) && isset($this->invoice->partial)) {
-            $this->invoice->partial = max(0, min($this->formatValue($this->invoice->partial, 2), $this->invoice->balance));
+            $this->invoice->partial =
+                max(0, min($this->formatValue($this->invoice->partial, 2), $this->invoice->balance));
         }
 
         return $this;
@@ -160,10 +166,25 @@ class InvoiceSumInclusive
         //Build invoice values here and return Invoice
         $this->setCalculatedAttributes();
         $this->invoice->save();
-        
+
         return $this->invoice;
     }
 
+    public function getQuote()
+    {
+        $this->setCalculatedAttributes();
+        $this->invoice->save();
+
+        return $this->invoice;
+    }
+
+    public function getCredit()
+    {
+        $this->setCalculatedAttributes();
+        $this->invoice->save();
+
+        return $this->invoice;
+    }
 
     /**
      * Build $this->invoice variables after
@@ -176,9 +197,11 @@ class InvoiceSumInclusive
         if ($this->invoice->total != $this->invoice->balance) {
             $paid_to_date = $this->invoice->total - $this->invoice->balance;
 
-            $this->invoice->balance = $this->formatValue($this->getTotal(), $this->invoice->customer->currency->precision) - $paid_to_date;
+            $this->invoice->balance =
+                $this->formatValue($this->getTotal(), $this->invoice->customer->currency->precision) - $paid_to_date;
         } else {
-            $this->invoice->balance = $this->formatValue($this->getTotal(), $this->invoice->customer->currency->precision);
+            $this->invoice->balance =
+                $this->formatValue($this->getTotal(), $this->invoice->customer->currency->precision);
         }
 
         /* Set new calculated total */

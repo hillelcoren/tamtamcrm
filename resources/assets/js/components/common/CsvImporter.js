@@ -19,7 +19,7 @@ export default class CsvImporter extends Component {
                 continue
             }
 
-            if(typeof dataObject[o] === 'object') {
+            if (typeof dataObject[o] === 'object') {
                 dataObject[o] = ''
             }
 

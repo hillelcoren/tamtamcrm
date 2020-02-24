@@ -20,13 +20,13 @@ class NotificationService extends AbstractService
         $this->account = $account;
 
         $this->notification = $notification;
-    
+
     }
 
     public function run()
     {
 
         $this->account->owner()->notify($this->notification);
-    
+
     }
 }

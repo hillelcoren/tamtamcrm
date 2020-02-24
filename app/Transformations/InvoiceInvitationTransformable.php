@@ -8,8 +8,8 @@ use App\InvoiceInvitation;
 class InvoiceInvitationTransformable
 {
     /**
-     * @param Quote $quote
-     * @return Quote
+     * @param InvoiceInvitation $invitation
+     * @return InvoiceInvitation
      */
     public function transformInvoiceInvitation(InvoiceInvitation $invitation)
     {

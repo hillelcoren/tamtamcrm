@@ -21,6 +21,8 @@ class RecurringQuoteFactory
         $quote->date = null;
         $quote->due_date = null;
         $quote->is_deleted = false;
+        $quote->tax_rate_name = '';
+        $quote->tax_rate = 0;
         $quote->line_items = json_encode([]);
         $quote->total = $total;
         $quote->balance = $total;

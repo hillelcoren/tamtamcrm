@@ -9,6 +9,7 @@
 namespace App\Transformations;
 
 use App\Credit;
+use App\CreditInvitation;
 
 
 trait CreditTransformable
@@ -26,7 +27,7 @@ trait CreditTransformable
         $prop->number = $credit->number ?: '';
         $prop->id = (int)$credit->id;
         $prop->customer_id = (int)$credit->customer_id;
-        //$prop->customer = $credit->customer;
+        $prop->invitations = $this->transformCreditInvitations($credit->invitations);
         $prop->deleted_at = $credit->deleted_at;
         $prop->user_id = $credit->user_id;
         $prop->total = (float)$credit->total;
@@ -39,5 +40,20 @@ trait CreditTransformable
         $prop->created_at = $credit->created_at;
 
         return $prop;
+    }
+
+    /**
+     * @param $invitations
+     * @return array
+     */
+    private function transformCreditInvitations($invitations)
+    {
+        if (empty($invitations)) {
+            return [];
+        }
+
+        return $invitations->map(function (CreditInvitation $invitation) {
+            return (new CreditInvitationTransformable())->transformCreditInvitation($invitation);
+        })->all();
     }
 }

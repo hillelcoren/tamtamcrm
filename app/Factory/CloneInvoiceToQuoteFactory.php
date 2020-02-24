@@ -17,6 +17,8 @@ class CloneInvoiceToQuoteFactory
         $quote->is_amount_discount = $invoice->is_amount_discount;
         $quote->po_number = $invoice->po_number;
         $quote->is_deleted = false;
+        $quote->tax_rate_name = $invoice->tax_rate_name;
+        $quote->tax_rate = $invoice->tax_rate;
         $quote->footer = $invoice->footer;
         $quote->public_notes = $invoice->public_notes;
         $quote->private_notes = $invoice->private_notes;

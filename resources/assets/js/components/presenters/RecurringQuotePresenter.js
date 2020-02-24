@@ -31,13 +31,13 @@ export default function RecurringQuotePresenter (props) {
         case 'due_date':
         case 'start_date':
             const date = entity[field] && entity[field].length ? moment(entity[field]).format('DD/MMM/YYYY') : ''
-            return <td onClick={() => this.toggleViewedEntity(entity, entity.number)} data-label="Date">{date}</td>
+            return <td onClick={() => props.toggleViewedEntity(entity, entity.number)} data-label="Date">{date}</td>
         case 'status_id':
             return <td onClick={() => this.toggleViewedEntity(entity, entity.number)} data-label="Status">{status}</td>
         case 'customer_id':
             const index = props.customers.findIndex(customer => customer.id === entity[field])
             const customer = props.customers[index]
-            return <td onClick={() => this.toggleViewedEntity(entity, entity.number)}
+            return <td onClick={() => props.toggleViewedEntity(entity, entity.number)}
                 data-label="Customer">{`${customer.first_name} ${customer.last_name}`}</td>
 
         default:

@@ -18,7 +18,7 @@ class NewAccountCreated extends Notification implements ShouldQueue
      *
      * @return void
      */
-    
+
     protected $user;
 
     protected $account;
@@ -32,7 +32,7 @@ class NewAccountCreated extends Notification implements ShouldQueue
     /**
      * Get the notification's delivery channels.
      *
-     * @param  mixed  $notifiable
+     * @param mixed $notifiable
      * @return array
      */
     public function via($notifiable)
@@ -44,7 +44,7 @@ class NewAccountCreated extends Notification implements ShouldQueue
     /**
      * Get the mail representation of the notification.
      *
-     * @param  mixed  $notifiable
+     * @param mixed $notifiable
      * @return \Illuminate\Notifications\Messages\MailMessage
      */
     public function toMail($notifiable)
@@ -64,9 +64,7 @@ class NewAccountCreated extends Notification implements ShouldQueue
         ];
 
 
-        return (new MailMessage)
-                    ->subject(trans('texts.new_signup'))
-                    ->markdown('email.admin.generic', $data);
+        return (new MailMessage)->subject(trans('texts.new_signup'))->markdown('email.admin.generic', $data);
 
 
     }
@@ -74,13 +72,12 @@ class NewAccountCreated extends Notification implements ShouldQueue
     /**
      * Get the array representation of the notification.
      *
-     * @param  mixed  $notifiable
+     * @param mixed $notifiable
      * @return array
      */
     public function toArray($notifiable)
     {
-        return [
-            //
+        return [//
         ];
     }
 
@@ -91,11 +88,8 @@ class NewAccountCreated extends Notification implements ShouldQueue
         $email = $this->user->email;
         $ip = $this->user->ip;
 
-        return (new SlackMessage)
-                ->success()
-                ->to("#devv2")
-                ->from("System")
-                ->image('https://app.invoiceninja.com/favicon.png')
-                ->content("A new account has been created by {$user_name} - {$email} - from IP: {$ip}");
+        return (new SlackMessage)->success()->to("#devv2")->from("System")
+                                 ->image('https://app.invoiceninja.com/favicon.png')
+                                 ->content("A new account has been created by {$user_name} - {$email} - from IP: {$ip}");
     }
 }

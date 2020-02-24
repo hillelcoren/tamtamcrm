@@ -185,7 +185,7 @@ class CompanySettings extends BaseSettings
     public $pdf_variables = [];
 
     public static $casts = [
-         'system_notifications_slack' => 'string',
+        'system_notifications_slack' => 'string',
         'system_notifications_email' => 'string',
         'portal_design_id' => 'string',
         'fill_products' => 'bool',

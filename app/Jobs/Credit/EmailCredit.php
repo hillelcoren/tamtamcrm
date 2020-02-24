@@ -20,20 +20,14 @@ class EmailCredit implements ShouldQueue
 
     public $credit;
 
-    public $message_array = [];
-
-    private $account;
-
     /**
      * Create a new job instance.
      *
      * @return void
      */
-    public function __construct(Credit $credit, Account $account)
+    public function __construct(Credit $credit)
     {
         $this->credit = $credit;
-
-        $this->account = $account;
     }
 
     /**

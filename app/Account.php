@@ -174,17 +174,18 @@ class Account extends Model
     }
 
     public function notification(Notification $notification)
-     {
-         return new NotificationService($this, $notification);
-     }
+    {
+        return new NotificationService($this, $notification);
+    }
 
-     public function routeNotificationForSlack($notification)
-     {
-         //todo need to return the company channel here for hosted users
-         //else the env variable for selfhosted
-         if(config('taskmanager.environment') == 'selfhosted')
-             return config('taskmanager.notification.slack');
-         else
-             return $this->settings->system_notifications_slack;
-     }
+    public function routeNotificationForSlack($notification)
+    {
+        //todo need to return the company channel here for hosted users
+        //else the env variable for selfhosted
+        if (config('taskmanager.environment') == 'selfhosted') {
+            return config('taskmanager.notification.slack');
+        } else {
+            return $this->settings->system_notifications_slack;
+        }
+    }
 }

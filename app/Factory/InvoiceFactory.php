@@ -19,6 +19,8 @@ class InvoiceFactory
         $invoice->terms = '';
         $invoice->public_notes = '';
         $invoice->private_notes = '';
+        $invoice->tax_rate_name = '';
+        $invoice->tax_rate = 0;
         $invoice->date = null;
         $invoice->partial_due_date = null;
         $invoice->total = $total;

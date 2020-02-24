@@ -5,6 +5,7 @@ namespace App\Services\Payment;
 use App\Invoice;
 use App\Jobs\Utils\SystemLogger;
 use App\SystemLog;
+
 class UpdateInvoicePayment
 {
     public $payment;
@@ -23,28 +24,18 @@ class UpdateInvoicePayment
         /* Simplest scenario - All invoices are paid in full*/
         if (strval($invoices_total) === strval($this->payment->amount)) {
             $invoices->each(function ($invoice) {
-                
-                $this->payment
-                     ->ledger()
-                     ->updatePaymentBalance($invoice->balance*-1);
-                
-                $this->payment->customer
-                    ->service()
-                    ->updateBalance($invoice->balance*-1)
-                    ->updatePaidToDate($invoice->balance)
-                    ->save();
-                
+
+                $this->payment->ledger()->updatePaymentBalance($invoice->balance * -1);
+
+                $this->payment->customer->service()->updateBalance($invoice->balance * -1)
+                                        ->updatePaidToDate($invoice->balance)->save();
+
                 $invoice->pivot->amount = $invoice->balance;
                 $invoice->pivot->save();
 
-                $invoice->service()
-                    ->clearPartial()
-                    ->updateBalance($invoice->balance*-1)
-                    ->save();
+                $invoice->service()->clearPartial()->updateBalance($invoice->balance * -1)->save();
             });
-        }
-        /*Combination of partials and full invoices are being paid*/
-        else {
+        } /*Combination of partials and full invoices are being paid*/ else {
             $total = 0;
 
             /* Calculate the grand total of the invoices*/
@@ -61,59 +52,43 @@ class UpdateInvoicePayment
                 $invoices->each(function ($invoice) {
                     if ($invoice->hasPartial()) {
 
-                        $this->payment
-                             ->ledger()
-                             ->updatePaymentBalance($invoice->partial*-1);
+                        $this->payment->ledger()->updatePaymentBalance($invoice->partial * -1);
 
-                        $this->payment->customer->service()
-                                                ->updateBalance($invoice->partial*-1)
-                                                ->updatePaidToDate($invoice->partial)
-                                                ->save();
+                        $this->payment->customer->service()->updateBalance($invoice->partial * -1)
+                                                ->updatePaidToDate($invoice->partial)->save();
 
                         $invoice->pivot->amount = $invoice->partial;
                         $invoice->pivot->save();
 
-                        $invoice->service()->updateBalance($invoice->partial*-1)
-                                ->clearPartial()
-                                ->setDueDate()
-                                ->setStatus(Invoice::STATUS_PARTIAL)
-                                ->save();
+                        $invoice->service()->updateBalance($invoice->partial * -1)->clearPartial()->setDueDate()
+                                ->setStatus(Invoice::STATUS_PARTIAL)->save();
                     } else {
-                        
-                        $this->payment
-                             ->ledger()
-                             ->updatePaymentBalance($invoice->balance*-1);
 
-                        $this->payment->customer->service()
-                                              ->updateBalance($invoice->balance*-1)
-                                              ->updatePaidToDate($invoice->balance)
-                                              ->save();
+                        $this->payment->ledger()->updatePaymentBalance($invoice->balance * -1);
+
+                        $this->payment->customer->service()->updateBalance($invoice->balance * -1)
+                                                ->updatePaidToDate($invoice->balance)->save();
 
                         $invoice->pivot->amount = $invoice->balance;
                         $invoice->pivot->save();
-                        
-                        $invoice->service()->clearPartial()->updateBalance($invoice->balance*-1)->save();
+
+                        $invoice->service()->clearPartial()->updateBalance($invoice->balance * -1)->save();
                     }
                 });
             } else {
-                SystemLogger::dispatch(
-                    [
-                        'payment' => $this->payment,
-                        'invoices' => $invoices,
-                        'invoices_total' => $invoices_total,
-                        'payment_amount' => $this->payment->amount,
-                        'partial_check_amount' => $total,
-                    ],
-                    SystemLog::CATEGORY_GATEWAY_RESPONSE,
-                    SystemLog::EVENT_PAYMENT_RECONCILIATION_FAILURE,
-                    SystemLog::TYPE_LEDGER,
-                    $this->payment->customer
-                );
+                SystemLogger::dispatch([
+                    'payment' => $this->payment,
+                    'invoices' => $invoices,
+                    'invoices_total' => $invoices_total,
+                    'payment_amount' => $this->payment->amount,
+                    'partial_check_amount' => $total,
+                ], SystemLog::CATEGORY_GATEWAY_RESPONSE, SystemLog::EVENT_PAYMENT_RECONCILIATION_FAILURE,
+                    SystemLog::TYPE_LEDGER, $this->payment->customer);
 
                 throw new \Exception("payment amount {$this->payment->amount} does not match invoice totals {$invoices_total} reversing payment");
 
                 $this->payment->invoice()->delete();
-                $this->payment->is_deleted=true;
+                $this->payment->is_deleted = true;
                 $this->payment->save();
                 $this->payment->delete();
             }

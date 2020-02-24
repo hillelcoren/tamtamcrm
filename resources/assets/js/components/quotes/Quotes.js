@@ -356,7 +356,7 @@ export default class Quotes extends Component {
                             columnMapping={{ customer_id: 'CUSTOMER' }}
                             ignore={this.state.ignoredColumns}
                             disableSorting={['id']}
-                            defaultColumn='total'
+                            defaultColumn='number'
                             userList={this.userList}
                             fetchUrl={fetchUrl}
                             updateState={this.updateInvoice}
@@ -368,7 +368,9 @@ export default class Quotes extends Component {
                     ignore={['next_send_date', 'updated_at', 'use_inclusive_taxes', 'last_sent_date', 'uses_inclusive_taxes', 'line_items', 'next_sent_date', 'first_name', 'last_name']}
                     toggle={this.toggleViewedEntity} title={view.title}
                     viewed={view.viewMode}
-                    entity={view.viewedId}/>
+                    entity={view.viewedId}
+                    entity_type="Quote"
+                />
             </div>
         )
     }

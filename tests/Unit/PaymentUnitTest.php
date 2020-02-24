@@ -342,6 +342,7 @@ class PaymentUnitTest extends TestCase
         $paymentRepo = new PaymentRepository(new Payment);
         $payment = $paymentRepo->save($data, $factory);
         $this->assertNotNull($payment);
+        $this->assertEquals(50, $payment->refunded);
     }
 
 //    public function testPaymentValidationAmount()

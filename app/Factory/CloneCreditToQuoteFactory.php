@@ -13,6 +13,8 @@ class CloneCreditToQuoteFactory
         $quote->customer_id = $credit->customer_id;
         $quote->user_id = $user_id;
         $quote->account_id = $credit->account_id;
+        $quote->tax_rate_name = $credit->tax_rate_name;
+        $quote->tax_rate = $credit->tax_rate;
         $quote->discount = 0;
         $quote->is_deleted = false;
         $quote->footer = $credit->footer;

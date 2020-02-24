@@ -4,7 +4,6 @@ namespace App\Jobs\Credit;
 
 
 use App\Jobs\Credit\ApplyPaymentToCredit;
-use App\Account;
 use App\Credit;
 use App\Payment;
 use Illuminate\Bus\Queueable;
@@ -19,19 +18,17 @@ class ApplyCreditPayment implements ShouldQueue
     public $credit;
     public $payment;
     public $amount;
-    private $account;
 
     /**
      * Create a new job instance.
      *
      * @return void
      */
-    public function __construct(Credit $credit, Payment $payment, float $amount, Account $account)
+    public function __construct(Credit $credit, Payment $payment, float $amount)
     {
         $this->credit = $credit;
         $this->payment = $payment;
         $this->amount = $amount;
-        $this->account = $account;
     }
 
     /**

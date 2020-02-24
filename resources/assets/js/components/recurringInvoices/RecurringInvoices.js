@@ -377,7 +377,7 @@ export default class RecurringInvoices extends Component {
                             columnMapping={{ customer_id: 'CUSTOMER' }}
                             ignore={this.state.ignoredColumns}
                             disableSorting={['id']}
-                            defaultColumn='total'
+                            defaultColumn='number'
                             userList={this.userList}
                             fetchUrl={fetchUrl}
                             updateState={this.updateInvoice}

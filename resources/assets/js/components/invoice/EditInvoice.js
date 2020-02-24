@@ -191,7 +191,7 @@ class EditInvoice extends Component {
             }
         }
 
-        if(e.target.name === 'tax') {
+        if (e.target.name === 'tax') {
             const name = e.target.options[e.target.selectedIndex].getAttribute('data-name')
             const rate = e.target.options[e.target.selectedIndex].getAttribute('data-rate')
 

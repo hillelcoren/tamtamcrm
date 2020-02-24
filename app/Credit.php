@@ -25,6 +25,8 @@ class Credit extends Model
         'total',
         'balance',
         'credit_date',
+        'tax_rate',
+        'tax_rate_name',
         'number',
         'terms',
         'footer',

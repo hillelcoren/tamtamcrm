@@ -36,7 +36,7 @@ class ClientContactRepository extends BaseRepository
             $contacts = collect();
         }
 
-        collect($customer->contacts->pluck('id'))->diff($contacts->pluck('id'))->each(function ($contact) {
+        $customer->contacts->pluck('id')->diff($contacts->pluck('id'))->each(function ($contact) {
             ClientContact::destroy($contact);
         });
 
@@ -50,7 +50,7 @@ class ClientContactRepository extends BaseRepository
 
         //loop and update/create contacts
         $contacts->each(function ($contact) use ($customer) {
-            //$update_contact = null;
+            $update_contact = null;
 
             if (isset($contact['id'])) {
                 $update_contact = ClientContact::find($contact['id']);

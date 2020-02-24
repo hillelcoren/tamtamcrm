@@ -176,7 +176,7 @@ class Invoice extends Model
     public function calc()
     {
         $invoice_calc = null;
-        
+
         if ($this->uses_inclusive_taxes) {
             $invoice_calc = new InvoiceSumInclusive($this);
         } else {

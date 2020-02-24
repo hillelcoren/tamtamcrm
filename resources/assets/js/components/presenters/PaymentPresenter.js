@@ -25,11 +25,11 @@ export default function PaymentPresenter (props) {
             const date = entity[field].length ? moment(entity[field]).format('DD/MMM/YYYY') : ''
             return <td data-label="Date">{date}</td>
         case 'status':
-            return <td onClick={() => this.toggleViewedEntity(entity, entity.number)} data-label="Status">{status}</td>
+            return <td onClick={() => props.toggleViewedEntity(entity, entity.number)} data-label="Status">{status}</td>
         case 'customer_id':
             const index = props.customers.findIndex(customer => customer.id === entity[field])
             const customer = props.customers[index]
-            return <td onClick={() => this.toggleViewedEntity(entity, entity.number)}
+            return <td onClick={() => props.toggleViewedEntity(entity, entity.number)}
                 data-label="Customer">{`${customer.first_name} ${customer.last_name}`}</td>
 
         case 'invoices':

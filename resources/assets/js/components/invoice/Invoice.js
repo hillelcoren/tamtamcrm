@@ -291,7 +291,7 @@ export default class Invoice extends Component {
                 <Col md={2}>
                     <FormGroup>
                         <DateFilter onChange={this.filterInvoices} update={this.updateInvoice}
-                                    data={this.state.cachedData}/>
+                            data={this.state.cachedData}/>
                     </FormGroup>
                 </Col>
 
@@ -366,9 +366,13 @@ export default class Invoice extends Component {
                     </CardBody>
                 </Card>
 
-                <ViewEntity ignore={[]} toggle={this.toggleViewedEntity} title={view.title}
+                <ViewEntity
+                    ignore={[]} toggle={this.toggleViewedEntity}
+                    title={view.title}
                     viewed={view.viewMode}
-                    entity={view.viewedId}/>
+                    entity={view.viewedId}
+                    entity_type="Invoice"
+                />
             </div>
         )
     }

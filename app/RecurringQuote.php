@@ -62,6 +62,8 @@ class RecurringQuote extends Model
         'custom_value2',
         'custom_value3',
         'custom_value4',
+        'tax_rate_name',
+        'tax_rate'
     ];
     protected $casts = [
         'settings' => 'object',

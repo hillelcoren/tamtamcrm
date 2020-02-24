@@ -24,7 +24,7 @@ class UpdateRecurringQuote extends Component {
             custom_value3: this.props.invoice.custom_value3,
             custom_value4: this.props.invoice.custom_value4,
             public_notes: this.props.invoice.public_notes,
-            private_notes: this.props.invoice.private_notes,
+            private_notes: this.props.invoice.private_notes
         }
 
         this.initialState = this.state
@@ -144,9 +144,18 @@ class UpdateRecurringQuote extends Component {
                         onChange={this.handleInput}
                     >
                         <option value="" />
-                        <option value="1">Monthly</option>
-                        <option value="3">Weekly</option>
-                        <option value="2">Daily</option>
+                        <option value="1">Daily</option>
+                        <option value="2">Weekly</option>
+                        <option value="3">Every 2 weeks</option>
+                        <option value="4">Every 4 weeks</option>
+                        <option value="5">Monthly</option>
+                        <option value="6">Every 2 months</option>
+                        <option value="7">Every 3 months</option>
+                        <option value="8">Every 4 months</option>
+                        <option value="9">Every 6 months</option>
+                        <option value="10">Annually</option>
+                        <option value="11">Every 2 years</option>
+                        <option value="12">Every 3 years</option>
                     </Input>
                 </FormGroup>
 

@@ -57,7 +57,8 @@ class InvoiceItemSumInclusive
 
     public function process()
     {
-        if (!$this->invoice->line_items || !is_array($this->invoice->line_items) || count($this->invoice->line_items) == 0) {
+        if (!$this->invoice->line_items || !is_array($this->invoice->line_items) ||
+            count($this->invoice->line_items) == 0) {
             $this->items = [];
             return $this;
         }
@@ -70,10 +71,7 @@ class InvoiceItemSumInclusive
     private function calcLineItems()
     {
         foreach ($this->invoice->line_items as $this->item) {
-            $this->sumLineItem()
-                ->setDiscount()
-                ->calcTaxes()
-                ->push();
+            $this->sumLineItem()->setDiscount()->calcTaxes()->push();
         }
 
         return $this;
@@ -91,7 +89,8 @@ class InvoiceItemSumInclusive
 
     private function sumLineItem()
     {
-        $this->setLineTotal($this->formatValue($this->item->unit_price, $this->currency->precision) * $this->formatValue($this->item->quantity, $this->currency->precision));
+        $this->setLineTotal($this->formatValue($this->item->unit_price, $this->currency->precision) *
+            $this->formatValue($this->item->quantity, $this->currency->precision));
 
         return $this;
     }
@@ -99,9 +98,12 @@ class InvoiceItemSumInclusive
     private function setDiscount()
     {
         if ($this->invoice->is_amount_discount) {
-            $this->setLineTotal($this->getLineTotal() - $this->formatValue($this->item->unit_discount, $this->currency->precision));
+            $this->setLineTotal($this->getLineTotal() -
+                $this->formatValue($this->item->unit_discount, $this->currency->precision));
         } else {
-            $this->setLineTotal($this->getLineTotal() - $this->formatValue(($this->item->sub_total * ($this->item->unit_discount / 100)), $this->currency->precision));
+            $this->setLineTotal($this->getLineTotal() -
+                $this->formatValue(($this->item->sub_total * ($this->item->unit_discount / 100)),
+                    $this->currency->precision));
         }
 
         $this->item->is_amount_discount = $this->invoice->is_amount_discount;
@@ -118,7 +120,7 @@ class InvoiceItemSumInclusive
     {
         $item_tax = 0;
 
-        $amount = $this->item->sub_total - ($this->item->sub_total * ($this->invoice->unit_discount/100));
+        $amount = $this->item->sub_total - ($this->item->sub_total * ($this->invoice->unit_discount / 100));
 
         $item_tax_rate1_total = $this->calcInclusiveLineTax($this->item->unit_tax, $amount);
 
@@ -135,9 +137,9 @@ class InvoiceItemSumInclusive
 
     private function groupTax($tax_name, $tax_rate, $tax_total)
     {
-        $key = str_replace(" ", "", $tax_name.$tax_rate);
+        $key = str_replace(" ", "", $tax_name . $tax_rate);
 
-        $group_tax = ['key' => $key, 'total' => $tax_total, 'tax_name' => $tax_name . ' ' . $tax_rate.'%'];
+        $group_tax = ['key' => $key, 'total' => $tax_total, 'tax_name' => $tax_name . ' ' . $tax_rate . '%'];
 
         $this->tax_collection->push(collect($group_tax));
     }
@@ -204,7 +206,7 @@ class InvoiceItemSumInclusive
      * and recalculate the taxes and then pass back
      * the updated map
      */
-    
+
     public function calcTaxesWithAmountDiscount()
     {
         $this->setGroupedTaxes(collect([]));
@@ -212,7 +214,8 @@ class InvoiceItemSumInclusive
         $item_tax = 0;
 
         foreach ($this->line_items as $this->item) {
-            $amount = $this->item->sub_total - ($this->item->sub_total * ($this->invoice->unit_discount/$this->sub_total));
+            $amount =
+                $this->item->sub_total - ($this->item->sub_total * ($this->invoice->unit_discount / $this->sub_total));
             $item_tax_rate1_total = $this->calcInclusiveLineTax($this->item->unit_tax, $amount);
 
             $item_tax += $item_tax_rate1_total;

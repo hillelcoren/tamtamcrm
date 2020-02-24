@@ -47,7 +47,8 @@ export default class Credits extends Component {
                 'public_notes',
                 'invoice_id',
                 'user_id',
-                'created_at'
+                'created_at',
+                'invitations'
             ],
             // columns: ['Number', 'Customer', 'Total', 'Status'],
             filters: {
@@ -68,6 +69,7 @@ export default class Credits extends Component {
         this.getFilters = this.getFilters.bind(this)
         this.onChangeBulk = this.onChangeBulk.bind(this)
         this.saveBulk = this.saveBulk.bind(this)
+        this.toggleViewedEntity = this.toggleViewedEntity.bind(this)
     }
 
     componentDidMount () {
@@ -357,9 +359,14 @@ export default class Credits extends Component {
                     </CardBody>
                 </Card>
 
-                <ViewEntity ignore={[]} toggle={this.toggleViewedEntity} title={view.title}
+                <ViewEntity
+                    ignore={[]}
+                    toggle={this.toggleViewedEntity}
+                    title={view.title}
                     viewed={view.viewMode}
-                    entity={view.viewedId}/>
+                    entity={view.viewedId}
+                    entity_type="Credit"
+                />
             </div>
         ) : null
     }
