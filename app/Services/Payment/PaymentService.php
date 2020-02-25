@@ -10,7 +10,7 @@ class PaymentService
 {
     private $payment;
 
-    public function __construct($payment)
+    public function __construct(Payment $payment)
     {
         $this->payment = $payment;
     }

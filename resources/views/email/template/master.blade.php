@@ -378,7 +378,7 @@
                         </tr>
                         <tr>
                             <td class="content-block powered-by">
-                                Powered by <a href="#">InvoiceNinja</a>.
+                                Powered by <a href="#">TamTam</a>.
                             </td>
                         </tr>
                     </table>

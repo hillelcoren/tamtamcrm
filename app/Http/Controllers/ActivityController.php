@@ -22,17 +22,17 @@ class ActivityController extends Controller
     /**
      * @var CommentRepositoryInterface
      */
-    private $commentRepository;
+    private $comment_repo;
 
     /**
      * @var NotificationRepositoryInterface
      */
-    private $notificationRepository;
+    private $notification_repo;
 
     /**
      * @var EventRepositoryInterface
      */
-    private $eventRepository;
+    private $event_repo;
 
     /**
      * ActivityController constructor.
@@ -40,21 +40,21 @@ class ActivityController extends Controller
      * @param CommentRepositoryInterface $commentRepository
      * NotificationRepositoryInterface $notificationRepository
      */
-    public function __construct(CommentRepositoryInterface $commentRepository,
-        NotificationRepositoryInterface $notificationRepository,
-        EventRepositoryInterface $eventRepository)
+    public function __construct(CommentRepositoryInterface $comment_repo,
+        NotificationRepositoryInterface $notification_repo,
+        EventRepositoryInterface $event_repo)
     {
-        $this->commentRepository = $commentRepository;
-        $this->notificationRepository = $notificationRepository;
-        $this->eventRepository = $eventRepository;
+        $this->comment_repo = $comment_repo;
+        $this->notification_repo = $notification_repo;
+        $this->event_repo = $event_repo;
     }
 
     public function index()
     {
-        $currentUser = Auth::user();
-        $comments = $this->commentRepository->getCommentsForActivityFeed();
-        $list = $this->notificationRepository->listNotifications();
-        $userEvents = $this->eventRepository->getEventsForUser($currentUser);
+        $currentUser = auth()->user();
+        $comments = $this->comment_repo->getCommentsForActivityFeed(auth()->user()->account_user()->account_id);
+        $list = $this->notification_repo->listNotifications();
+        $userEvents = $this->event_repo->getEventsForUser($currentUser, auth()->user()->account_user()->account_id);
 
         $events = $userEvents->map(function (Event $event) {
             return $this->transformEvent($event);

@@ -12,7 +12,7 @@ interface CommentRepositoryInterface
      *
      * @param Task $objTask
      */
-    public function getAllCommentsForTask(Task $objTask);
+    public function getAllCommentsForTask(Task $objTask, int $account_id);
 
     /**
      *
@@ -42,6 +42,6 @@ interface CommentRepositoryInterface
     /**
      *
      */
-    public function getCommentsForActivityFeed(): Collection;
+    public function getCommentsForActivityFeed(int $account_id): Collection;
 
 }

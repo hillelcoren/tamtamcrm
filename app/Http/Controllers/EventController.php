@@ -132,7 +132,7 @@ class EventController extends Controller
     public function getEventsForUser(int $user_id)
     {
         $objTask = (new UserRepository(new User))->findUserById($user_id);
-        $events = $this->event_repo->getEventsForUser($objTask);
+        $events = $this->event_repo->getEventsForUser($objTask, auth()->user()->account_user()->account_id);
         return $events->toJson();
     }
 

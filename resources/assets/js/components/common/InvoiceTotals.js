@@ -12,7 +12,7 @@ export default class InvoiceTotals extends Component {
     render () {
         return (
             <Card body outline color="danger">
-                <CardText>
+                <CardText className="text-white">
                     <div className="d-flex">
                         <div
                             className="p-2 flex-fill">

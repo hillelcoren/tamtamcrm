@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Factory\CommentFactory;
 use App\Requests\CommentRequest;
 use App\Repositories\Interfaces\CommentRepositoryInterface;
 use App\Repositories\Interfaces\TaskRepositoryInterface;
@@ -18,12 +19,12 @@ class CommentController extends Controller
     /**
      * @var CommentRepositoryInterface
      */
-    private $commentRepository;
+    private $comment_repo;
 
     /**
      * @var TaskRepositoryInterface
      */
-    private $taskRepository;
+    private $task_repo;
 
     /**
      * CommentController constructor.
@@ -31,17 +32,16 @@ class CommentController extends Controller
      * @param CommentRepositoryInterface $commentRepository
      * TaskRepositoryInterface $taskRepository
      */
-    public function __construct(CommentRepositoryInterface $commentRepository, TaskRepositoryInterface $taskRepository)
+    public function __construct(CommentRepositoryInterface $comment_repo, TaskRepositoryInterface $task_repo)
     {
-        $this->commentRepository = $commentRepository;
-        $this->taskRepository = $taskRepository;
+        $this->comment_repo = $comment_repo;
+        $this->task_repo = $task_repo;
     }
 
     public function index($task_id)
     {
-
-        $objTask = $this->taskRepository->findTaskById($task_id);
-        $comments = $this->commentRepository->getAllCommentsForTask($objTask);
+        $objTask = $this->task_repo->findTaskById($task_id);
+        $comments = $this->comment_repo->getAllCommentsForTask($objTask, auth()->user()->account_user()->account_id);
         return $comments->toJson();
     }
 
@@ -52,19 +52,22 @@ class CommentController extends Controller
      */
     public function store(CommentRequest $request)
     {
-
         $validatedData = $request->validated();
 
         $user = Auth::user();
 
-        $comment = $this->commentRepository->createComment([
+        $data = [
             'parent_id' => !empty($validatedData['parent_id']) ? $validatedData['parent_id'] : 0,
             'comment' => $validatedData['comment'],
             'parent_type' => (int)!empty($validatedData['task_id']) ? 1 : 2,
             'user_id' => $user->id
-        ]);
+        ];
+
+        $comment = $this->comment_repo->save($data,
+            CommentFactory::create(auth()->user()->id, auth()->user()->account_user()->account_id));
+
         if (!empty($validatedData['task_id'])) {
-            $task = $this->taskRepository->findTaskById($validatedData['task_id']);
+            $task = $this->task_repo->findTaskById($validatedData['task_id']);
             $task->comments()->attach($comment);
         }
 
@@ -79,13 +82,13 @@ class CommentController extends Controller
     }
 
     /**
-     *
      * @param int $id
-     * @return type
+     * @return \Illuminate\Http\JsonResponse
+     * @throws \Exception
      */
     public function destroy(int $id)
     {
-        $comment = $this->commentRepository->findCommentById($id);
+        $comment = $this->comment_repo->findCommentById($id);
         $commentRepo = new CommentRepository($comment);
         $commentRepo->deleteComment();
 
@@ -93,15 +96,14 @@ class CommentController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
-     *
      * @param Request $request
-     * @param int $id
-     * @return Response
+     * @param $id
+     * @return \Illuminate\Http\JsonResponse
+     * @throws \Exception
      */
     public function update(Request $request, $id)
     {
-        $comment = $this->commentRepository->findCommentById($id);
+        $comment = $this->comment_repo->findCommentById($id);
         $update = new CommentRepository($comment);
         $update->updateComment($request->all());
         return response()->json('Comment updated!');

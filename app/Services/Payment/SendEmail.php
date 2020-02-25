@@ -5,6 +5,7 @@ namespace App\Services\Payment;
 use App\Helpers\Email\PaymentEmail;
 use App\Jobs\Payment\EmailPayment;
 use App\Jobs\Quote\EmailQuote;
+use App\Payment;
 use App\Quote;
 use App\Services\AbstractService;
 
@@ -14,7 +15,7 @@ class SendEmail extends AbstractService
     private $payment;
     private $contact;
 
-    public function __construct($payment, $contact = null)
+    public function __construct(Payment $payment, $contact = null)
     {
         $this->payment = $payment;
         $this->contact = $contact;

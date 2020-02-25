@@ -117,6 +117,20 @@ class TaskController extends Controller
     }
 
     /**
+     * @param int $task_id
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function updateLead(int $task_id, Request $request)
+    {
+        $task = $this->task_repo->findTaskById($task_id);
+        $task = $task->service()->updateLead($request,
+            new CustomerRepository(new Customer, new ClientContactRepository(new ClientContact)), $this->task_repo,
+            true);
+        return response()->json($task);
+    }
+
+    /**
      * @param UpdateTaskRequest $request
      * @param int $id
      *

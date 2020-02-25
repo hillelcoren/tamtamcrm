@@ -31,12 +31,10 @@ class DownloadInvoices extends Mailable
     public function build()
     {
 
-        return $this->subject(ctrans('texts.download_files'))
-                    ->markdown('email.admin.download_files',
-                        [
-                            'url' => $this->file_path,
-                            'logo' => $this->account->present()->logo,
-                        ]);
+        return $this->subject(trans('texts.download_files'))->markdown('email.admin.download_files', [
+                    'url' => $this->file_path,
+                    'logo' => $this->account->present()->logo,
+                ]);
 
         // return $this->from(config('mail.from.address')) //todo this needs to be fixed to handle the hosted version
         //     ->subject(ctrans('texts.download_documents',['size'=>'']))

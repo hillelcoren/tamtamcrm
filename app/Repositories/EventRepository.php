@@ -110,10 +110,11 @@ class EventRepository extends BaseRepository implements EventRepositoryInterface
      * @param User $objUser
      * @return Collection
      */
-    public function getEventsForUser(User $objUser): Collection
+    public function getEventsForUser(User $objUser, int $account_id): Collection
     {
         return $this->model->join('event_user', 'event_user.event_id', '=', 'events.id')
-                           ->select('events.*', 'event_user.status')->where('event_user.user_id', $objUser->id)->get();
+                           ->select('events.*', 'event_user.status')->where('events.account_id', $account_id)
+                           ->where('event_user.user_id', $objUser->id)->get();
     }
 
     /**

@@ -37,11 +37,9 @@ class UpdateInvoiceRequest extends FormRequest
     {
         $input = $this->all();
 
-        if(isset($input['invitations']))
-        {
-            foreach($input['invitations'] as $key => $value)
-            {
-                if(is_numeric($input['invitations'][$key]['id'])) {
+        if (isset($input['invitations'])) {
+            foreach ($input['invitations'] as $key => $value) {
+                if (is_numeric($input['invitations'][$key]['id'])) {
                     unset($input['invitations'][$key]['id']);
                 }
             }

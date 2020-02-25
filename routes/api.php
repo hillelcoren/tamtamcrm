@@ -291,6 +291,7 @@ Route::group(['middleware' => ['jwt.auth', 'api-header']], function () {
     Route::get('tasks/task-types', 'TaskController@getTaskTypes')->middleware('role:null,view-invoice');
     Route::get('tasks/convertToDeal/{task_id}', 'TaskController@convertToDeal')->middleware('role:null,view-invoice');
     Route::put('tasks/timer/{task_id}', 'TaskController@updateTimer')->middleware('role:null,taskcontroller.update');
+    Route::put('tasks/lead/{lead_id}', 'TaskController@updateLead')->middleware('role:null,taskcontroller.update');
     Route::delete('tasks/archive/{task_id}', 'TaskController@archive');
 
     Route::group(['middleware' => ['role:Manager']], function () {

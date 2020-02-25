@@ -13,7 +13,8 @@ class Comment extends Model
         'comment',
         'user_id',
         'parent_id',
-        'parent_type'
+        'parent_type',
+        'account_id'
     ];
 
     public function task()

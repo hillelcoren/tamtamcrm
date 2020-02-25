@@ -362,26 +362,21 @@ class EditInvoice extends Component {
             }
 
             if (product.unit_tax > 0 && this.state.tax === 0) {
-                // const n = parseFloat(total)
+                const n = parseFloat(total)
                 const tax_percentage = lexieTotal * product.unit_tax / 100
                 tax_total += tax_percentage
             }
         })
 
-        // const mikeTotal = total
-
-        // if (discount_total > 0) {
-        // mikeTotal -= discount_total
-        // }
-
         if (this.state.tax > 0) {
-            // const tax_percentage = parseFloat(this.state.total) * parseFloat(this.state.tax) / 100
+            const tax_percentage = parseFloat(this.state.total) * parseFloat(this.state.tax) / 100
+            total += tax_percentage
         }
 
-        // if (this.state.discount > 0) {
-        // const percentage = parseFloat(this.state.total) * parseFloat(this.state.discount) / 100
-        // total -= percentage
-        // }
+        if (this.state.discount > 0) {
+            const discount_percentage = parseFloat(this.state.total) * parseFloat(this.state.discount) / 100
+            total -= discount_percentage
+        }
 
         this.setState({
             total: total,
@@ -404,6 +399,7 @@ class EditInvoice extends Component {
         let total = price
         const unit_discount = currentRow.unit_discount
         const unit_tax = currentRow.unit_tax
+        const uses_inclusive_taxes = false
 
         const quantity = currentRow.quantity
 
@@ -420,11 +416,12 @@ class EditInvoice extends Component {
         }
 
         if (unit_tax > 0 && this.state.tax === 0) {
-            const n = parseFloat(total)
-
             const tax_percentage = lexieTotal * unit_tax / 100
             currentRow.tax_total = tax_percentage
-            total += tax_percentage
+
+            if (uses_inclusive_taxes === false) {
+                total += tax_percentage
+            }
         }
 
         currentRow.sub_total = total

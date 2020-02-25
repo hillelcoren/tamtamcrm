@@ -41,5 +41,5 @@ interface EventRepositoryInterface extends BaseRepositoryInterface
      *
      * @param \App\Repositories\Interfaces\User $objUser
      */
-    public function getEventsForUser(User $objUser): Collection;
+    public function getEventsForUser(User $objUser, int $account_id): Collection;
 }

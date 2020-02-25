@@ -18,4 +18,23 @@ class UpdateCreditRequest extends BaseFormRequest
             'total' => 'required|numeric',
         ];
     }
+
+    protected function prepareForValidation()
+    {
+        $input = $this->all();
+
+
+        if (isset($input['invitations'])) {
+
+            foreach ($input['invitations'] as $key => $value) {
+                if (is_numeric($input['invitations'][$key]['id'])) {
+                    unset($input['invitations'][$key]['id']);
+                }
+            }
+        }
+
+        $input['line_items'] = isset($input['line_items']) ? $this->cleanItems($input['line_items']) : [];
+
+        $this->replace($input);
+    }
 }

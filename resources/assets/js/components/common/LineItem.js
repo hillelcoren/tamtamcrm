@@ -20,17 +20,26 @@ class LineItem extends Component {
     }
 
     render () {
+        const uses_inclusive_taxes = false
+
         return this.props.rows.map((lineItem, index) => {
             let total = 0
 
             if (lineItem.unit_price > 0 && lineItem.quantity > 0) {
                 total = lineItem.unit_price * lineItem.quantity
 
-                const percentage = total * lineItem.unit_discount / 100
-                total -= percentage
+                if (lineItem.unit_discount > 0) {
+                    const percentage = total * lineItem.unit_discount / 100
+                    total -= percentage
+                }
 
-                const tax_percentage = total * lineItem.unit_tax / 100
-                total += tax_percentage
+                if (lineItem.unit_tax > 0) {
+                    const tax_percentage = total * lineItem.unit_tax / 100
+
+                    if (uses_inclusive_taxes === false) {
+                        total += tax_percentage
+                    }
+                }
             }
 
             return <React.Fragment>

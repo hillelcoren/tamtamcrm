@@ -151,6 +151,8 @@ class InvoiceRepository extends BaseRepository implements InvoiceRepositoryInter
             }
         }
 
+        $invoice->load('invitations');
+
         /* If no invitations have been created, this is our fail safe to maintain state*/
         if ($invoice->invitations->count() == 0) {
             $invoice->service()->createInvitations();

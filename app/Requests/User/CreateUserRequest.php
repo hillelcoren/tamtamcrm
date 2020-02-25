@@ -56,11 +56,11 @@ class CreateUserRequest extends BaseFormRequest
                 $input['company_user']['permissions'] = '';
             }
             if (!isset($input['company_user']['settings'])) {
-                $input['company_user']['settings'] = json_encode(DefaultSettings::userSettings());
+                $input['company_user']['settings'] = null;
             }
         } else {
             $input['company_user'] = [
-                'settings' => json_encode(DefaultSettings::userSettings()),
+                'settings' => null,
                 'permissions' => '',
             ];
         }

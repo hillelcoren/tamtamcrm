@@ -2,22 +2,19 @@
 
 namespace App\Services\Task;
 
-use App\ClientContact;
-use App\Customer;
-use App\Events\Invoice\QuoteWasMarkedSent;
-use App\Events\Quote\QuoteWasMarkedApproved;
 use App\Factory\CustomerFactory;
-use App\Jobs\Company\UpdateCompanyLedgerWithInvoice;
-use App\Repositories\ClientContactRepository;
 use App\Repositories\CustomerRepository;
 use App\Repositories\TaskRepository;
-use App\Task;
-use App\Quote;
+use App\Services\AbstractService;
 use DateInterval;
 use DateTime;
 use Illuminate\Http\Request;
 
-class CreateDeal
+/**
+ * Class CreateDeal
+ * @package App\Services\Task
+ */
+class CreateDeal extends AbstractService
 {
     private $task;
     private $request;
@@ -25,7 +22,19 @@ class CreateDeal
     private $task_repo;
     private $is_deal;
 
-    public function __construct($task, Request $request, $customer_repo, $task_repo, $is_deal)
+    /**
+     * CreateDeal constructor.
+     * @param $task
+     * @param Request $request
+     * @param CustomerRepository $customer_repo
+     * @param TaskRepository $task_repo
+     * @param $is_deal
+     */
+    public function __construct($task,
+        Request $request,
+        CustomerRepository $customer_repo,
+        TaskRepository $task_repo,
+        $is_deal)
     {
         $this->task = $task;
         $this->request = $request;

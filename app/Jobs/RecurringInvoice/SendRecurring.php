@@ -39,7 +39,7 @@ class SendRecurring implements ShouldQueue
      *
      * @return void
      */
-    public function handle() : void
+    public function handle(): void
     {
 
         // Generate Standard Invoice

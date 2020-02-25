@@ -6,10 +6,11 @@ use App\Customer;
 use App\Events\Invoice\QuoteWasMarkedSent;
 use App\Events\Quote\QuoteWasMarkedApproved;
 use App\Jobs\Company\UpdateCompanyLedgerWithInvoice;
+use App\Services\AbstractService;
 use App\Task;
 use App\Quote;
 
-class ConvertLead
+class ConvertLead extends AbstractService
 {
     private $task;
 

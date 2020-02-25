@@ -84,20 +84,28 @@ class CommentRepository extends BaseRepository implements CommentRepositoryInter
         return $this->all($columns, $orderBy, $sortBy);
     }
 
-    public function getAllCommentsForTask(Task $objTask): Collection
+    public function getAllCommentsForTask(Task $objTask, int $account_id): Collection
     {
         return $this->model->join('comment_task', 'comments.id', '=', 'comment_task.comment_id')
-                           ->where('comment_task.task_id', $objTask->id)->where('comments.parent_type', '=', 1)
-                           ->orderBy('created_at', 'desc')->with('user')->get();
+                           ->where('comment_task.task_id', $objTask->id)->where('comments.account_id', $account_id)
+                           ->where('comments.parent_type', '=', 1)->orderBy('created_at', 'desc')->with('user')->get();
     }
 
     /**
      *
      * @return Collection
      */
-    public function getCommentsForActivityFeed(): Collection
+    public function getCommentsForActivityFeed(int $account_id): Collection
     {
-        return $this->model->where('parent_type', 2)->orderBy('created_at', 'desc')->with('user')->get();
+        return $this->model->where('parent_type', 2)->where('account_id', '=', $account_id)
+                           ->orderBy('created_at', 'desc')->with('user')->get();
+    }
+
+    public function save(array $data, Comment $comment)
+    {
+        $comment->fill($data);
+        $comment->save();
+        return $comment;
     }
 
 }

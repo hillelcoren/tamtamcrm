@@ -4,13 +4,14 @@ namespace App\Services\Payment;
 
 use App\Invoice;
 use App\Jobs\Utils\SystemLogger;
+use App\Payment;
 use App\SystemLog;
 
 class UpdateInvoicePayment
 {
     public $payment;
 
-    public function __construct($payment)
+    public function __construct(Payment $payment)
     {
         $this->payment = $payment;
     }

@@ -2,6 +2,7 @@
 
 namespace App\Repositories;
 
+use App\ClientContact;
 use App\Factory\CreditInvitationFactory;
 use App\CreditInvitation;
 use App\Repositories\Base\BaseRepository;
@@ -33,39 +34,60 @@ class CreditRepository extends BaseRepository implements CreditRepositoryInterfa
         return $this->model;
     }
 
-    public function save(array $data, Credit $credit, $invoice = null): ?Credit
+    public function save(array $data, Credit $credit): ?Credit
     {
         $credit->fill($data);
 
         $credit->save();
 
-        if (isset($data['invitations'])) {
-            $invitations = collect($data['invitations']);
-
-            /* Get array of Keyss which have been removed from the invitations array and soft delete each invitation */
-            collect($credit->invitations->pluck('key'))->diff($invitations->pluck('key'))->each(function ($invitation) {
-                CreditInvitation::destroy($invitation);
-            });
-
-
-            foreach ($data['invitations'] as $invitation) {
-                $cred = false;
-
-                if (array_key_exists('key', $invitation)) {
-                    $cred = CreditInvitation::whereKey($invitation['key'])->first();
-                }
-
-                if (!$cred) {
-                    $invitation['client_contact_id'] = $invitation['client_contact_id'];
-                    $new_invitation = CreditInvitationFactory::create($credit->account_id, $credit->user_id);
-                    $new_invitation->fill($invitation);
-                    $new_invitation->credit_id = $credit->id;
-                    //$new_invitation->customer_id = $credit->customer_id;
-                    $new_invitation->client_contact_id = $invitation['client_contact_id'];
-                    $new_invitation->save();
+        if (isset($data['client_contacts'])) {
+            foreach ($data['client_contacts'] as $contact) {
+                if ($contact['send_email'] == 1 && is_string($contact['id'])) {
+                    $client_contact = ClientContact::find($contact['id']);
+                    $client_contact->send_email = true;
+                    $client_contact->save();
                 }
             }
         }
+
+        if (isset($data['invitations'])) {
+            $invitations = collect($data['invitations']);
+
+            /* Get array of Keys which have been removed from the invitations array and soft delete each invitation */
+            $credit->invitations->pluck('key')->diff($invitations->pluck('key'))->each(function ($invitation) {
+
+                $invite = $this->getInvitationByKey($invitation);
+
+                if ($invite) {
+                    $invite->forceDelete();
+                }
+
+            });
+
+            foreach ($data['invitations'] as $invitation) {
+                $inv = false;
+
+                if (array_key_exists('key', $invitation)) {
+                    $inv = $this->getInvitationByKey($invitation['key']);
+                }
+
+                if (!$inv) {
+
+                    if (isset($invitation['id'])) {
+                        unset($invitation['id']);
+                    }
+
+                    $new_invitation = CreditInvitationFactory::create($credit->account_id, $credit->user_id);
+                    $new_invitation->fill($invitation);
+                    $new_invitation->credit_id = $credit->id;
+                    $new_invitation->client_contact_id = $invitation['client_contact_id'];
+                    $new_invitation->save();
+
+                }
+            }
+        }
+
+        $credit->load('invitations');
 
         /* If no invitations have been created, this is our fail safe to maintain state*/
         if ($credit->invitations->count() == 0) {
@@ -89,8 +111,12 @@ class CreditRepository extends BaseRepository implements CreditRepositoryInterfa
 
     public function getCreditForCustomer(Customer $objCustomer)
     {
-
         return $this->model->where('customer_id', $objCustomer->id)->get();
+    }
+
+    public function getInvitationByKey($key): ?CreditInvitation
+    {
+        return CreditInvitation::whereRaw("BINARY `key`= ?", [$key])->first();
     }
 
     /**

@@ -2,6 +2,7 @@
 import React from 'react'
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter, Input, FormGroup, Label, Form } from 'reactstrap'
 import axios from 'axios'
+import UserDropdown from '../common/UserDropdown'
 
 class AddLeadForm extends React.Component {
     constructor (props) {
@@ -36,7 +37,6 @@ class AddLeadForm extends React.Component {
         this.handleClick = this.handleClick.bind(this)
         this.hasErrorFor = this.hasErrorFor.bind(this)
         this.renderErrorFor = this.renderErrorFor.bind(this)
-        this.buildUserOptions = this.buildUserOptions.bind(this)
         this.buildSourceTypeOptions = this.buildSourceTypeOptions.bind(this)
         this.handleMultiSelect = this.handleMultiSelect.bind(this)
     }
@@ -142,30 +142,6 @@ class AddLeadForm extends React.Component {
         )
     }
 
-    buildUserOptions () {
-        let userContent
-        if (!this.props.users) {
-            userContent = <option value="">Loading...</option>
-        } else {
-            userContent = this.props.users.map((user, index) => (
-                <option key={index} value={user.id}>{user.first_name + ' ' + user.last_name}</option>
-            ))
-        }
-
-        return (
-            <FormGroup>
-                <Label for="contributors">Assign to:</Label>
-                <Input className={this.hasErrorFor('contributors') ? 'is-invalid' : ''} multiple
-                    type="select"
-                    value={this.state.selectedUsers}
-                    name="contributors" id="contributors" onChange={this.handleMultiSelect.bind(this)}>
-                    {userContent}
-                </Input>
-                {this.renderErrorFor('contributors')}
-            </FormGroup>
-        )
-    }
-
     toggle () {
         this.setState({
             modal: !this.state.modal
@@ -193,7 +169,6 @@ class AddLeadForm extends React.Component {
 
     render () {
         const { submitSuccess, loading } = this.state
-        const userOptions = this.buildUserOptions()
         const sourceTypeOptions = this.buildSourceTypeOptions()
 
         return (
@@ -244,7 +219,7 @@ class AddLeadForm extends React.Component {
                                 {this.renderErrorFor('valued_at')}
                             </FormGroup>
 
-                            {userOptions}
+                            <UserDropdown name="contributors" users={this.props.users}/>
 
                             {sourceTypeOptions}
 
@@ -252,40 +227,55 @@ class AddLeadForm extends React.Component {
 
                             <FormGroup>
                                 <Label for="first_name"> First Name </Label>
-                                <Input className={this.hasErrorFor('first_name') ? 'is-invalid' : ''} type="text"
-                                    id="first_name" onChange={this.handleInputChanges.bind(this)} name="first_name"
+                                <Input className={this.hasErrorFor('first_name') ? 'is-invalid' : ''}
+                                    type="text"
+                                    id="first_name"
+                                    onChange={this.handleInputChanges.bind(this)}
+                                    name="first_name"
                                     placeholder="Enter customer's first name"/>
                                 {this.renderErrorFor('first_name')}
                             </FormGroup>
 
                             <FormGroup>
                                 <Label for="last_name"> Last Name </Label>
-                                <Input className={this.hasErrorFor('last_name') ? 'is-invalid' : ''} type="text"
-                                    id="last_name" onChange={this.handleInputChanges.bind(this)} name="last_name"
+                                <Input className={this.hasErrorFor('last_name') ? 'is-invalid' : ''}
+                                    type="text"
+                                    id="last_name"
+                                    onChange={this.handleInputChanges.bind(this)}
+                                    name="last_name"
                                     placeholder="Enter customer's last name"/>
                                 {this.renderErrorFor('last_name')}
                             </FormGroup>
 
                             <FormGroup>
                                 <Label for="email"> Email </Label>
-                                <Input className={this.hasErrorFor('email') ? 'is-invalid' : ''} type="email" id="email"
-                                    onChange={this.handleInputChanges.bind(this)} name="email"
+                                <Input className={this.hasErrorFor('email') ? 'is-invalid' : ''}
+                                    type="email"
+                                    id="email"
+                                    onChange={this.handleInputChanges.bind(this)}
+                                    name="email"
                                     placeholder="Enter customer's email address"/>
                                 {this.renderErrorFor('email')}
                             </FormGroup>
 
                             <FormGroup>
                                 <Label for="phone"> Phone </Label>
-                                <Input className={this.hasErrorFor('phone') ? 'is-invalid' : ''} type="text" id="phone"
-                                    onChange={this.handleInputChanges.bind(this)} name="phone"
+                                <Input className={this.hasErrorFor('phone') ? 'is-invalid' : ''}
+                                    type="text"
+                                    id="phone"
+                                    onChange={this.handleInputChanges.bind(this)}
+                                    name="phone"
                                     placeholder="Enter customer's phone number"/>
                                 {this.renderErrorFor('phone')}
                             </FormGroup>
 
                             <FormGroup>
                                 <Label for="address"> Address 1 </Label>
-                                <Input className={this.hasErrorFor('address_1') ? 'is-invalid' : ''} type="text"
-                                    id="address_1" onChange={this.handleInputChanges.bind(this)} name="address_1"
+                                <Input className={this.hasErrorFor('address_1') ? 'is-invalid' : ''}
+                                    type="text"
+                                    id="address_1"
+                                    onChange={this.handleInputChanges.bind(this)}
+                                    name="address_1"
                                     placeholder="Enter customer's address"/>
                                 {this.renderErrorFor('address_1')}
                             </FormGroup>
@@ -293,23 +283,31 @@ class AddLeadForm extends React.Component {
                             <FormGroup>
                                 <Label for="address"> Address 2 </Label>
                                 <Input className={this.hasErrorFor('address_2') ? 'is-invalid' : ''} type="text"
-                                    id="address_2" onChange={this.handleInputChanges.bind(this)} name="address_2"
+                                    id="address_2"
+                                    onChange={this.handleInputChanges.bind(this)}
+                                    name="address_2"
                                     placeholder="Enter customer's address"/>
                                 {this.renderErrorFor('address_2')}
                             </FormGroup>
 
                             <FormGroup>
                                 <Label for="postcode"> Postcode </Label>
-                                <Input className={this.hasErrorFor('zip') ? 'is-invalid' : ''} type="text" id="zip"
-                                    onChange={this.handleInputChanges.bind(this)} name="zip"
+                                <Input className={this.hasErrorFor('zip') ? 'is-invalid' : ''}
+                                    type="text"
+                                    id="zip"
+                                    onChange={this.handleInputChanges.bind(this)}
+                                    name="zip"
                                     placeholder="Enter customer's postcode"/>
                                 {this.renderErrorFor('zip')}
                             </FormGroup>
 
                             <FormGroup>
                                 <Label htmlFor="city"> City </Label>
-                                <Input className={this.hasErrorFor('city') ? 'is-invalid' : ''} type="text" id="city"
-                                    onChange={this.handleInputChanges.bind(this)} name="city"
+                                <Input className={this.hasErrorFor('city') ? 'is-invalid' : ''}
+                                    type="text"
+                                    id="city"
+                                    onChange={this.handleInputChanges.bind(this)}
+                                    name="city"
                                     placeholder="Enter customer's city"/>
                                 {this.renderErrorFor('city')}
                             </FormGroup>

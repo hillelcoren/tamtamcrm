@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import React, { Component } from 'react'
 import moment from 'moment'
 import axios from 'axios'
@@ -10,6 +9,7 @@ import ViewTask from './forms/viewTask'
 import Subtasks from './forms/Subtasks'
 import Avatar from './common/Avatar'
 import RestoreModal from './common/RestoreModal'
+import EditLeadForm from './forms/EditLeadForm'
 
 class Task extends Component {
     constructor (props) {
@@ -78,8 +78,10 @@ class Task extends Component {
                     .map((i, index) => {
                         let contributors = ''
 
-                        const deleteButton = !i.deleted_at ? <i id="delete" className="fa fa-times" onClick={() => this.api(i.id)}/> : <RestoreModal id={i.id} entities={tasks} updateState={this.props.action}
-                            url={`/api/tasks/restore/${i.id}`}/>
+                        const deleteButton = !i.deleted_at
+                            ? <i id="delete" className="fa fa-times" onClick={() => this.api(i.id)}/>
+                            : <RestoreModal id={i.id} entities={tasks} updateState={this.props.action}
+                                url={`/api/tasks/restore/${i.id}`}/>
 
                         if (i.users && i.users.length) {
                             contributors = i.users.map((user, index) => {
@@ -93,21 +95,24 @@ class Task extends Component {
                             borderLeft: `2px solid ${this.props.column.column_color}`
                         }
 
+                        const edit = this.props.task_type === 2 ? <EditLeadForm users={this.props.users} lead={i}/>
+                            : <ViewTask
+                                custom_fields={this.props.custom_fields}
+                                project_id={this.props.project_id}
+                                customers={this.props.customers}
+                                users={this.props.users}
+                                task_type={this.props.task_type}
+                                allTasks={this.props.tasks}
+                                action={this.props.action}
+                                task={i}
+                            />
+
                         return (
                             <div style={divStyle} data-task={i.id} id={i.id}
                                 className="col-12 col-md-12 mcell-task card" key={index}>
 
                                 <span className="task-name">
-                                    <ViewTask
-                                        custom_fields={this.props.custom_fields}
-                                        project_id={this.props.project_id}
-                                        customers={this.props.customers}
-                                        users={this.props.users}
-                                        task_type={this.props.task_type}
-                                        allTasks={this.props.tasks}
-                                        action={this.props.action}
-                                        task={i}
-                                    />
+                                    {edit}
                                     {deleteButton}
                                 </span>
 

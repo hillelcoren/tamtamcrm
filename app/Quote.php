@@ -178,7 +178,7 @@ class Quote extends Model
     public function calc()
     {
         $quote_calc = null;
-        
+
         if ($this->uses_inclusive_taxes) {
             $quote_calc = new InvoiceSumInclusive($this);
         } else {
