@@ -1,10 +1,10 @@
 @extends('email.template.master')
 @section('title')
-    {{ $title }}
+{{ $title }}
 @endsection
 @section('content')
-    {!! $body !!}
+{!! $body !!}
 @endsection
 @section('footer')
-    {!! $footer !!}
+{!! $footer !!}
 @endsection

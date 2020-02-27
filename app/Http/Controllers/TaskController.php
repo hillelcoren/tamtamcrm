@@ -16,6 +16,7 @@ use App\Repositories\ProjectRepository;
 use App\Repositories\TaskRepository;
 use App\User;
 use Exception;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use App\Task;
@@ -119,7 +120,7 @@ class TaskController extends Controller
     /**
      * @param int $task_id
      * @param Request $request
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
     public function updateLead(int $task_id, Request $request)
     {
@@ -262,6 +263,10 @@ class TaskController extends Controller
      */
     public function createLead(Request $request)
     {
+        echo '<pre>';
+        print_r($request->all());
+        die;
+
         $task = (new TaskFactory())->create(9874, 1);
         $task = $task->service()->createDeal($request,
             (new CustomerRepository(new Customer, new ClientContactRepository(new ClientContact))),
@@ -304,14 +309,6 @@ class TaskController extends Controller
      */
     public function convertToDeal(int $task_id)
     {
-        $task = $this->task_repo->findTaskById($task_id);
-        $response = $task->service()->convertLead();
-        //$response = $this->task_service->convertLeadToDeal($task_id);
-
-        if ($response) {
-            return response()->json('Converted successfully');
-        }
-
         return response()->json('Unable to convert');
     }
 

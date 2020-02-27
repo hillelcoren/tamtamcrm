@@ -77,7 +77,7 @@ class Task extends Component {
                 tasks.filter(i => i.task_status === Number(filter))
                     .map((i, index) => {
                         let contributors = ''
-
+                        
                         const deleteButton = !i.deleted_at
                             ? <i id="delete" className="fa fa-times" onClick={() => this.api(i.id)}/>
                             : <RestoreModal id={i.id} entities={tasks} updateState={this.props.action}

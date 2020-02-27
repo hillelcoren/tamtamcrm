@@ -27,8 +27,6 @@ use App\Repositories\Interfaces\QuoteRepositoryInterface;
 use App\Repositories\QuoteRepository;
 use App\Repositories\Interfaces\InvoiceRepositoryInterface;
 use App\Repositories\InvoiceRepository;
-use App\Repositories\Interfaces\InvoiceLineRepositoryInterface;
-use App\Repositories\InvoiceLineRepository;
 use App\Repositories\Interfaces\CustomerRepositoryInterface;
 use App\Repositories\CustomerRepository;
 use App\Repositories\Interfaces\AddressRepositoryInterface;
@@ -98,8 +96,6 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(InvoiceRepositoryInterface::class, InvoiceRepository::class);
 
         $this->app->bind(QuoteRepositoryInterface::class, QuoteRepository::class);
-
-        $this->app->bind(InvoiceLineRepositoryInterface::class, InvoiceLineRepository::class);
 
         $this->app->bind(AddressRepositoryInterface::class, AddressRepository::class);
 

@@ -279,7 +279,7 @@ Route::group(['middleware' => ['jwt.auth', 'api-header']], function () {
         'TaskController@filterTasks')->middleware('role:null,taskcontroller.filtertasks');
     Route::put('tasks/status/{task_id}',
         'TaskController@updateStatus')->middleware('role:null,taskcontroller.updatestatus');
-    Route::get('leads', 'TaskController@getLeads')->middleware('role:null,taskcontroller.getleads');
+    Route::get('leads', 'LeadController@index')->middleware('role:null,taskcontroller.getleads');
     Route::get('deals', 'TaskController@getDeals')->middleware('role:null,taskcontroller.getdeals');
     Route::get('tasks', 'TaskController@index')->middleware('role:null,taskcontroller.index');
     Route::get('tasks/subtasks/{task_id}',
@@ -291,7 +291,7 @@ Route::group(['middleware' => ['jwt.auth', 'api-header']], function () {
     Route::get('tasks/task-types', 'TaskController@getTaskTypes')->middleware('role:null,view-invoice');
     Route::get('tasks/convertToDeal/{task_id}', 'TaskController@convertToDeal')->middleware('role:null,view-invoice');
     Route::put('tasks/timer/{task_id}', 'TaskController@updateTimer')->middleware('role:null,taskcontroller.update');
-    Route::put('tasks/lead/{lead_id}', 'TaskController@updateLead')->middleware('role:null,taskcontroller.update');
+    Route::put('tasks/lead/{lead_id}', 'LeadController@update')->middleware('role:null,taskcontroller.update');
     Route::delete('tasks/archive/{task_id}', 'TaskController@archive');
 
     Route::group(['middleware' => ['role:Manager']], function () {
@@ -356,5 +356,6 @@ Route::group(['middleware' => 'api-header'], function () {
     Route::post('tasks/products/{task_id}', 'TaskController@addProducts');
     Route::post("categories/products/{id}", 'ProductController@getProductsForCategory');
     Route::post('tasks/deal', 'TaskController@createDeal');
-    Route::post('tasks/lead', 'TaskController@createLead');
+    Route::post('tasks/lead', 'LeadController@store');
+    Route::get('lead/convert/{id}', 'LeadController@convert');
 });

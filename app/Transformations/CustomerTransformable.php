@@ -51,6 +51,9 @@ trait CustomerTransformable
         $prop->group_settings_id = $customer->group_settings_id;
         $prop->shipping = $shipping;
         $prop->billing = $billing;
+        $prop->website = $customer->website ?: '';
+        $prop->industry_id = (int)$customer->industry_id ?: null;
+        $prop->size_id = (int)$customer->size_id ?: null;
         $prop->currency_id = $customer->currency_id;
         $prop->paid_to_date = (float)$customer->paid_to_date;
         $prop->credit_balance = (float)$customer->credit_balance;
@@ -63,6 +66,8 @@ trait CustomerTransformable
         $prop->custom_value2 = $customer->custom_value2 ?: '';
         $prop->custom_value3 = $customer->custom_value3 ?: '';
         $prop->custom_value4 = $customer->custom_value4 ?: '';
+        $prop->private_notes = $customer->private_notes ?: '';
+        $prop->public_notes = $customer->public_notes ?: '';
 
         return $prop;
     }

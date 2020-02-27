@@ -4,7 +4,10 @@ namespace App\Services\Task;
 
 use App\Factory\CustomerFactory;
 use App\Factory\TaskFactory;
+use App\Models\Invoice;
+use App\Repositories\ClientContactRepository;
 use App\Repositories\CustomerRepository;
+use App\Repositories\InvoiceSum;
 use App\Repositories\TaskRepository;
 use App\Services\Task\ConvertLead;
 use Illuminate\Http\Request;
@@ -36,26 +39,16 @@ class TaskService
     }
 
     /**
-     * converts a lead to a deal
-     * @return $this
-     */
-    public function convertLead()
-    {
-        $convert_lead = new ConvertLead($this->task);
-
-        $this->task = $convert_lead->run();
-
-        return $this;
-    }
-
-    /**
      * @param Request $request
      * @param CustomerRepository $customer_repo
      * @param TaskRepository $task_repo
      * @param bool $is_deal
-     * @return \App\Models\Invoice|\App\Repositories\InvoiceSum|Task|null
+     * @return Invoice|InvoiceSum|Task|null
      */
-    public function createDeal(Request $request, CustomerRepository $customer_repo, TaskRepository $task_repo, $is_deal = true)
+    public function createDeal(Request $request,
+        CustomerRepository $customer_repo,
+        TaskRepository $task_repo,
+        $is_deal = true)
     {
         $create_deal = new CreateDeal($this->task, $request, $customer_repo, $task_repo, $is_deal);
 
@@ -71,7 +64,10 @@ class TaskService
      * @param bool $is_lead
      * @return mixed
      */
-    public function updateLead(Request $request, CustomerRepository $customer_repo, TaskRepository $task_repo, $is_lead = true)
+    public function updateLead(Request $request,
+        CustomerRepository $customer_repo,
+        TaskRepository $task_repo,
+        $is_lead = true)
     {
         $update_lead = new UpdateLead($this->task, $request, $customer_repo, $task_repo, $is_lead);
 

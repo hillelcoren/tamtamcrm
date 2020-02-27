@@ -1,24 +1,24 @@
-@component('email.components.layout')
+@component('email.template.master', ['design' => 'light'])
 
     @slot('header')
-        @component('email.components.header', ['p' => ''])
-            <img src="{{ $logo }}" alt="Company Logo" style="display: block">
+        @component('email.components.header', ['p' => '', 'logo' => $url])
+            @lang('texts.download')
         @endcomponent
+
+    @endslot
+
+    @slot('greeting')
     @endslot
 
     @lang('texts.download_timeframe')
 
-    @component('email.components.button', ['url' => $url])
-        @lang('texts.download')
-    @endcomponent
-
     @slot('signature')
-        TamTam
+        TamTam CRM (contact@tamtamcrm.com)
     @endslot
 
     @slot('footer')
-        @component('email.components.footer', ['url' => 'https://tamtam.com', 'url_text' => '&copy; TamTam'])
-            For any info, please visit TamTam.
+        @component('email.components.footer', ['url' => 'https://tamtamcrm.com', 'url_text' => '&copy; InvoiceNinja'])
+            For any info, please visit InvoiceNinja.
         @endcomponent
     @endslot
 

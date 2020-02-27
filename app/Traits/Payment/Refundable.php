@@ -199,7 +199,8 @@ trait Refundable
 
     private function buildCreditNote(array $data): ?Credit
     {
-        $credit_note = CreditFactory::create($this->customer_id, $this->account_id, $this->user_id, $data['amount']);
+        $credit_note = CreditFactory::create($this->account_id, $this->user_id, $data['amount'], $this->customer,
+            $this->customer->getMergedSettings());
         $credit_note->assigned_user_id = isset($this->assigned_user_id) ?: null;
         $credit_note->date = $data['date'];
         $credit_note->number = $this->getNextCreditNumber($this->customer);

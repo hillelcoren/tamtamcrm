@@ -20,7 +20,7 @@ import { ToastContainer, toast } from 'react-toastify'
 class Settings extends Component {
     constructor (props) {
         super(props)
-
+        
         this.state = {
             id: this.props.match.params.add && this.props.match.params.add === 'true' ? null : localStorage.getItem('account_id'),
             loaded: false,

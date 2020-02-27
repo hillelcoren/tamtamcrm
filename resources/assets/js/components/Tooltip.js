@@ -21,7 +21,8 @@ class Tooltips extends Component {
     }
 
     render () {
-        const addButton = this.props.task_type === 3
+
+        const addButton = this.props.task_type === 2
             ? <AddLeadForm
                 users={this.props.users}
                 tasks={this.props.tasks}

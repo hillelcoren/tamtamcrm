@@ -2,6 +2,7 @@
 
 namespace App\Traits;
 
+use App\DataMapper\BaseSettings;
 use App\DataMapper\CompanySettings;
 use App\DataMapper\FeesAndLimits;
 
@@ -86,8 +87,8 @@ trait CompanyGatewayFeesAndLimitsSaver
 
             $fal = new FeesAndLimits;
             foreach ($value as $k => $v) {
-
                 $fal->{$k} = $v;
+                $fal->{$k} = BaseSettings::castAttribute(FeesAndLimits::$casts[$k], $v);
             }
 
             $new_arr[$key] = (array)$fal;

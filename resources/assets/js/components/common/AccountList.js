@@ -1,8 +1,6 @@
 import React, { Component } from 'react'
-import { Modal, ModalHeader, ModalBody, ModalFooter, Button, FormGroup, Form, Input, Label } from 'reactstrap'
+import { FormGroup, Input } from 'reactstrap'
 import axios from 'axios'
-import SuccessMessage from './SucessMessage'
-import ErrorMessage from './ErrorMessage'
 
 export default class AccountList extends Component {
     constructor (props) {
@@ -29,7 +27,11 @@ export default class AccountList extends Component {
 
     handleChange (e) {
         const accountId = e.target.value
-        const $self = this
+
+        if (accountId === 'add') {
+            window.location.href = '/#/accounts/true'
+            return
+        }
 
         axios.post('/api/account/change', { account_id: e.target.value })
             .then(function (response) {
@@ -54,6 +56,7 @@ export default class AccountList extends Component {
                 <FormGroup style={{ width: '90%' }} className="mt-1 ml-2">
                     <Input value={localStorage.getItem('account_id')} type="select" onChange={this.handleChange} name="account_id" id="account_id">
                         {columnList}
+                        <option value="add">Add Account</option>
                     </Input>
                 </FormGroup>
             </React.Fragment>

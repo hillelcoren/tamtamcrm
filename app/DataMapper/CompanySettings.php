@@ -53,6 +53,8 @@ class CompanySettings extends BaseSettings
     public $auto_email_invoice = true;
     public $inclusive_taxes = false;
     public $quote_footer = '';
+    public $credit_footer = '';
+    public $credit_terms = '';
     public $translations;
     public $counter_number_applied = 'when_saved'; // when_saved , when_sent , when_paid
     public $quote_number_applied = 'when_saved'; // when_saved , when_sent
@@ -266,7 +268,6 @@ class CompanySettings extends BaseSettings
         'client_number_counter' => 'integer',
         'credit_number_pattern' => 'string',
         'credit_number_counter' => 'integer',
-        'currency_id' => 'string',
         'custom_value1' => 'string',
         'custom_value2' => 'string',
         'custom_value3' => 'string',
@@ -293,7 +294,6 @@ class CompanySettings extends BaseSettings
         'email_template_reminder2' => 'string',
         'email_template_reminder3' => 'string',
         'email_template_reminder_endless' => 'string',
-        'enable_client_portal_password' => 'bool',
         'inclusive_taxes' => 'bool',
         'invoice_number_pattern' => 'string',
         'invoice_number_counter' => 'integer',
@@ -302,6 +302,8 @@ class CompanySettings extends BaseSettings
         'invoice_taxes' => 'int',
         'enabled_item_tax_rates' => 'int',
         'invoice_footer' => 'string',
+        'credit_footer' => 'string',
+        'credit_terms' => 'string',
         'invoice_labels' => 'string',
         'invoice_terms' => 'string',
         'name' => 'string',
@@ -345,7 +347,7 @@ class CompanySettings extends BaseSettings
         'counter_padding' => 'integer',
         'design' => 'string',
         'website' => 'string',
-        'pdf_variables' => 'object',
+        'pdf_variables' => 'array',
     ];
     /**
      * Array of variables which

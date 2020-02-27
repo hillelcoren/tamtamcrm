@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Customer;
 use App\Factory\CloneInvoiceFactory;
 use App\Factory\CloneQuoteFactory;
 use App\Factory\NotificationFactory;
@@ -19,6 +20,8 @@ use Carbon\Carbon;
 use App\Factory\QuoteFactory;
 use App\Transformations\QuoteTransformable;
 use Exception;
+use Illuminate\Contracts\Filesystem\FileNotFoundException;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
 use App\Event;
 use App\RecurringQuote;
@@ -92,9 +95,10 @@ class QuoteController extends Controller
      */
     public function store(CreateQuoteRequest $request)
     {
+        $customer = Customer::find($request->input('customer_id'));
         $quote = $this->quote_repo->save($request->all(),
-            QuoteFactory::create($request->customer_id, auth()->user()->account_user()->account_id, auth()->user()->id,
-                $request->total));
+            QuoteFactory::create(auth()->user()->account_user()->account_id, auth()->user()->id, $request->total,
+                $customer, $customer->getMergedSettings()));
         SaveRecurringQuote::dispatchNow($request, $quote->account, $quote);
         QuoteOrders::dispatchNow($quote);
         $notification = NotificationFactory::create(auth()->user()->account_user()->account_id, auth()->user()->id);
@@ -130,8 +134,8 @@ class QuoteController extends Controller
      * @param Request $request
      * @param Quote $quote
      * @param $action
-     * @return \Illuminate\Http\JsonResponse
-     * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
+     * @return JsonResponse
+     * @throws FileNotFoundException
      */
     public function action(Request $request, Quote $quote, $action)
     {

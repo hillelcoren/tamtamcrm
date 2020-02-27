@@ -93,7 +93,7 @@ class AddLeadForm extends React.Component {
             values: [...this.state.values, formData],
             loading: false
         })
-        axios.post('/api/tasks/deal', formData)
+        axios.post('/api/tasks/lead', formData)
             .then((response) => {
                 this.toggle()
                 this.setState({

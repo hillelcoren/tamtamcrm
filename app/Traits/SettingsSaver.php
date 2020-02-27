@@ -50,6 +50,7 @@ trait SettingsSaver
     public function validateSettings($settings)
     {
         $settings = (object)$settings;
+
         $casts = CompanySettings::$casts;
         ksort($casts);
         foreach ($casts as $key => $value) {

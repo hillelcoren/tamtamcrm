@@ -96,8 +96,8 @@ class PaymentRepository extends BaseRepository implements PaymentRepositoryInter
         $payment->save();
 
 
-        if (!$payment->number) {
-            $payment->number = $this->getNextPaymentNumber($payment->customer);
+        if (!$payment->number || strlen($payment->number) == 0) {
+            $payment->number = $payment->customer->getNextPaymentNumber($payment->customer);
         }
 
         //we only ever update the ACTUAL amount of money transferred

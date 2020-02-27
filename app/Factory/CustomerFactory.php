@@ -20,6 +20,9 @@ class CustomerFactory
         $client->balance = 0;
         $client->paid_to_date = 0;
         $client->group_settings_id = null;
+        $client->private_notes = '';
+        $client->public_notes = '';
+        $client->website = '';
 
         return $client;
     }

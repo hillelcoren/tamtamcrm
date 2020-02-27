@@ -7,6 +7,7 @@ use App\Account;
 use App\CompanyGateway;
 use App\GatewayType;
 use App\User;
+use Illuminate\Database\Eloquent\Model;
 
 class ClientGatewayToken extends Model
 {
@@ -46,7 +47,7 @@ class ClientGatewayToken extends Model
      * Retrieve the model for a bound value.
      *
      * @param mixed $value
-     * @return \Illuminate\Database\Eloquent\Model|null
+     * @return Model|null
      */
     public function resolveRouteBinding($value)
     {

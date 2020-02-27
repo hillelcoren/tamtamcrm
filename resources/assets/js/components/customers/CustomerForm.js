@@ -35,7 +35,7 @@ export default function CustomerForm (props) {
                     <Input className={hasErrorFor('first_name') ? 'is-invalid' : ''} type="text"
                         id="first_name" defaultValue={props.customer.first_name}
                         onChange={props.onChange} name="first_name"
-                        placeholder="Enter customer's first name"/>
+                        placeholder="First Name"/>
                     {renderErrorFor('first_name')}
                 </FormGroup>
 
@@ -44,7 +44,7 @@ export default function CustomerForm (props) {
                     <Input className={hasErrorFor('last_name') ? 'is-invalid' : ''} type="text"
                         id="last_name" defaultValue={props.customer.last_name}
                         onChange={props.onChange} name="last_name"
-                        placeholder="Enter customer's last name"/>
+                        placeholder="Last Name"/>
                     {renderErrorFor('last_name')}
                 </FormGroup>
 
@@ -53,7 +53,7 @@ export default function CustomerForm (props) {
                     <Input className={hasErrorFor('email') ? 'is-invalid' : ''} type="email" id="email"
                         defaultValue={props.customer.email}
                         onChange={props.onChange} name="email"
-                        placeholder="Enter customer's email address"/>
+                        placeholder="Email Address"/>
                     {renderErrorFor('email')}
                 </FormGroup>
 
@@ -62,7 +62,7 @@ export default function CustomerForm (props) {
                     <Input className={hasErrorFor('phone') ? 'is-invalid' : ''} type="text" id="phone"
                         defaultValue={props.customer.phone}
                         onChange={props.onChange} name="phone"
-                        placeholder="Enter customer's phone number"/>
+                        placeholder="Phone Number"/>
                     {renderErrorFor('phone')}
                 </FormGroup>
 
@@ -71,8 +71,20 @@ export default function CustomerForm (props) {
                     <Input className={hasErrorFor('job_title') ? 'is-invalid' : ''} type="text" id="job_title"
                         defaultValue={props.customer.job_title}
                         onChange={props.onChange} name="job_title"
-                        placeholder="Enter Job Title"/>
+                        placeholder="Job Title"/>
                     {renderErrorFor('job_title')}
+                </FormGroup>
+
+                <FormGroup>
+                    <Label htmlFor="website"> Website </Label>
+                    <Input className={hasErrorFor('website') ? 'is-invalid' : ''}
+                        type="text"
+                        id="website"
+                        defaultValue={props.customer.website}
+                        onChange={props.onChange}
+                        name="website"
+                        placeholder="Website"/>
+                    {renderErrorFor('website')}
                 </FormGroup>
 
                 {customForm}

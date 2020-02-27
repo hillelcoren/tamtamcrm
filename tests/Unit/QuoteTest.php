@@ -29,9 +29,7 @@ use App\Traits\GeneratesCounter;
 class QuoteTest extends TestCase
 {
 
-    use DatabaseTransactions,
-        WithFaker,
-        GeneratesCounter;
+    use DatabaseTransactions, WithFaker, GeneratesCounter;
 
     private $customer;
 
@@ -85,11 +83,9 @@ class QuoteTest extends TestCase
     /** @test */
     public function it_can_create_a_quote()
     {
-
-        $customerId = $this->customer->id;
         $total = $this->faker->randomFloat();
-        $factory = (new QuoteFactory())->create($customerId, $this->account_id, $this->user->id, $total);
-
+        $factory = (new QuoteFactory())->create($this->account_id, $this->user->id, $total, $this->customer,
+            $this->customer->getMergedSettings());
 
         $data = [
             'account_id' => $this->account_id,

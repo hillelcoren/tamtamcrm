@@ -20,6 +20,9 @@ trait PdfMaker
      */
     public function makePdf($header, $footer, $html)
     {
+//        echo $html;
+//        die;
+
         $pdf = App::make('dompdf.wrapper');
         $pdf->loadHTML($html);
         return $pdf->stream();

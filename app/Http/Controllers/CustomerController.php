@@ -11,6 +11,7 @@ use App\Order;
 use App\Repositories\CustomerRepository;
 use App\Repositories\Interfaces\CustomerRepositoryInterface;
 use App\Repositories\Interfaces\AddressRepositoryInterface;
+use App\Repositories\NotificationRepository;
 use App\Repositories\OrderRepository;
 use App\Requests\Customer\BulkCustomerRequest;
 use App\Transformations\CustomerTransformable;
@@ -90,10 +91,8 @@ class CustomerController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
-     *
      * @param CreateCustomerRequest $request
-     * @return Response
+     * @return Customer
      */
     public function store(CreateCustomerRequest $request)
     {

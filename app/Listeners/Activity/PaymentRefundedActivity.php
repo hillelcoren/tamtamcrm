@@ -1,22 +1,22 @@
 <?php
 
-
 namespace App\Listeners\Activity;
 
-use stdClass;
+use App\Repositories\NotificationRepository;
+use Illuminate\Contracts\Queue\ShouldQueue;
 
 class PaymentRefundedActivity implements ShouldQueue
 {
-    protected $activity_repo;
+    protected $notification_repo;
 
     /**
      * Create the event listener.
      *
      * @return void
      */
-    public function __construct(ActivityRepository $activity_repo)
+    public function __construct(NotificationRepository $notification_repo)
     {
-        $this->activity_repo = $activity_repo;
+        $this->notification_repo = $notification_repo;
     }
 
     /**
@@ -27,14 +27,16 @@ class PaymentRefundedActivity implements ShouldQueue
      */
     public function handle($event)
     {
-        $fields = new stdClass;
+        $fields = [];
+        $fields['data']['id'] = $event->payment->id;
+        $fields['data']['message'] = 'A payment was refunded';
+        $fields['notifiable_id'] = $event->payment->user_id;
+        $fields['account_id'] = $event->payment->account_id;
+        $fields['notifiable_type'] = get_class($event->payment);
+        $fields['type'] = get_class($this);
+        $fields['data'] = json_encode($fields['data']);
+        $this->notification_repo->create($fields);
 
-        $fields->customer_id = $event->payment->id;
-        $fields->user_id = $event->payment->user_id;
-        $fields->account_id = $event->payment->account_id;
-        //$fields->activity_type_id = Activity::REFUNDED_PAYMENT;
-        $fields->payment_id = $event->payment->id;
-
-        //$this->activity_repo->save($fields, $event->client);
+        $this->notification_repo->create($fields);
     }
 }

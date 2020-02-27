@@ -81,6 +81,7 @@ class CommentTest extends TestCase {
     /** @test */
     public function it_can_create_a_comment() {
         $data = [
+            'account_id' => 1,
             'user_id' => $this->user->id,
             'comment' => $this->faker->sentence,
         ];

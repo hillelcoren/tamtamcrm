@@ -49,6 +49,10 @@ export default class Customers extends Component {
                 end_date: ''
             },
             ignoredColumns: [
+                'public_notes',
+                'private_notes',
+                'industry_id',
+                'size_id',
                 'created_at',
                 'contacts',
                 'deleted_at',
@@ -257,19 +261,19 @@ export default class Customers extends Component {
                     />
                 </Col>
 
-                <Col md={3}>
+                <Col md={2}>
                     <CustomerTypeDropdown
                         renderErrorFor={this.renderErrorFor}
                         handleInputChanges={this.filterCustomers}
                     />
                 </Col>
 
-                <Col>
+                <Col md={1}>
                     <CsvImporter filename="customers.csv"
                         url={`/api/customers?search_term=${searchText}&status=${status}&company_id=${company_id}&customer_type=${customer_type}&group_settings_id=${group_settings_id}&start_date=${start_date}&end_date=${end_date}&page=1&per_page=5000`}/>
                 </Col>
 
-                <Col>
+                <Col md={2}>
                     <BulkActionDropdown
                         dropdownButtonActions={this.state.dropdownButtonActions}
                         saveBulk={this.saveBulk}/>
@@ -282,7 +286,7 @@ export default class Customers extends Component {
                     </FormGroup>
                 </Col>
 
-                <Col md={8}>
+                <Col md={6}>
                     <FormGroup>
                         {columnFilter}
                     </FormGroup>

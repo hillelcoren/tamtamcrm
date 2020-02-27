@@ -33,9 +33,7 @@ use App\Traits\GeneratesCounter;
 class InvoiceTest extends TestCase
 {
 
-    use DatabaseTransactions,
-        WithFaker,
-        GeneratesCounter;
+    use DatabaseTransactions, WithFaker, GeneratesCounter;
 
     private $customer;
 
@@ -43,7 +41,7 @@ class InvoiceTest extends TestCase
 
     private $user;
 
-    public function setUp() : void
+    public function setUp(): void
     {
         parent::setUp();
         $this->beginDatabaseTransaction();
@@ -56,8 +54,7 @@ class InvoiceTest extends TestCase
     public function it_can_show_all_the_invoices()
     {
         factory(Invoice::class)->create();
-        $list = (new InvoiceFilter(new InvoiceRepository(new Invoice)))->filter(new SearchRequest(),
-            1);
+        $list = (new InvoiceFilter(new InvoiceRepository(new Invoice)))->filter(new SearchRequest(), 1);
         $this->assertNotEmpty($list);
         $this->assertInstanceOf(Invoice::class, $list[0]);
     }
@@ -90,8 +87,7 @@ class InvoiceTest extends TestCase
         $total = $this->faker->randomFloat();
         $user = factory(User::class)->create();
         $customer = factory(Customer::class)->create();
-        $factory = (new InvoiceFactory())->create($customer->id, $user->id, 1, $total);
-
+        $factory = (new InvoiceFactory())->create($user->id, 1, $customer, $total, $customer->getMergedSettings());
 
         $data = [
             'account_id' => 1,
@@ -118,8 +114,8 @@ class InvoiceTest extends TestCase
 
         $this->assertEquals(1, count($invoice->payments));
 
-        foreach($invoice->payments as $payment) {
-            $this->assertEquals(round($invoice->total,2), $payment->amount);
+        foreach ($invoice->payments as $payment) {
+            $this->assertEquals(round($invoice->total, 2), $payment->amount);
         }
     }
 
@@ -131,7 +127,8 @@ class InvoiceTest extends TestCase
 
         $total = $this->faker->randomFloat();
         $user = factory(User::class)->create();
-        $factory = (new InvoiceFactory())->create($customerId, $user->id, 1, $total);
+        $factory =
+            (new InvoiceFactory())->create($user->id, 1, $this->customer, $total, $this->customer->getMergedSettings());
 
 
         $data = [

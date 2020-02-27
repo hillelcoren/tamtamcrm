@@ -11,20 +11,19 @@ class EditLeadForm extends React.Component {
         this.state = {
             modal: false,
             id: this.props.lead.id,
-            customer_id: this.props.lead.customer_id,
-            first_name: this.props.lead.customer.first_name,
-            last_name: this.props.lead.customer.last_name,
-            email: this.props.lead.customer.email,
-            phone: this.props.lead.customer.phone,
-            address_1: this.props.lead.customer.billing ? this.props.lead.customer.billing.address_1 : '',
-            address_2: this.props.lead.customer.billing ? this.props.lead.customer.billing.address_2 : '',
-            job_title: this.props.lead.customer.job_title,
+            first_name: this.props.lead.first_name,
+            last_name: this.props.lead.last_name,
+            email: this.props.lead.email,
+            phone: this.props.lead.phone,
+            address_1: this.props.lead.address_1,
+            address_2: this.props.lead ? this.props.lead.address_2 : '',
+            job_title: this.props.lead.job_title,
             company_name: '',
-            zip: this.props.lead.customer.billing ? this.props.lead.customer.billing.zip : '',
-            city: this.props.lead.customer.billing ? this.props.lead.customer.billing.city : '',
+            zip: this.props.lead.zip,
+            city: this.props.lead.city,
             title: this.props.lead.title,
+            description: this.props.lead.description,
             valued_at: this.props.lead.valued_at,
-            contributors: this.props.lead.contributors,
             source_type: this.props.lead.source_type,
             values: [],
             loading: false,
@@ -42,10 +41,24 @@ class EditLeadForm extends React.Component {
         this.renderErrorFor = this.renderErrorFor.bind(this)
         this.buildSourceTypeOptions = this.buildSourceTypeOptions.bind(this)
         this.handleMultiSelect = this.handleMultiSelect.bind(this)
+        this.convertLead = this.convertLead.bind(this)
     }
 
     componentDidMount () {
         this.getSourceTypes()
+    }
+
+    convertLead () {
+        axios.get(`/api/lead/convert/${this.state.id}`)
+            .then(function (response) {
+                const arrTasks = [...this.props.allTasks]
+                const index = arrTasks.findIndex(task => task.id === this.props.task.id)
+                arrTasks.splice(index, 1)
+                this.props.action(arrTasks)
+            })
+            .catch(function (error) {
+                console.log(error)
+            })
     }
 
     hasErrorFor (field) {
@@ -316,7 +329,7 @@ class EditLeadForm extends React.Component {
                             <FormGroup>
                                 <Label for="postcode"> Postcode </Label>
                                 <Input className={this.hasErrorFor('zip') ? 'is-invalid' : ''}
-                                    value={this.state.postcode}
+                                    value={this.state.zip}
                                     type="text"
                                     id="zip"
                                     onChange={this.handleInputChanges.bind(this)}
@@ -365,6 +378,7 @@ class EditLeadForm extends React.Component {
                     <ModalFooter>
                         <Button color="success" onClick={this.handleClick.bind(this)}>Add</Button>
                         <Button color="secondary" onClick={this.toggle}>Close</Button>
+                        <Button color="success" onClick={this.convertLead}>Convert to Deal</Button>
 
                         {loading &&
                         <span className="fa fa-circle-o-notch fa-spin"/>

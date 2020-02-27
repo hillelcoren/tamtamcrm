@@ -1,10 +1,10 @@
 <?php
 /**
- * Invoice Ninja (https://invoiceninja.com)
+ * Tam Tam (https://tamtam.com)
  *
- * @link https://github.com/invoiceninja/invoiceninja source repository
+ * @link https://github.com/tamtam/tamtam source repository
  *
- * @copyright Copyright (c) 2020. Invoice Ninja LLC (https://invoiceninja.com)
+ * @copyright Copyright (c) 2020. Tam Tam LLC (https://tamtam.com)
  *
  * @license https://opensource.org/licenses/AAL
  */

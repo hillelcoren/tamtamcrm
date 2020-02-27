@@ -247,6 +247,73 @@ class InvoiceSettings extends Component {
         return formFields
     }
 
+    getCreditFields () {
+        const settings = this.state.settings
+
+        const formFields = [
+            [
+                {
+                    name: 'credit_terms',
+                    label: 'Credit Terms',
+                    type: 'textarea',
+                    placeholder: 'Credit Terms',
+                    value: settings.credit_terms,
+                    group: 1
+                },
+                {
+                    name: 'credit_footer',
+                    label: 'Credit Footer',
+                    type: 'textarea',
+                    placeholder: 'Credit Footer',
+                    value: settings.credit_footer,
+                    group: 1
+                },
+                {
+                    name: 'credit_number_pattern',
+                    label: 'Credit Number Pattern',
+                    type: 'text',
+                    placeholder: 'Credit Number Pattern',
+                    value: settings.credit_number_pattern,
+                    group: 1
+                },
+                {
+                    name: 'credit_number_counter',
+                    label: 'Credit Counter',
+                    type: 'text',
+                    placeholder: 'Credit Counter',
+                    value: settings.credit_number_counter
+                }
+                // {
+                //     name: 'credit_design_id',
+                //     label: 'Credit Design',
+                //     type: 'select',
+                //     value: settings.credit_design_id,
+                //     options: [
+                //         {
+                //             value: '1',
+                //             text: 'Clean'
+                //         },
+                //         {
+                //             value: '2',
+                //             text: 'Bold'
+                //         },
+                //         {
+                //             value: '3',
+                //             text: 'Modern'
+                //         },
+                //         {
+                //             value: '4',
+                //             text: 'Plain'
+                //         }
+                //     ],
+                //     group: 1
+                // }
+            ]
+        ]
+
+        return formFields
+    }
+
     getPaymentFields () {
         const settings = this.state.settings
 
@@ -297,6 +364,7 @@ class InvoiceSettings extends Component {
                             Invoices
                         </NavLink>
                     </NavItem>
+
                     <NavItem>
                         <NavLink
                             className={this.state.activeTab === '2' ? 'active' : ''}
@@ -306,6 +374,7 @@ class InvoiceSettings extends Component {
                             Quotes
                         </NavLink>
                     </NavItem>
+
                     <NavItem>
                         <NavLink
                             className={this.state.activeTab === '3' ? 'active' : ''}
@@ -313,6 +382,16 @@ class InvoiceSettings extends Component {
                                 this.toggle('3')
                             }}>
                             Payments
+                        </NavLink>
+                    </NavItem>
+
+                    <NavItem>
+                        <NavLink
+                            className={this.state.activeTab === '4' ? 'active' : ''}
+                            onClick={() => {
+                                this.toggle('4')
+                            }}>
+                            Credits
                         </NavLink>
                     </NavItem>
                 </Nav>
@@ -328,6 +407,7 @@ class InvoiceSettings extends Component {
                             </CardBody>
                         </Card>
                     </TabPane>
+
                     <TabPane tabId="2">
                         <Card>
                             <CardHeader>Quote Settings</CardHeader>
@@ -339,6 +419,7 @@ class InvoiceSettings extends Component {
                             </CardBody>
                         </Card>
                     </TabPane>
+
                     <TabPane tabId="3">
                         <Card>
                             <CardHeader>Payment Settings</CardHeader>
@@ -346,6 +427,18 @@ class InvoiceSettings extends Component {
                                 <FormBuilder
                                     handleChange={this.handleSettingsChange}
                                     formFieldsRows={this.getPaymentFields()}
+                                />
+                            </CardBody>
+                        </Card>
+                    </TabPane>
+
+                    <TabPane tabId="4">
+                        <Card>
+                            <CardHeader>Credit Settings</CardHeader>
+                            <CardBody>
+                                <FormBuilder
+                                    handleChange={this.handleSettingsChange}
+                                    formFieldsRows={this.getCreditFields()}
                                 />
                             </CardBody>
                         </Card>

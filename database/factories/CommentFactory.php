@@ -22,6 +22,7 @@ $factory->define(Comment::class, function (Faker $faker) {
     $task = factory(Task::class)->create();
 
     return [
+        'account_id' => 1,
         'parent_id' => 0,
         'is_active' => 1,
         'user_id' => $user->id,

@@ -2,42 +2,29 @@
 
 namespace App\Http\Controllers;
 
-use App\Account;
+use App\Customer;
 use App\Factory\CloneInvoiceFactory;
 use App\Jobs\Invoice\ZipInvoices;
 use App\Factory\CloneInvoiceToQuoteFactory;
 use App\Factory\NotificationFactory;
-use App\Jobs\Invoice\CreateInvoicePdf;
 use App\Jobs\Order\InvoiceOrders;
 use App\Jobs\RecurringInvoice\SaveRecurringInvoice;
+use App\Notification;
 use App\Quote;
-use App\RecurringInvoice;
-use App\Repositories\AccountRepository;
 use App\Repositories\NotificationRepository;
 use App\Repositories\QuoteRepository;
-use App\Repositories\UserRepository;
-use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
 use App\Repositories\Interfaces\InvoiceRepositoryInterface;
-use App\Repositories\Interfaces\InvoiceLineRepositoryInterface;
 use App\Transformations\InvoiceTransformable;
 use App\Invoice;
 use App\Requests\SearchRequest;
 use App\Requests\Invoice\CreateInvoiceRequest;
-use Illuminate\Support\Facades\File;
-use Illuminate\Support\Facades\Mail;
 use App\Jobs\Invoice\MarkInvoicePaid;
 use App\Factory\InvoiceFactory;
-use App\Factory\RecurringInvoiceFactory;
-use App\Repositories\RecurringInvoiceRepository;
 use App\Jobs\Invoice\StoreInvoice;
 use App\Events\Invoice\InvoiceWasUpdated;
-use App\Events\Invoice\InvoiceWasCreated;
-use App\Notifications\InvoiceCreated;
 use App\Filters\InvoiceFilter;
-use Illuminate\Support\Facades\Notification;
-use App\Jobs\Invoice\EmailInvoice;
 use App\Repositories\TaskRepository;
 use App\Task;
 use App\Traits\CheckEntityStatus;
@@ -84,14 +71,16 @@ class InvoiceController extends Controller
      */
     public function store(CreateInvoiceRequest $request)
     {
+        $customer = Customer::find($request->input('customer_id'));
+
         $invoice = $this->invoice_repo->save($request->all(),
-            InvoiceFactory::create($request->customer_id, auth()->user()->id,
-                auth()->user()->account_user()->account_id, $request->total));
+            InvoiceFactory::create(auth()->user()->id, auth()->user()->account_user()->account_id, $customer,
+                $request->total, $customer->getMergedSettings()));
         $invoice = StoreInvoice::dispatchNow($invoice, $request->all(),
             $invoice->account); //todo potentially this may return mixed ie PDF/$invoice... need to revisit when we implement UI
         InvoiceOrders::dispatchNow($invoice);
         $notification = NotificationFactory::create(auth()->user()->account_user()->account_id, auth()->user()->id);
-        (new NotificationRepository(new \App\Notification))->save($notification, [
+        (new NotificationRepository(new Notification))->save($notification, [
             'data' => json_encode(['id' => $invoice->id, 'message' => 'A new invoice was created']),
             'type' => 'App\Notifications\InvoiceCreated'
         ]);

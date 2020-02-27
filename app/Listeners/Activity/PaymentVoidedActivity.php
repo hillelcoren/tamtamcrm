@@ -1,34 +1,22 @@
 <?php
-/**
- * Invoice Ninja (https://invoiceninja.com)
- *
- * @link https://github.com/invoiceninja/invoiceninja source repository
- *
- * @copyright Copyright (c) 2020. Invoice Ninja LLC (https://invoiceninja.com)
- *
- * @license https://opensource.org/licenses/AAL
- */
 
 namespace App\Listeners\Activity;
 
-use App\Models\Activity;
-use App\Repositories\ActivityRepository;
+use App\Repositories\NotificationRepository;
 use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Queue\InteractsWithQueue;
-use stdClass;
 
 class PaymentVoidedActivity implements ShouldQueue
 {
-    protected $activity_repo;
+    protected $notification_repo;
 
     /**
      * Create the event listener.
      *
      * @return void
      */
-    public function __construct(ActivityRepository $activity_repo)
+    public function __construct(NotificationRepository $notification_repo)
     {
-        $this->activity_repo = $activity_repo;
+        $this->notification_repo = $notification_repo;
     }
 
     /**
@@ -39,14 +27,16 @@ class PaymentVoidedActivity implements ShouldQueue
      */
     public function handle($event)
     {
-        $fields = new stdClass;
+        $fields = [];
+        $fields['data']['id'] = $event->payment->id;
+        $fields['data']['message'] = 'A payment was voided';
+        $fields['notifiable_id'] = $event->payment->user_id;
+        $fields['account_id'] = $event->payment->account_id;
+        $fields['notifiable_type'] = get_class($event->payment);
+        $fields['type'] = get_class($this);
+        $fields['data'] = json_encode($fields['data']);
+        $this->notification_repo->create($fields);
 
-        $fields->client_id = $event->payment->id;
-        $fields->user_id = $event->payment->user_id;
-        $fields->company_id = $event->payment->company_id;
-        $fields->activity_type_id = Activity::VOIDED_PAYMENT;
-        $fields->payment_id = $event->payment->id;
-
-        $this->activity_repo->save($fields, $event->client);
+        $this->notification_repo->create($fields);
     }
 }

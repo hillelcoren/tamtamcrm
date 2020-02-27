@@ -5,6 +5,9 @@ namespace App\Traits;
 use App\Address;
 use App\Utils\Number;
 use App\Country;
+use App\Credit;
+use App\Invoice;
+use App\Quote;
 
 /**
  * Class MakesInvoiceValues
@@ -249,12 +252,26 @@ trait MakesInvoiceValues
         $data['$number'] = $this->number ?: '&nbsp;';
         $data['$invoice.number'] = &$data['$number'];
         $data['$invoice_number'] = &$data['$number'];
+        $data['$entity_number'] = &$data['$number'];
         $data['$po_number'] = $this->po_number ?: '&nbsp;';
         $data['$invoice.po_number'] = &$data['$po_number'];
         $data['$line_taxes'] = $this->makeLineTaxes() ?: '&nbsp;';
         $data['$invoice.line_taxes'] = &$data['$line_taxes'];
         $data['$total_taxes'] = $this->makeTotalTaxes() ?: '&nbsp;';
         $data['$invoice.total_taxes'] = &$data['$total_taxes'];
+
+        if ($this instanceof Invoice) {
+            $data['$entity_label'] = trans('texts.invoice');
+        }
+
+        if ($this instanceof Quote) {
+            $data['$entity_label'] = trans('texts.quote');
+        }
+
+        if ($this instanceof Credit) {
+            $data['$entity_label'] = trans('texts.credit');
+        }
+
         $data['$discount'] = Number::formatMoney($this->calc()->getTotalDiscount(), $this->customer) ?: '&nbsp;';
         $data['$invoice.discount'] = &$data['$discount'];
         $data['$subtotal'] = Number::formatMoney($this->calc()->getSubTotal(), $this->customer) ?: '&nbsp;';

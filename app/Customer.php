@@ -4,6 +4,7 @@ namespace App;
 
 use App\DataMapper\CompanySettings;
 use App\DataMapper\CustomerSettings;
+use App\Traits\GeneratesCounter;
 use Exception;
 use Illuminate\Database\Eloquent\Model;
 use App\Message;
@@ -22,7 +23,7 @@ use Illuminate\Contracts\Translation\HasLocalePreference;
 class Customer extends Model implements HasLocalePreference
 {
 
-    use CustomerSettingsSaver, SoftDeletes, PresentableTrait;
+    use CustomerSettingsSaver, SoftDeletes, PresentableTrait, GeneratesCounter;
 
     protected $presenter = 'App\Presenters\CustomerPresenter';
 
@@ -53,6 +54,11 @@ class Customer extends Model implements HasLocalePreference
         'custom_value3',
         'custom_value4',
         'group_settings_id',
+        'public_notes',
+        'private_notes',
+        'website',
+        'size_id',
+        'industry_id'
     ];
 
     protected $casts = [
@@ -158,6 +164,17 @@ class Customer extends Model implements HasLocalePreference
         return $this->belongsTo(Currency::class, 'currency_id');
     }
 
+    public function date_format()
+    {
+        return "Y/m/d";
+
+//        return $date_formats->filter(function ($item) {
+//            return $item->id == $this->getSetting('date_format_id');
+//        })->first()->format;
+
+        //return DateFormat::find($this->getSetting('date_format_id'))->format;
+    }
+
     public function contacts()
     {
         return $this->hasMany(ClientContact::class)->orderBy('is_primary', 'desc');
@@ -233,7 +250,6 @@ class Customer extends Model implements HasLocalePreference
         /*Group Settings*/
         if ($this->group_settings && (property_exists($this->group_settings->settings, $setting) !== false) &&
             (isset($this->group_settings->settings->{$setting}) !== false)) {
-            echo $setting . ' b';
             return $this->group_settings->settings->{$setting};
         }
         /*Company Settings*/

@@ -6,6 +6,8 @@ use App\Factory\CommentFactory;
 use App\Requests\CommentRequest;
 use App\Repositories\Interfaces\CommentRepositoryInterface;
 use App\Repositories\Interfaces\TaskRepositoryInterface;
+use Exception;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Notification;
 use App\Notifications\CommentCreated;
@@ -83,8 +85,8 @@ class CommentController extends Controller
 
     /**
      * @param int $id
-     * @return \Illuminate\Http\JsonResponse
-     * @throws \Exception
+     * @return JsonResponse
+     * @throws Exception
      */
     public function destroy(int $id)
     {
@@ -98,8 +100,8 @@ class CommentController extends Controller
     /**
      * @param Request $request
      * @param $id
-     * @return \Illuminate\Http\JsonResponse
-     * @throws \Exception
+     * @return JsonResponse
+     * @throws Exception
      */
     public function update(Request $request, $id)
     {

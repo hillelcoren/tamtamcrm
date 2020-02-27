@@ -76,10 +76,10 @@ class CreditController extends Controller
      */
     public function store(CreateCreditRequest $request)
     {
-
+        $customer = Customer::find($request->input('customer_id'));
         $credit = $this->credit_repo->save($request->all(),
-            CreditFactory::create($request->customer_id, auth()->user()->account_user()->account_id, auth()->user()->id,
-                $request->total));
+            CreditFactory::create(auth()->user()->account_user()->account_id, auth()->user()->id, $request->total,
+                $customer, $customer->getMergedSettings()));
         return response()->json($this->transformCredit($credit));
     }
 

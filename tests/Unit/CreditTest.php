@@ -28,9 +28,7 @@ use App\Traits\GeneratesCounter;
 class CreditTest extends TestCase
 {
 
-    use DatabaseTransactions,
-        WithFaker,
-        GeneratesCounter;
+    use DatabaseTransactions, WithFaker, GeneratesCounter;
 
     private $customer;
 
@@ -51,8 +49,7 @@ class CreditTest extends TestCase
     public function it_can_show_all_the_credits()
     {
         factory(Credit::class)->create();
-        $list = (new CreditFilter(new CreditRepository(new Credit)))->filter(new SearchRequest(),
-            1);
+        $list = (new CreditFilter(new CreditRepository(new Credit)))->filter(new SearchRequest(), 1);
         $this->assertNotEmpty($list);
         $this->assertInstanceOf(Credit::class, $list[0]);
     }
@@ -87,7 +84,8 @@ class CreditTest extends TestCase
         $customerId = $this->customer->id;
         $total = $this->faker->randomFloat();
         $user = factory(User::class)->create();
-        $factory = (new CreditFactory)->create($customerId, 1, $user->id, $total);
+        $factory =
+            (new CreditFactory)->create(1, $user->id, $total, $this->customer, $this->customer->getMergedSettings());
 
 
         $data = [

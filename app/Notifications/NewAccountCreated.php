@@ -45,7 +45,7 @@ class NewAccountCreated extends Notification implements ShouldQueue
      * Get the mail representation of the notification.
      *
      * @param mixed $notifiable
-     * @return \Illuminate\Notifications\Messages\MailMessage
+     * @return MailMessage
      */
     public function toMail($notifiable)
     {
@@ -60,7 +60,8 @@ class NewAccountCreated extends Notification implements ShouldQueue
             'message' => trans('texts.new_signup_text', ['user' => $user_name, 'email' => $email, 'ip' => $ip]),
             'url' => config('taskmanager.web_url'),
             'button' => trans('texts.account_login'),
-            'signature' => '',
+            'signature' => $this->account->settings->email_signature,
+            'logo' => $this->account->present()->logo(),
         ];
 
 
