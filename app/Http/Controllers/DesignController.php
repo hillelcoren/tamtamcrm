@@ -9,6 +9,7 @@ use App\Requests\Design\StoreDesignRequest;
 use App\Requests\Design\UpdateDesignRequest;
 use App\Requests\SearchRequest;
 use App\Traits\CheckEntityStatus;
+use App\Transformations\DesignTransformable;
 
 /**
  * Class DesignController
@@ -18,6 +19,7 @@ use App\Traits\CheckEntityStatus;
 class DesignController extends Controller
 {
     use CheckEntityStatus;
+    use DesignTransformable;
 
     protected $design_repo;
 
@@ -79,7 +81,7 @@ class DesignController extends Controller
         $design->fill($request->all());
         $design->save();
 
-        return response()->json($design->fresh());
+        return response()->json($this->transformDesign($design->fresh()));
     }
 
     /**
@@ -104,7 +106,7 @@ class DesignController extends Controller
         $design->fill($request->all());
         $design->save();
 
-        return response()->json($design->fresh());
+        return response()->json($this->transformDesign($design->fresh()));
     }
 
 

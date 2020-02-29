@@ -16,7 +16,7 @@ import {
     Dropdown,
     DropdownToggle,
     DropdownMenu,
-    DropdownItem, TabPane
+    DropdownItem
 } from 'reactstrap'
 import axios from 'axios'
 import PropTypes from 'prop-types'
@@ -46,7 +46,8 @@ class EditUser extends React.Component {
             custom_value1: '',
             custom_value2: '',
             custom_value3: '',
-            custom_value4: ''
+            custom_value4: '',
+            is_admin: false
         }
 
         this.defaultValues = {
@@ -73,6 +74,7 @@ class EditUser extends React.Component {
         this.handleInput = this.handleInput.bind(this)
         this.toggleMenu = this.toggleMenu.bind(this)
         this.changeStatus = this.changeStatus.bind(this)
+        this.handleCheck = this.handleCheck.bind(this)
     }
 
     componentDidMount () {
@@ -91,7 +93,8 @@ class EditUser extends React.Component {
                 this.setState({
                     roles: r.data.roles,
                     user: r.data.user,
-                    selectedRoles: r.data.selectedIds
+                    selectedRoles: r.data.selectedIds,
+                    selectedAccounts: r.data.user.account_users
                 })
             })
             .catch((e) => {
@@ -117,6 +120,30 @@ class EditUser extends React.Component {
             custom_value2: this.state.custom_value2,
             custom_value3: this.state.custom_value3,
             custom_value4: this.state.custom_value4
+        }
+    }
+
+    handleCheck (e) {
+        const account_id = parseInt(e.target.value)
+        const checked = e.target.checked
+        const name = e.target.name
+
+        const index = this.state.selectedAccounts.findIndex(selectedAccount => selectedAccount.account_id === account_id)
+
+        if (index > -1) {
+            const selectedAccounts = [...this.state.selectedAccounts]
+
+            if (name === 'is_checked' && checked === false) {
+                selectedAccounts.splice(index, 1)
+            } else {
+                selectedAccounts[index][name] = checked
+            }
+
+            this.setState({ selectedAccounts }, () => console.log('accounts', this.state.selectedAccounts))
+        } else {
+            this.setState(prevState => ({
+                selectedAccounts: [...prevState.selectedAccounts, { account_id: account_id, [name]: checked }]
+            }), () => console.log('accounts', this.state.selectedAccounts))
         }
     }
 
@@ -256,6 +283,32 @@ class EditUser extends React.Component {
             formFieldsRows={customFields}
         /> : null
 
+        const accountList = this.props.accounts.map((account) => {
+            const assignedAccounts = this.state.selectedAccounts && this.state.selectedAccounts.length ? this.state.selectedAccounts.filter(selectedAccount => selectedAccount.account_id === account.id) : []
+
+            const checked = assignedAccounts.length > 0
+            const is_admin = assignedAccounts.length > 0 && assignedAccounts[0].is_admin === true
+
+            return (
+                <React.Fragment>
+                    <div>
+                        <FormGroup check inline>
+                            <Label check>
+                                <Input name="is_checked" checked={checked} key={account.id} value={account.id} onChange={this.handleCheck} type="checkbox"/>
+                                {account.settings.name}
+                            </Label>
+                        </FormGroup>
+                        <FormGroup check inline>
+                            <Label check>
+                                <Input name="is_admin" checked={is_admin} value={account.id} onChange={this.handleCheck} type="checkbox"/>
+                                Administrator
+                            </Label>
+                        </FormGroup>
+                    </div>
+                </React.Fragment>
+            )
+        })
+
         const dropdownMenu = <Dropdown isOpen={this.state.dropdownOpen} toggle={this.toggleMenu}>
             <DropdownToggle caret>
                 Actions
@@ -383,7 +436,7 @@ class EditUser extends React.Component {
                         {customForm}
 
                         <Card>
-                            <CardHeader>Job Details</CardHeader>
+                            <CardHeader>Permissions</CardHeader>
                             <CardBody>
 
                                 <FormGroup>
@@ -416,10 +469,11 @@ class EditUser extends React.Component {
                                             handleInputChanges={this.handleMultiSelect}
                                         />
                                     </Col>
+                                </Row>
 
-                                      <Col>
-                                        <AccountDropdown handleInputChanges={this.handleAccountMultiSelect}
-                                            accounts={this.props.accounts}/>
+                                <Row form>
+                                    <Col md={6}>
+                                        {accountList}
                                     </Col>
                                 </Row>
                             </CardBody>

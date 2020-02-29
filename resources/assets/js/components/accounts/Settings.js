@@ -247,6 +247,23 @@ class Settings extends Component {
                             text: 'Custom'
                         }
                     ]
+                },
+                {
+                    name: 'inclusive_taxes',
+                    label: 'Inclusive Taxes',
+                    type: 'select',
+                    value: settings.inclusive_taxes,
+                    group: 3,
+                    options: [
+                        {
+                            value: true,
+                            text: 'Yes'
+                        },
+                        {
+                            value: false,
+                            text: 'No'
+                        }
+                    ]
                 }
             ]
         ]

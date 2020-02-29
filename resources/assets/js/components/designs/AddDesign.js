@@ -54,7 +54,7 @@ class AddDesign extends React.Component {
         })
             .then((response) => {
                 const newUser = response.data
-                this.props.groups.push(newUser)
+                this.props.designs.push(newUser)
                 this.props.action(this.props.designs)
                 localStorage.removeItem('designForm')
                 this.setState({

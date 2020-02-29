@@ -45,31 +45,25 @@ class UpdateUserRequest extends BaseFormRequest
     protected function prepareForValidation()
     {
         $input = $this->all();
-
-        $companyUsers = [];
-
+        
         if (isset($input['company_user'])) {
 
             foreach($input['company_user'] as $key => $company_user) {
 
-                $companyUsers[$key]['id'] = $company_user;
-
                 if (!isset($company_user['is_admin'])) {
-                    $companyUsers[$key]['is_admin'] = false;
+                    $input['company_user'][$key]['is_admin'] = false;
                 }
 
                 if (!isset($company_user['permissions'])) {
-                    $companyUsers[$key]['permissions'] = '';
+                    $input['company_user'][$key]['permissions'] = '';
                 }
 
                 if (!isset($company_user['settings'])) {
                     //$input['company_user']['settings'] = DefaultSettings::userSettings();
-                    $companyUsers[$key]['settings'] = null;
+                    $input['company_user'][$key]['settings'] = null;
                 }
             }
         }
-
-        $input['company_user'] = $companyUsers;
 
         $this->replace($input);
     }

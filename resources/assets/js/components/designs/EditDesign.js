@@ -18,6 +18,7 @@ class EditDesign extends React.Component {
 
         this.initialState = this.state
         this.toggle = this.toggle.bind(this)
+        this.handleClick = this.handleClick.bind(this)
         this.hasErrorFor = this.hasErrorFor.bind(this)
         this.renderErrorFor = this.renderErrorFor.bind(this)
     }
@@ -51,7 +52,7 @@ class EditDesign extends React.Component {
             .then((response) => {
                 this.toggle()
                 const index = this.props.designs.findIndex(design => design.id === this.state.id)
-                this.props.designs[index].name = this.state.name
+                this.props.designs[index] = response.data
                 this.props.action(this.props.designs)
             })
             .catch((error) => {

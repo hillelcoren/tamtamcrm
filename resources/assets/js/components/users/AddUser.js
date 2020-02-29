@@ -47,7 +47,8 @@ class AddUser extends React.Component {
             custom_value1: '',
             custom_value2: '',
             custom_value3: '',
-            custom_value4: ''
+            custom_value4: '',
+            is_admin: false
         }
         this.toggle = this.toggle.bind(this)
         this.hasErrorFor = this.hasErrorFor.bind(this)
@@ -57,6 +58,7 @@ class AddUser extends React.Component {
         this.setDate = this.setDate.bind(this)
         this.buildGenderDropdown = this.buildGenderDropdown.bind(this)
         this.handleInput = this.handleInput.bind(this)
+        this.handleCheck = this.handleCheck.bind(this)
 
         this.defaultValues = {
             year: 'Select Year',
@@ -76,6 +78,30 @@ class AddUser extends React.Component {
         if (localStorage.hasOwnProperty('userForm')) {
             const storedValues = JSON.parse(localStorage.getItem('userForm'))
             this.setState({ ...storedValues }, () => console.log('new state', this.state))
+        }
+    }
+
+    handleCheck (e) {
+        const account_id = parseInt(e.target.value)
+        const checked = e.target.checked
+        const name = e.target.name
+
+        const index = this.state.selectedAccounts.findIndex(selectedAccount => selectedAccount.account_id === account_id)
+
+        if (index > -1) {
+            const selectedAccounts = [...this.state.selectedAccounts]
+
+            if (name === 'is_checked' && checked === false) {
+                selectedAccounts.splice(index, 1)
+            } else {
+                selectedAccounts[index][name] = checked
+            }
+
+            this.setState({ selectedAccounts }, () => console.log('accounts', this.state.selectedAccounts))
+        } else {
+            this.setState(prevState => ({
+                selectedAccounts: [...prevState.selectedAccounts, { account_id: account_id, [name]: checked }]
+            }), () => console.log('accounts', this.state.selectedAccounts))
         }
     }
 
@@ -235,6 +261,34 @@ class AddUser extends React.Component {
             formFieldsRows={customFields}
         /> : null
 
+        const accountList = this.props.accounts.map((account) => {
+            const assignedAccounts = this.state.selectedAccounts && this.state.selectedAccounts.length ? this.state.selectedAccounts.filter(selectedAccount => selectedAccount.account_id === account.id) : []
+
+            const checked = assignedAccounts.length > 0
+            const is_admin = assignedAccounts.length > 0 && assignedAccounts[0].is_admin === true
+
+            return (
+                <React.Fragment>
+                    <div>
+                        <FormGroup check inline>
+                            <Label check>
+                                <Input name="is_checked" checked={checked} key={account.id} value={account.id}
+                                    onChange={this.handleCheck} type="checkbox"/>
+                                {account.settings.name}
+                            </Label>
+                        </FormGroup>
+                        <FormGroup check inline>
+                            <Label check>
+                                <Input name="is_admin" checked={is_admin} value={account.id} onChange={this.handleCheck}
+                                    type="checkbox"/>
+                                Administrator
+                            </Label>
+                        </FormGroup>
+                    </div>
+                </React.Fragment>
+            )
+        })
+
         return (
             <React.Fragment>
                 <AddButtons toggle={this.toggle}/>
@@ -360,7 +414,7 @@ class AddUser extends React.Component {
                         {customForm}
 
                         <Card>
-                            <CardHeader>Job Details</CardHeader>
+                            <CardHeader>Permissions</CardHeader>
                             <CardBody>
 
                                 <FormGroup>
@@ -394,10 +448,21 @@ class AddUser extends React.Component {
                                             role={this.state.selectedRoles}
                                         />
                                     </Col>
+                                </Row>
+
+                                <Row form>
+                                    <Col md={6}>
+                                        {accountList}
+                                    </Col>
 
                                     <Col>
-                                        <AccountDropdown handleInputChanges={this.handleAccountMultiSelect}
-                                            accounts={this.props.accounts}/>
+                                        <FormGroup check>
+                                            <Label check>
+                                                <Input value={this.state.is_admin} onChange={this.handleCheck}
+                                                    type="checkbox"/>
+                                                Administrator
+                                            </Label>
+                                        </FormGroup>
                                     </Col>
                                 </Row>
                             </CardBody>

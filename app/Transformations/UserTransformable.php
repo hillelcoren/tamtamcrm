@@ -2,6 +2,7 @@
 
 namespace App\Transformations;
 
+use App\AccountUser;
 use App\User;
 use App\Repositories\DepartmentRepository;
 use App\Department;
@@ -27,6 +28,7 @@ trait UserTransformable
         $prop->phone_number = $user->phone_number;
         $prop->password = $user->password;
         $prop->job_description = $user->job_description;
+        $prop->account_users = $this->transformUserAccounts($user->account_users);
         $prop->gender = $user->gender;
         $prop->dob = $user->dob;
         $prop->department = 0;
@@ -44,6 +46,17 @@ trait UserTransformable
         }
 
         return $prop;
+    }
+
+    private function transformUserAccounts($account_users)
+    {
+        if (empty($account_users)) {
+            return [];
+        }
+
+        return $account_users->map(function (AccountUser $account_user) {
+            return (new AccountUserTransformable())->transform($account_user);
+        })->all();
     }
 
 }

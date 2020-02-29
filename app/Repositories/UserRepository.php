@@ -153,17 +153,29 @@ $user->fill($data);
 $user->save();
 
 if (isset($data['company_user'])) {
+    $company_users = collect($data['company_user']);
+} else {
+    $company_users = collect();
+}
+
+$user->account_users->pluck('account_id')->diff($company_users->pluck('account_id'))->each(function ($co_user) use (
+    $user
+) {
+    AccountUser::whereAccountId($co_user)->whereUserId($user->id)->first()->forceDelete();
+});
+
+if (isset($data['company_user'])) {
     foreach ($data['company_user'] as $company_user) {
         if (auth()->user()->account_user()->count() > 0) {
-            $account = Account::find($company_user['id']);
+            $account = Account::find($company_user['account_id']);
 
             $cu = AccountUser::whereUserId($user->id)->whereAccountId($account->id)->first();
 
             /*No company user exists - attach the user*/
             if (!$cu) {
-                $user->accounts()->attach($account->id, $data['company_user']);
+                $user->accounts()->attach($account->id, $company_user);
             } else {
-                $cu->fill($data['company_user']);
+                $cu->fill($company_user);
                 $cu->save();
             }
         }

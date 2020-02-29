@@ -7,7 +7,6 @@ use Illuminate\Database\Eloquent\Relations\Pivot;
 class AccountUser extends Pivot
 {
     //   protected $guarded = ['id'];
-    protected $dateFormat = 'Y-m-d H:i:s.u';
     /**
      * The attributes that should be cast to native types.
      *

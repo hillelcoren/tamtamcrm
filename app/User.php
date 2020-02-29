@@ -170,10 +170,10 @@ class User extends Authenticatable implements JWTSubject
         where company_tokens.user_id = 9874 and `company_tokens`.`token` = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOlwvXC90YXNrbWFuMi5kZXZlbG9wXC9hcGlcL2xvZ2luIiwiaWF0IjoxNTgwNTc2ODI5LCJleHAiOjE1ODA1ODA0MjksIm5iZiI6MTU4MDU3NjgyOSwianRpIjoicjVxN3pudXdISjFGVWo1dCIsInN1YiI6OTg3NCwicHJ2IjoiODdlMGFmMWVmOWZkMTU4MTJmZGVjOT'
         */
 
-        return Account::join('company_tokens', 'company_tokens.account_id', '=', 'accounts.id')
+        return AccountUser::join('company_tokens', 'company_tokens.account_id', '=', 'account_user.account_id')
                       ->where('company_tokens.user_id', '=', $this->id)
                       ->where('company_tokens.token', '=', $this->auth_token)
-                      ->select('accounts.*', 'accounts.id AS account_id')->first();
+                      ->select('account_user.*')->first();
     }
 
     /**

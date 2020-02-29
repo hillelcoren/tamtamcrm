@@ -49,6 +49,7 @@ export default class UserList extends Component {
                 searchText: ''
             },
             ignoredColumns: [
+                'account_users',
                 'department',
                 'phone_number',
                 'job_description',
@@ -86,7 +87,7 @@ export default class UserList extends Component {
     }
 
     updateIgnoredColumns (columns) {
-        this.setState({ ignoredColumns: columns.concat('customer') }, function () {
+        this.setState({ ignoredColumns: columns.concat('customer', 'account_users') }, function () {
             console.log('ignored columns', this.state.ignoredColumns)
         })
     }
