@@ -30,6 +30,7 @@ export default class UserList extends Component {
             users: [],
             cachedData: [],
             departments: [],
+            accounts: [],
             custom_fields: [],
             bulk: [],
             dropdownButtonActions: ['download'],
@@ -74,10 +75,13 @@ export default class UserList extends Component {
         this.toggleViewedEntity = this.toggleViewedEntity.bind(this)
         this.onChangeBulk = this.onChangeBulk.bind(this)
         this.saveBulk = this.saveBulk.bind(this)
+        this.getAccounts = this.getAccounts.bind(this)
+        this.getDepartments = this.getDepartments.bind(this)
     }
 
     componentDidMount () {
         this.getDepartments()
+        this.getAccounts()
         this.getCustomFields()
     }
 
@@ -259,6 +263,20 @@ export default class UserList extends Component {
             })
     }
 
+    getAccounts () {
+        axios.get('/api/accounts')
+            .then((r) => {
+                console.log('accounts', r.data)
+                this.setState({
+                    accounts: r.data
+                })
+            })
+            .catch((e) => {
+                alert(e)
+                console.error(e)
+            })
+    }
+
     getDepartments () {
         axios.get('/api/departments')
             .then((r) => {
@@ -292,7 +310,7 @@ export default class UserList extends Component {
                 const deleteButton = !user.deleted_at
                     ? <DeleteModal archive={false} deleteFunction={this.deleteUser} id={user.id}/> : null
                 const editButton = !user.deleted_at
-                    ? <EditUser departments={departments} user_id={user.id}
+                    ? <EditUser accounts={this.state.accounts} departments={departments} user_id={user.id}
                         custom_fields={custom_fields} users={users}
                         action={this.addUserToState}/> : null
 
@@ -343,9 +361,10 @@ export default class UserList extends Component {
         const { status, role_id, department_id, searchText, start_date, end_date } = this.state.filters
         const fetchUrl = `/api/users?search_term=${searchText}&status=${status}&role_id=${role_id}&department_id=${department_id}&start_date=${start_date}&end_date=${end_date}`
         const filters = this.getFilters()
-        const addButton = departments.length ? <AddUser custom_fields={custom_fields} departments={departments}
-            users={users}
-            action={this.addUserToState}/> : null
+        const addButton = departments.length
+            ? <AddUser accounts={this.state.accounts} custom_fields={custom_fields} departments={departments}
+                users={users}
+                action={this.addUserToState}/> : null
 
         return (
             <div className="data-table">

@@ -5,7 +5,7 @@ namespace App\Transformations;
 use App\Payment;
 use App\Paymentable;
 
-trait PaymentableTransformer
+class PaymentableTransformer
 {
     public function transform(Paymentable $paymentable)
     {
@@ -17,7 +17,7 @@ trait PaymentableTransformer
         $prop = new Paymentable;
 
         $prop->id = $paymentable->id;
-        $prop->{$entityKey} = $paymentable->paymentable_id;
+        $prop->{$entity_key} = $paymentable->paymentable_id;
         $prop->amount = $paymentable->amount;
         $prop->refunded = (float)$paymentable->refunded;
 

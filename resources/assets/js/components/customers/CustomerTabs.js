@@ -59,7 +59,7 @@ export default function CustomerTabs (props) {
     const [contacts, setContactValues] = useState({
         contacts: props.customer && props.customer.contacts ? props.customer.contacts : []
     })
-    
+
     const [customer, setCustomerValues] = useState({
         first_name: props.customer ? props.customer.name.split(' ').slice(0, -1).join(' ') : '',
         last_name: props.customer ? props.customer.name.split(' ').slice(-1).join(' ') : '',
@@ -116,14 +116,14 @@ export default function CustomerTabs (props) {
     }
 
     const updateForm = () => {
-
         const addresses = []
         const innerObj = {}
         innerObj.billing = billing
         innerObj.shipping = shipping
         addresses.push(innerObj)
 
-        console.log('contacts 2', contacts)
+        const cleanedContacts = contacts.contacts && contacts.contacts.length ? cleanContacts(contacts.contacts) : []
+        console.log('contacts 2', cleanedContacts)
 
         const formdata = {
             first_name: customer.first_name,
@@ -152,8 +152,6 @@ export default function CustomerTabs (props) {
             settings: settings
         }
 
-        console.log('update', formdata)
-
         axios.put(`/api/customers/${props.customer.id}`, formdata
         ).then(response => {
             if (props.customers && props.customers.length) {
@@ -174,6 +172,9 @@ export default function CustomerTabs (props) {
         innerObj.billing = billing
         innerObj.shipping = shipping
         addresses.push(innerObj)
+
+        const cleanedContacts = contacts.contacts && contacts.contacts.length ? cleanContacts(contacts.contacts) : []
+        console.log('contacts 2', cleanedContacts)
 
         const formdata = {
             first_name: customer.first_name,
@@ -216,14 +217,8 @@ export default function CustomerTabs (props) {
             })
     }
 
-    let button = null
-
-    if(contacts && contacts.contacts) {
-        const method = props.type === 'add' ? submitForm : updateForm
-        button = <Button color="primary" onClick={method}>Send </Button>
-    }
-
-
+    const method = props.type === 'add' ? submitForm : updateForm
+    const button = <Button color="primary" onClick={method}>Send </Button>
 
     return (
         <React.Fragment>

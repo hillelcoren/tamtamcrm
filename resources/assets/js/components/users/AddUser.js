@@ -20,6 +20,7 @@ import DepartmentDropdown from '../common/DepartmentDropdown'
 import RoleDropdown from '../common/RoleDropdown'
 import FormBuilder from '../accounts/FormBuilder'
 import AddButtons from '../common/AddButtons'
+import AccountDropdown from '../common/AccountDropdown'
 
 class AddUser extends React.Component {
     constructor (props) {
@@ -40,6 +41,7 @@ class AddUser extends React.Component {
             loading: false,
             errors: [],
             roles: [],
+            selectedAccounts: [],
             selectedRoles: [],
             message: '',
             custom_value1: '',
@@ -51,6 +53,7 @@ class AddUser extends React.Component {
         this.hasErrorFor = this.hasErrorFor.bind(this)
         this.renderErrorFor = this.renderErrorFor.bind(this)
         this.handleMultiSelect = this.handleMultiSelect.bind(this)
+        this.handleAccountMultiSelect = this.handleAccountMultiSelect.bind(this)
         this.setDate = this.setDate.bind(this)
         this.buildGenderDropdown = this.buildGenderDropdown.bind(this)
         this.handleInput = this.handleInput.bind(this)
@@ -93,7 +96,7 @@ class AddUser extends React.Component {
     handleClick () {
         axios.post('/api/users', {
             username: this.state.username,
-            company_user: true,
+            company_user: this.state.selectedAccounts,
             department: this.state.department,
             email: this.state.email,
             first_name: this.state.first_name,
@@ -191,6 +194,10 @@ class AddUser extends React.Component {
 
     handleMultiSelect (e) {
         this.setState({ selectedRoles: Array.from(e.target.selectedOptions, (item) => item.value) }, () => localStorage.setItem('userForm', JSON.stringify(this.state)))
+    }
+
+    handleAccountMultiSelect (e) {
+        this.setState({ selectedAccounts: Array.from(e.target.selectedOptions, (item) => item.value) }, () => console.log('accounts', this.state.selectedAccounts))
     }
 
     setDate (date) {
@@ -386,6 +393,11 @@ class AddUser extends React.Component {
                                             handleInputChanges={this.handleMultiSelect}
                                             role={this.state.selectedRoles}
                                         />
+                                    </Col>
+
+                                    <Col>
+                                        <AccountDropdown handleInputChanges={this.handleAccountMultiSelect}
+                                            accounts={this.props.accounts}/>
                                     </Col>
                                 </Row>
                             </CardBody>

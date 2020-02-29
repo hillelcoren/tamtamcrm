@@ -2,6 +2,7 @@
 
 namespace App\Listeners\Invoice;
 
+use App\Factory\NotificationFactory;
 use App\Repositories\NotificationRepository;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
@@ -35,7 +36,10 @@ class CreateInvoiceActivity implements ShouldQueue
         $fields['notifiable_type'] = get_class($event->invoice);
         $fields['type'] = get_class($this);
         $fields['data'] = json_encode($fields['data']);
-        $this->notification_repo->create($fields);
+
+        $notification = NotificationFactory::create($event->invoice->account_id, $event->invoice->user_id);
+
+        $this->notification_repo->save($notification, $fields);
 
     }
 }

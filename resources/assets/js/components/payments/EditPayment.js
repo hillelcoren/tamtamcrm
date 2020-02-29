@@ -12,6 +12,7 @@ import moment from 'moment'
 import FormBuilder from '../accounts/FormBuilder'
 import SuccessMessage from '../common/SucessMessage'
 import ErrorMessage from '../common/ErrorMessage'
+import InvoiceLine from './InvoiceLine'
 
 class EditPayment extends React.Component {
     constructor (props) {
@@ -33,6 +34,7 @@ class EditPayment extends React.Component {
             private_notes: this.props.payment.private_notes,
             invoice_id: this.props.payment.invoice_id,
             amount: this.props.payment.amount,
+            payable_invoices: this.props.payment.paymentables && this.props.payment.paymentables.length ? this.props.payment.paymentables : [],
             date: this.props.payment.date ? this.props.payment.date : moment(new Date()).format('YYYY-MM-DD'),
             id: this.props.payment.id,
             type_id: this.props.payment.type_id,
@@ -43,6 +45,7 @@ class EditPayment extends React.Component {
         this.initialState = this.state
         this.toggle = this.toggle.bind(this)
         this.hasErrorFor = this.hasErrorFor.bind(this)
+        this.setInvoices = this.setInvoices.bind(this)
         this.renderErrorFor = this.renderErrorFor.bind(this)
         this.handleCustomerChange = this.handleCustomerChange.bind(this)
         this.handleInvoiceChange = this.handleInvoiceChange.bind(this)
@@ -75,7 +78,7 @@ class EditPayment extends React.Component {
             amount: invoice[0].total
         })
 
-        this.setState({ selectedInvoices: Array.from(e.target.selectedOptions, (item) => item.value) })
+        this.setState({ payable_invoices: Array.from(e.target.selectedOptions, (item) => item.value) })
     }
 
     handleCustomerChange (e) {
@@ -122,7 +125,7 @@ class EditPayment extends React.Component {
             customer_id: this.state.customer_id,
             amount: this.state.amount,
             transaction_reference: this.state.transaction_reference,
-            invoices: this.state.selectedInvoices,
+            invoices: this.state.payable_invoices,
             custom_value1: this.state.custom_value1,
             custom_value2: this.state.custom_value2,
             custom_value3: this.state.custom_value3,
@@ -190,6 +193,14 @@ class EditPayment extends React.Component {
             modal: !this.state.modal,
             errors: []
         })
+    }
+
+    setAmount (amount) {
+        this.setState({ amount: amount }, () => localStorage.setItem('paymentForm', JSON.stringify(this.state)))
+    }
+
+    setInvoices (payableInvoices) {
+        this.setState({ payable_invoices: payableInvoices }, () => localStorage.setItem('paymentForm', JSON.stringify(this.state)))
     }
 
     render () {
@@ -297,17 +308,9 @@ class EditPayment extends React.Component {
                             />
                         </FormGroup>
 
-                        <InvoiceDropdown
-                            status={2}
-                            error_name="invoices"
-                            invoices={this.state.invoices}
-                            invoice_id={this.state.invoice_id}
-                            disabled={true}
-                            multiple={true}
-                            handleInputChanges={this.handleInvoiceChange}
-                            name="invoice_id"
-                            errors={this.state.errors}
-                        />
+                        <InvoiceLine lines={this.state.payable_invoices} handleAmountChange={this.setAmount} errors={this.state.errors}
+                            invoices={this.props.invoices}
+                            customerChange={this.handleCustomerChange} onChange={this.setInvoices}/>
 
                         <FormGroup className="mb-3">
                             <Label>Notes</Label>

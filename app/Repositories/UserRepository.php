@@ -2,6 +2,7 @@
 
 namespace App\Repositories;
 
+use App\Account;
 use App\User;
 use App\Department;
 use App\Repositories\Interfaces\UserRepositoryInterface;
@@ -106,7 +107,7 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
     public function getUsersForDepartment(Department $objDepartment): Support
     {
         return $this->model->join('department_user', 'department_user.user_id', '=', 'users.id')->select('users.*')
-                           ->where('department_user.department_id', $objDepartment->id)->groupBy('users.id')->get();
+            ->where('department_user.department_id', $objDepartment->id)->groupBy('users.id')->get();
     }
 
     public function getModel()
@@ -148,35 +149,39 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
             $data['password'] = Hash::make($data['password']);
         }
 
-        $user->fill($data);
-        $user->save();
+$user->fill($data);
+$user->save();
 
-        if (isset($data['company_user'])) {
-            if (auth()->user()->account_user()->count() > 0) {
-                $account = auth()->user()->account_user();
+if (isset($data['company_user'])) {
+    foreach ($data['company_user'] as $company_user) {
+        if (auth()->user()->account_user()->count() > 0) {
+            $account = Account::find($company_user['id']);
 
-                $cu = AccountUser::whereUserId($user->id)->whereAccountId($account->id)->first();
+            $cu = AccountUser::whereUserId($user->id)->whereAccountId($account->id)->first();
 
-                /*No company user exists - attach the user*/
-                if (!$cu) {
-                    $user->accounts()->attach($account->id, $data['company_user']);
-                } else {
-                    $cu->fill($data['company_user']);
-                    $cu->save();
-                }
+            /*No company user exists - attach the user*/
+            if (!$cu) {
+                $user->accounts()->attach($account->id, $data['company_user']);
+            } else {
+                $cu->fill($data['company_user']);
+                $cu->save();
             }
         }
-
-
-        if (isset($data['role']) && !empty($data['role'])) {
-            $this->syncRoles($user, [$data['role']]);
-        }
-
-        if (isset($data['department']) && !empty($data['department'])) {
-            $this->syncDepartment($user, $data['department']);
-        }
-        return $user->fresh();
-
     }
+
+
+}
+
+
+if (isset($data['role']) && !empty($data['role'])) {
+    $this->syncRoles($user, [$data['role']]);
+}
+
+if (isset($data['department']) && !empty($data['department'])) {
+    $this->syncDepartment($user, $data['department']);
+}
+return $user->fresh();
+
+}
 
 }

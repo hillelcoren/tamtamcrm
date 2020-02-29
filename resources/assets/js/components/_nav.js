@@ -60,6 +60,11 @@ export default {
                     name: 'Field Settings',
                     url: '/field-settings',
                     icon: 'fa fa-dashboard'
+                },
+                {
+                    name: 'Designs',
+                    url: '/designs',
+                    icon: 'fa fa-dashboard'
                 }
             ]
         },

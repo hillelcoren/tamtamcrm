@@ -42,6 +42,38 @@ class UpdateUserRequest extends BaseFormRequest
         return $rules;
     }
 
+    protected function prepareForValidation()
+    {
+        $input = $this->all();
+
+        $companyUsers = [];
+
+        if (isset($input['company_user'])) {
+
+            foreach($input['company_user'] as $key => $company_user) {
+
+                $companyUsers[$key]['id'] = $company_user;
+
+                if (!isset($company_user['is_admin'])) {
+                    $companyUsers[$key]['is_admin'] = false;
+                }
+
+                if (!isset($company_user['permissions'])) {
+                    $companyUsers[$key]['permissions'] = '';
+                }
+
+                if (!isset($company_user['settings'])) {
+                    //$input['company_user']['settings'] = DefaultSettings::userSettings();
+                    $companyUsers[$key]['settings'] = null;
+                }
+            }
+        }
+
+        $input['company_user'] = $companyUsers;
+
+        $this->replace($input);
+    }
+
     /**
      * Custom message for validation
      *

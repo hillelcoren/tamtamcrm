@@ -35,6 +35,7 @@ import ProductSettings from './accounts/ProductSettings'
 import NumberSettings from './accounts/NumberSettings'
 import GroupSettings from './accounts/GroupSettings'
 import Expenses from './expenses/Expenses'
+import Designs from './designs/Designs'
 
 // https://github.com/ReactTraining/react-router/tree/master/packages/react-router-config
 const routes = [
@@ -194,6 +195,11 @@ const routes = [
         path: '/field-settings',
         name: 'Field Settings',
         component: CustomFieldSettings
+    },
+    {
+        path: '/designs',
+        name: 'Designs',
+        component: Designs
     },
     {
         path: '/recurring-quotes',

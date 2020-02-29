@@ -26,6 +26,7 @@ import DepartmentDropdown from '../common/DepartmentDropdown'
 import FormBuilder from '../accounts/FormBuilder'
 import SuccessMessage from '../common/SucessMessage'
 import ErrorMessage from '../common/ErrorMessage'
+import AccountDropdown from '../common/AccountDropdown'
 
 class EditUser extends React.Component {
     constructor (props) {
@@ -39,6 +40,7 @@ class EditUser extends React.Component {
             user: [],
             roles: [],
             selectedRoles: [],
+            selectedAccounts: [],
             department: 0,
             message: '',
             custom_value1: '',
@@ -65,6 +67,7 @@ class EditUser extends React.Component {
         this.hasErrorFor = this.hasErrorFor.bind(this)
         this.renderErrorFor = this.renderErrorFor.bind(this)
         this.handleMultiSelect = this.handleMultiSelect.bind(this)
+        this.handleAccountMultiSelect = this.handleAccountMultiSelect.bind(this)
         this.setDate = this.setDate.bind(this)
         this.buildGenderDropdown = this.buildGenderDropdown.bind(this)
         this.handleInput = this.handleInput.bind(this)
@@ -98,6 +101,7 @@ class EditUser extends React.Component {
 
     getFormData () {
         return {
+            company_user: this.state.selectedAccounts,
             username: this.state.user.username,
             department: this.state.user.department,
             email: this.state.user.email,
@@ -186,6 +190,10 @@ class EditUser extends React.Component {
 
     handleMultiSelect (e) {
         this.setState({ selectedRoles: Array.from(e.target.selectedOptions, (item) => item.value) })
+    }
+
+    handleAccountMultiSelect (e) {
+        this.setState({ selectedAccounts: Array.from(e.target.selectedOptions, (item) => item.value) }, () => console.log('accounts', this.state.selectedAccounts))
     }
 
     toggle () {
@@ -407,6 +415,11 @@ class EditUser extends React.Component {
                                             errors={this.state.errors}
                                             handleInputChanges={this.handleMultiSelect}
                                         />
+                                    </Col>
+
+                                      <Col>
+                                        <AccountDropdown handleInputChanges={this.handleAccountMultiSelect}
+                                            accounts={this.props.accounts}/>
                                     </Col>
                                 </Row>
                             </CardBody>

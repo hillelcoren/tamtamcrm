@@ -7,10 +7,18 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Design extends Model
 {
+
+    use SoftDeletes;
+
     protected $casts = [
         'design' => 'object'
     ];
 
+    protected $fillable = [
+        'name',
+        'design',
+        'is_active',
+    ];
 
     public function account()
     {

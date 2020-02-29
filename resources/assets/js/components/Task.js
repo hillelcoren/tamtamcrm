@@ -91,6 +91,8 @@ class Task extends Component {
                             })
                         }
 
+                        const description = this.props.task_type === 2 ? i.description : i.content
+
                         const divStyle = {
                             borderLeft: `2px solid ${this.props.column.column_color}`
                         }
@@ -116,8 +118,9 @@ class Task extends Component {
                                     {deleteButton}
                                 </span>
 
+                                <h3>{i.title}</h3>
                                 <h5 className="m-3">{i.valued_at}</h5>
-                                <p className="mb-1">{i.content}</p>
+                                <p className="mb-1">{description}</p>
 
                                 <div>
                                     <span className="task-due">Start: {moment(i.startDate).format('DD.MM.YYYY')}</span>

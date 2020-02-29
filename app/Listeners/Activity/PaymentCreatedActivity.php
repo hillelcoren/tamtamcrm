@@ -2,6 +2,7 @@
 
 namespace App\Listeners\Activity;
 
+use App\Factory\NotificationFactory;
 use App\Repositories\NotificationRepository;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
@@ -39,17 +40,19 @@ class PaymentCreatedActivity implements ShouldQueue
         $fields['notifiable_type'] = get_class($payment);
         $fields['type'] = get_class($this);
 
+        $notification = NotificationFactory::create($payment->account_id, $payment->user_id);
+
         foreach ($invoices as $invoice) { //todo we may need to add additional logic if in the future we apply payments to other entity Types, not just invoices
             $fields2 = $fields;
 
             $fields2['data']['invoice_id'] = $invoice->id;
             $fields2['data'] = json_encode($fields2['data']);
-            $this->notification_repo->create($fields2);
+            $this->notification_repo->save($notification, $fields2);
         }
 
         if (count($invoices) == 0) {
             $fields['data'] = json_encode($fields['data']);
-            $this->notification_repo->create($fields);
+            $this->notification_repo->save($notification, $fields);
         }
     }
 }

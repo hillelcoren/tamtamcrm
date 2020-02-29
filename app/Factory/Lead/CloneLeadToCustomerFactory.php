@@ -21,7 +21,7 @@ class CloneLeadToCustomerFactory
         $client_contact->public_notes = $lead->public_notes;
         $client_contact->private_notes = $lead->private_notes;
         $client_contact->currency_id = 2;
-
+        $client_contact->customer_type = 2;
 
         return $client_contact;
     }

@@ -19,6 +19,9 @@ Route::group(['middleware' => ['jwt.auth', 'api-header']], function () {
         //support
         Route::post('support/messages/send', 'Support\Messages\SendingController');
 
+        //design
+        Route::resource('designs', 'DesignController');// name = (payments. index / create / show / update / destroy / edit
+
         // messages
         Route::get('messages/customers', 'MessageController@getCustomers');
         Route::get('messages/{customer_id}', 'MessageController@index');
@@ -200,6 +203,7 @@ Route::group(['middleware' => ['jwt.auth', 'api-header']], function () {
     Route::get('accounts/fields/getAllCustomFields',
         'AccountController@getAllCustomFields')->middleware('role:null,invoicecontroller.store');
     Route::get('accounts/fields/{entity}', 'AccountController@getCustomFields');
+    Route::get('accounts', 'AccountController@index');
     Route::get('accounts/{id}', 'AccountController@show');
     Route::post('account/change',
         'AccountController@changeAccount')->middleware('role:null,invoicecontroller.store');

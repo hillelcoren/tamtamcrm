@@ -49,16 +49,11 @@ class UpdatePaymentRequest extends BaseFormRequest
             unset($input['number']);
         }
 
-        $test = [];
-
-        if (isset($input['invoices']) && is_array($input['invoices']) !== false) {
-            foreach ($input['invoices'] as $key => $value) {
-                $test['invoices'][$key]['invoice_id'] = $value;
+        foreach($input['invoices'] as $key => $invoice) {
+            if(empty($invoice['invoice_id']) || empty($invoice['amount'])) {
+                unset($input['invoices'][$key]);
             }
-
-            $input['invoices'] = $test['invoices'];
         }
-
 
         $this->replace($input);
     }

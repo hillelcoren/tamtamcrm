@@ -6,7 +6,7 @@ export default class InvoiceLine extends Component {
     constructor (props) {
         super(props)
         this.state = {
-            lines: [{ invoice_id: null, amount: 0 }],
+            lines: this.props.lines && this.props.lines.length ? this.props.lines : [{ invoice_id: null, amount: 0 }],
             amount: 0,
             customer_id: null
         }

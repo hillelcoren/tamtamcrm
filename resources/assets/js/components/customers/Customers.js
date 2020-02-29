@@ -261,13 +261,6 @@ export default class Customers extends Component {
                     />
                 </Col>
 
-                <Col md={2}>
-                    <CustomerTypeDropdown
-                        renderErrorFor={this.renderErrorFor}
-                        handleInputChanges={this.filterCustomers}
-                    />
-                </Col>
-
                 <Col md={1}>
                     <CsvImporter filename="customers.csv"
                         url={`/api/customers?search_term=${searchText}&status=${status}&company_id=${company_id}&customer_type=${customer_type}&group_settings_id=${group_settings_id}&start_date=${start_date}&end_date=${end_date}&page=1&per_page=5000`}/>

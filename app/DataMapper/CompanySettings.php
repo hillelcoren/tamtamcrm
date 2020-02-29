@@ -181,14 +181,9 @@ class CompanySettings extends BaseSettings
     public $all_pages_header = true;
     public $all_pages_footer = true;
 
-    public $system_notifications_slack = '';
-    public $system_notifications_email = '';
-
     public $pdf_variables = [];
 
     public static $casts = [
-        'system_notifications_slack' => 'string',
-        'system_notifications_email' => 'string',
         'portal_design_id' => 'string',
         'fill_products' => 'bool',
         'update_products' => 'bool',

@@ -3,6 +3,7 @@
 namespace App\Transformations;
 
 use App\Payment;
+use App\Paymentable;
 
 trait PaymentTransformable
 {
@@ -12,6 +13,7 @@ trait PaymentTransformable
      */
     public function transformPayment(Payment $payment)
     {
+
         $obj = new Payment;
         $obj->id = (int)$payment->id;
         $obj->user_id = (int)$payment->user_id;
@@ -23,8 +25,7 @@ trait PaymentTransformable
         $obj->amount = (float)$payment->amount;
         $obj->transaction_reference = $payment->transaction_reference ?: '';
         $obj->invoices = $payment->invoices;
-        $obj->paymentables = $payment->paymentables;
-
+        $obj->paymentables = !empty($payment->paymentables) ? $this->transformPaymentables($payment->paymentables) : [];
         $obj->deleted_at = $payment->deleted_at;
         //$obj->archived_at = $payment->deleted_at;
         //$obj->is_deleted = (bool) $payment->is_deleted;
@@ -41,6 +42,17 @@ trait PaymentTransformable
         $obj->private_notes = $payment->private_notes ?: '';
 
         return $obj;
+    }
+
+    public function transformPaymentables($paymentables)
+    {
+        if (empty($paymentables)) {
+            return [];
+        }
+
+        return $paymentables->map(function (Paymentable $paymentable) {
+            return (new PaymentableTransformer())->transform($paymentable);
+        })->all();
     }
 
 }

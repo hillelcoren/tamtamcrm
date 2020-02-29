@@ -64,6 +64,8 @@ export default class InvoiceDropdown extends Component {
         const error_name = this.props.error_name ? this.props.error_name : name
         const data_id = this.props.data_id ? this.props.data_id : 0
 
+        alert(this.props.invoic)
+
         const selectList = this.props.multiple && this.props.multiple === true ? (
             <Input onChange={this.props.handleInputChanges} multiple type="select"
                 data-id={data_id}

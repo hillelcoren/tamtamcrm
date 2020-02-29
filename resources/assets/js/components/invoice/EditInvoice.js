@@ -599,7 +599,6 @@ class EditInvoice extends Component {
 
         // check if the check box is checked or unchecked
         if (e.target.checked) {
-            alert(contact)
             // add the numerical value of the checkbox to options array
             invitations.push({ client_contact_id: contact })
         } else {

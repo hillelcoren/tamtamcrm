@@ -3,6 +3,7 @@ import React from 'react'
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter, Input, FormGroup, Label, Form } from 'reactstrap'
 import axios from 'axios'
 import UserDropdown from '../common/UserDropdown'
+import TaskStatusDropdown from '../common/TaskStatusDropdown'
 
 class EditLeadForm extends React.Component {
     constructor (props) {
@@ -25,6 +26,7 @@ class EditLeadForm extends React.Component {
             description: this.props.lead.description,
             valued_at: this.props.lead.valued_at,
             source_type: this.props.lead.source_type,
+            task_status: this.props.lead.task_status,
             values: [],
             loading: false,
             submitSuccess: false,
@@ -102,7 +104,7 @@ class EditLeadForm extends React.Component {
             contributors: this.state.selectedUsers,
             source_type: this.state.source_type,
             task_type: this.props.task_type,
-            task_status: this.props.status
+            task_status: this.state.task_status
         }
         this.setState({
             submitSuccess: true,
@@ -248,7 +250,16 @@ class EditLeadForm extends React.Component {
                                 {this.renderErrorFor('valued_at')}
                             </FormGroup>
 
-                            <UserDropdown handleInputChanges={this.handleMultiSelect.bind(this)} name="contributors" users={this.props.users}
+                            <FormGroup>
+                                <Label for="valued_at"> Task Status </Label>
+                                <TaskStatusDropdown task_type={2}
+                                    handleInputChanges={this.handleInputChanges.bind(this)}
+                                    status={this.state.task_status}/>
+                                {this.renderErrorFor('valued_at')}
+                            </FormGroup>
+
+                            <UserDropdown handleInputChanges={this.handleMultiSelect.bind(this)} name="contributors"
+                                users={this.props.users}
                                 multiple={true}/>
 
                             {sourceTypeOptions}

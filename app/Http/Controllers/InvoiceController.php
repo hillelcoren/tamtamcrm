@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Customer;
+use App\Events\Invoice\InvoiceWasCreated;
 use App\Factory\CloneInvoiceFactory;
 use App\Jobs\Invoice\ZipInvoices;
 use App\Factory\CloneInvoiceToQuoteFactory;
@@ -79,11 +80,13 @@ class InvoiceController extends Controller
         $invoice = StoreInvoice::dispatchNow($invoice, $request->all(),
             $invoice->account); //todo potentially this may return mixed ie PDF/$invoice... need to revisit when we implement UI
         InvoiceOrders::dispatchNow($invoice);
-        $notification = NotificationFactory::create(auth()->user()->account_user()->account_id, auth()->user()->id);
-        (new NotificationRepository(new Notification))->save($notification, [
-            'data' => json_encode(['id' => $invoice->id, 'message' => 'A new invoice was created']),
-            'type' => 'App\Notifications\InvoiceCreated'
-        ]);
+//        $notification = NotificationFactory::create(auth()->user()->account_user()->account_id, auth()->user()->id);
+//        (new NotificationRepository(new Notification))->save($notification, [
+//            'data' => json_encode(['id' => $invoice->id, 'message' => 'A new invoice was created']),
+//            'type' => 'App\Notifications\InvoiceCreated'
+//        ]);
+
+        event(new InvoiceWasCreated($invoice));
 
 
         SaveRecurringInvoice::dispatchNow($request, $invoice->account, $invoice);

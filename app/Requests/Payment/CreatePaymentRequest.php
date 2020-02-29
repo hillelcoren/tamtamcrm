@@ -3,6 +3,7 @@
 namespace App\Requests\Payment;
 
 use App\Repositories\Base\BaseFormRequest;
+use App\Rules\Payment\ValidInvoicesRules;
 use App\Rules\ValidCreditsPresentRule;
 use App\Rules\ValidPayableInvoicesRule;
 use App\Rules\PaymentAmountsBalanceRule;
@@ -62,17 +63,20 @@ class CreatePaymentRequest extends BaseFormRequest
      */
     public function rules()
     {
-        return [
-            'customer_id' => 'required|exists:customers,id',
-            'invoices.*.invoice_id' => 'required',
-            'invoices.*.amount' => 'required',
-            'credits.*.credit_id' => 'required',
+        $rules = [
             'amount' => 'numeric|required',
-            'amount' => [new PaymentAmountsBalanceRule(), new ValidCreditsPresentRule()],
-            //'invoices' => 'required',
+            'amount' => [new PaymentAmountsBalanceRule(),new ValidCreditsPresentRule()],
+            'date' => 'required',
+            'customer_id' => 'bail|required|exists:customers,id',
+            'invoices.*.invoice_id' => 'required|distinct|exists:invoices,id',
+            'invoices.*.invoice_id' => new ValidInvoicesRules($this->all()),
+            'invoices.*.amount' => 'required',
+            'credits.*.credit_id' => 'required|exists:credits,id',
+            'credits.*.amount' => 'required',
             'invoices' => new ValidPayableInvoicesRule(),
-            'type_id' => 'required',
-            'number' => 'nullable'
+            'number' => 'nullable',
         ];
+
+        return $rules;
     }
 }

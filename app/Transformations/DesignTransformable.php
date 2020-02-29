@@ -9,7 +9,7 @@ use App\Design;
 use App\Repositories\ClientContactRepository;
 use App\Repositories\CustomerRepository;
 
-class DesignTransformable
+trait DesignTransformable
 {
 
     /**
