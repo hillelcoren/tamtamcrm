@@ -20,7 +20,6 @@ import DepartmentDropdown from '../common/DepartmentDropdown'
 import RoleDropdown from '../common/RoleDropdown'
 import FormBuilder from '../accounts/FormBuilder'
 import AddButtons from '../common/AddButtons'
-import AccountDropdown from '../common/AccountDropdown'
 
 class AddUser extends React.Component {
     constructor (props) {
@@ -268,7 +267,7 @@ class AddUser extends React.Component {
             const is_admin = assignedAccounts.length > 0 && assignedAccounts[0].is_admin === true
 
             return (
-                <React.Fragment>
+                <React.Fragment key={account.id}>
                     <div>
                         <FormGroup check inline>
                             <Label check>
@@ -451,18 +450,9 @@ class AddUser extends React.Component {
                                 </Row>
 
                                 <Row form>
+                                    <h4>Accounts</h4>
                                     <Col md={6}>
                                         {accountList}
-                                    </Col>
-
-                                    <Col>
-                                        <FormGroup check>
-                                            <Label check>
-                                                <Input value={this.state.is_admin} onChange={this.handleCheck}
-                                                    type="checkbox"/>
-                                                Administrator
-                                            </Label>
-                                        </FormGroup>
                                     </Col>
                                 </Row>
                             </CardBody>

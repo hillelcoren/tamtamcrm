@@ -2,7 +2,7 @@ import * as React from 'react'
 import Avatar from '../common/Avatar'
 import axios from 'axios'
 import TimeAgo from 'react-timeago/lib'
-import { Button, Card, CardFooter, CardBody, CardHeader } from 'reactstrap'
+import { Card, CardBody, CardHeader } from 'reactstrap'
 
 class Event extends React.Component {
     constructor (props) {

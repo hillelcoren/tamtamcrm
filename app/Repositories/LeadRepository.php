@@ -62,4 +62,9 @@ class LeadRepository extends BaseRepository
         return $this->findOneOrFail($id);
     }
 
+    public function getModel()
+    {
+        return $this->model;
+    }
+
 }

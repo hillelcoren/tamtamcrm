@@ -38,13 +38,9 @@ class CreateCreditPdf implements ShouldQueue
      */
     public function __construct($credit, Account $account, ClientContact $contact = null)
     {
-
         $this->credit = $credit;
-
         $this->account = $account;
-
         $this->contact = $contact;
-
         $this->disk = $disk ?? config('filesystems.default');
 
     }
@@ -53,7 +49,7 @@ class CreateCreditPdf implements ShouldQueue
     {
 
         if (!$this->contact) {
-            $this->contact = $this->quote->customer->primary_contact()->first();
+            $this->contact = $this->credit->customer->primary_contact()->first();
         }
 
         App::setLocale($this->contact->preferredLocale());
@@ -73,17 +69,20 @@ class CreateCreditPdf implements ShouldQueue
 
         $designer = new Designer($credit_design, $this->credit->customer->getSetting('pdf_variables'), 'credit');
 
-//get invoice design
+        //get invoice design
         $html = $this->generateInvoiceHtml($designer->build($this->credit)->getHtml(), $this->credit, $this->contact);
 
-//todo - move this to the client creation stage so we don't keep hitting this unnecessarily
+        //todo - move this to the client creation stage so we don't keep hitting this unnecessarily
         Storage::makeDirectory($path, 0755);
 
-//\Log::error($html);
+        //\Log::error($html);
         $pdf = $this->makePdf(null, null, $html);
 
         $instance = Storage::disk($this->disk)->put($file_path, $pdf);
 
+        //$instance= Storage::disk($this->disk)->path($file_path);
+        //
         return $file_path;
     }
+
 }

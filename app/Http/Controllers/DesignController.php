@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers;
 
 use App\Design;
@@ -39,8 +40,7 @@ class DesignController extends Controller
      */
     public function index(SearchRequest $request)
     {
-        $designs = (new DesignFilter($this->design_repo))->filter($request,
-            auth()->user()->account_user()->account_id);
+        $designs = (new DesignFilter($this->design_repo))->filter($request, auth()->user()->account_user()->account_id);
 
         return response()->json($designs);
     }

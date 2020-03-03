@@ -2,6 +2,7 @@
 
 namespace App\Services\Invoice;
 
+use App\Customer;
 use App\Events\Invoice\InvoiceWasMarkedSent;
 use App\Jobs\Company\UpdateCompanyLedgerWithInvoice;
 use App\Invoice;
@@ -12,7 +13,12 @@ class MarkSent extends AbstractService
     private $customer;
     private $invoice;
 
-    public function __construct($customer, $invoice)
+    /**
+     * MarkSent constructor.
+     * @param Customer $customer
+     * @param Invoice $invoice
+     */
+    public function __construct(Customer $customer, Invoice $invoice)
     {
         $this->customer = $customer;
         $this->invoice = $invoice;

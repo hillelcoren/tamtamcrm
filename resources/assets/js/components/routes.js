@@ -10,6 +10,7 @@ import Invoice from './invoice/Invoice'
 import Companies from './companies/Companies'
 import Categories from './categories/Categories'
 import ProjectList from './forms/ProjectList'
+import Leads from './forms/Leads'
 import TaskList from './forms/TaskList'
 import Customers from './customers/Customers'
 import Departments from './departments/Departments'
@@ -36,6 +37,7 @@ import NumberSettings from './accounts/NumberSettings'
 import GroupSettings from './accounts/GroupSettings'
 import Expenses from './expenses/Expenses'
 import Designs from './designs/Designs'
+import Integrations from './accounts/IntegrationSettings'
 
 // https://github.com/ReactTraining/react-router/tree/master/packages/react-router-config
 const routes = [
@@ -202,6 +204,11 @@ const routes = [
         component: Designs
     },
     {
+        path: '/integrations',
+        name: 'Integrations',
+        component: Integrations
+    },
+    {
         path: '/recurring-quotes',
         name: 'Recurring Quotes',
         component: RecurringQuotes
@@ -222,6 +229,12 @@ const routes = [
         exact: true,
         name: 'Project List',
         component: ProjectList
+    },
+    {
+        path: '/leads',
+        exact: true,
+        name: 'Leads List',
+        component: Leads
     },
     {
         path: '/users/:username',

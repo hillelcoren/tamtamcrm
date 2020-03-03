@@ -115,7 +115,6 @@ class LineItemEditor extends Component {
     }
 
     render () {
-        console.log('rows', this.props.rows)
         const lineItemRows = this.state.products.length && this.state.expenses.length && this.state.taxRates.length
             ? <LineItem
                 line_type={parseInt(this.state.line_type)}

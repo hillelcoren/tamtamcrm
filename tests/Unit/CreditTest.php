@@ -85,7 +85,7 @@ class CreditTest extends TestCase
         $total = $this->faker->randomFloat();
         $user = factory(User::class)->create();
         $factory =
-            (new CreditFactory)->create(1, $user->id, $total, $this->customer, $this->customer->getMergedSettings());
+            (new CreditFactory)->create(1, $user->id, $this->customer);
 
 
         $data = [

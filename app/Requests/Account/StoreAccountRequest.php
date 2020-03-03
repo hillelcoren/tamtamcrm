@@ -2,6 +2,7 @@
 
 namespace App\Requests\Account;
 
+use App\DataMapper\CompanySettings;
 use App\Rules\ValidSettingsRule;
 use App\Repositories\Base\BaseFormRequest;
 
@@ -32,5 +33,17 @@ class StoreAccountRequest extends BaseFormRequest
         }
 
         return $rules;
+    }
+
+    protected function prepareForValidation()
+    {
+        $input = $this->all();
+
+        if (array_key_exists('settings', $input) && property_exists($input['settings'], 'pdf_variables') &&
+            empty((array)$input['settings']->pdf_variables)) {
+            $input['settings']['pdf_variables'] = CompanySettings::getEntityVariableDefaults();
+        }
+
+        $this->replace($input);
     }
 }

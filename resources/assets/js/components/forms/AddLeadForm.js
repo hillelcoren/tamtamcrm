@@ -80,7 +80,6 @@ class AddLeadForm extends React.Component {
             job_title: this.state.job_title,
             company_name: this.state.company_name,
             description: this.state.description,
-            customer_type: this.props.customer_type,
             title: this.state.title,
             valued_at: this.state.valued_at,
             contributors: this.state.selectedUsers,

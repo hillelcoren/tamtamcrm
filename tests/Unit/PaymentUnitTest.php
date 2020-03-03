@@ -191,8 +191,7 @@ class PaymentUnitTest extends TestCase
         $client = CustomerFactory::create($this->account_id, $this->user->id);
         $client->save();
 
-        $invoice = InvoiceFactory::create($this->user->id, $this->account_id, $client, 0,
-            $client->getMergedSettings());//stub the company and user_id
+        $invoice = InvoiceFactory::create($this->user->id, $this->account_id, $client);//stub the company and user_id
         $invoice->customer_id = $client->id;
 
         $invoice->partial = 5.0;
@@ -240,8 +239,7 @@ class PaymentUnitTest extends TestCase
         $client = CustomerFactory::create($this->account_id, $this->user->id);
         $client->save();
 
-        $invoice = InvoiceFactory::create($this->user->id, $this->account_id, $client, 0,
-            $client->getMergedSettings());//stub the company and user_id
+        $invoice = InvoiceFactory::create($this->user->id, $this->account_id, $client);//stub the company and user_id
         $invoice->customer_id = $client->id;
 
         $invoice->partial = 5.0;
@@ -271,7 +269,7 @@ class PaymentUnitTest extends TestCase
             'date' => '2019/12/12',
         ];
 
-        $factory = (new PaymentFactory())->create($this->customer->id, $this->user->id, $this->account_id);
+        $factory = (new PaymentFactory())->create(3, $this->user->id, $this->account_id);
         $paymentRepo = new PaymentRepository(new Payment);
         $payment = $paymentRepo->save($data, $factory);
 
@@ -291,8 +289,7 @@ class PaymentUnitTest extends TestCase
         $client = CustomerFactory::create($this->account_id, $this->user->id);
         $client->save();
 
-        $invoice = InvoiceFactory::create($this->user->id, $this->account_id, $client, 0,
-            $client->getMergedSettings());//stub the company and user_id
+        $invoice = InvoiceFactory::create($this->user->id, $this->account_id, $client);//stub the company and user_id
         $invoice->customer_id = $client->id;
         $invoice->status_id = Invoice::STATUS_SENT;
         //$invoice->uses_inclusive_Taxes = false;

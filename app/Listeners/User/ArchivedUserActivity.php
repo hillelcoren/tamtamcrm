@@ -2,6 +2,7 @@
 
 namespace App\Listeners\User;
 
+use App\Factory\NotificationFactory;
 use App\Repositories\NotificationRepository;
 
 class ArchivedUserActivity
@@ -42,6 +43,7 @@ class ArchivedUserActivity
         $fields['type'] = get_class($this);
         $fields['data'] = json_encode($fields['data']);
 
-        $this->notification_repo->create($fields);
+        $notification = NotificationFactory::create($event->user->account_id, $event->user->user_id);
+        $this->notification_repo->save($notification, $fields);
     }
 }

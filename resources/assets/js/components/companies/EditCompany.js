@@ -177,7 +177,7 @@ class EditCompany extends React.Component {
         axios.post(`/api/companies/${this.state.id}`, formData)
             .then((response) => {
                 this.toggle()
-                const index = this.props.brands.findIndex(product => parseInt(brand.id) === this.state.id)
+                const index = this.props.brands.findIndex(company => parseInt(company.id) === this.state.id)
                 this.props.brands[index] = response.data
                 this.props.action(this.props.brands)
             })

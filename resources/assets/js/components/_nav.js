@@ -65,6 +65,11 @@ export default {
                     name: 'Designs',
                     url: '/designs',
                     icon: 'fa fa-dashboard'
+                },
+                {
+                    name: 'Integrations',
+                    url: '/integrations',
+                    icon: 'fa fa-dashboard'
                 }
             ]
         },
@@ -119,8 +124,13 @@ export default {
                     icon: 'fa fa-clock-o'
                 },
                 {
-                    name: 'Leads',
+                    name: 'Leads Kanban',
                     url: '/kanban/leads',
+                    icon: 'fa fa-chain-broken'
+                },
+                {
+                    name: 'Leads',
+                    url: '/leads',
                     icon: 'fa fa-chain-broken'
                 },
 

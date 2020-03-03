@@ -34,13 +34,6 @@ class CustomerService
         return $this;
     }
 
-    public function setCustomerType($customer_type)
-    {
-        $this->customer->customer_type = $customer_type;
-
-        return $this;
-    }
-
     public function save()
     {
         $this->customer->save();

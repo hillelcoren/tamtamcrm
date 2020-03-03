@@ -6,10 +6,7 @@ import DataTable from '../common/DataTable'
 import RestoreModal from '../common/RestoreModal'
 import DeleteModal from '../common/DeleteModal'
 import {
-    FormGroup, Input, Card, CardBody, Row, Col, ButtonDropdown,
-    DropdownToggle,
-    DropdownMenu,
-    DropdownItem
+    FormGroup, Input, Card, CardBody, Row, Col
 } from 'reactstrap'
 import DisplayColumns from '../common/DisplayColumns'
 import CustomerDropdown from '../common/CustomerDropdown'
@@ -118,7 +115,7 @@ export default class ProjectList extends Component {
     saveBulk (e) {
         const action = e.target.id
         const self = this
-        axios.post('/api/project/bulk', { bulk: this.state.bulk }).then(function (response) {
+        axios.post('/api/project/bulk', { bulk: this.state.bulk, action: action }).then(function (response) {
             // const arrQuotes = [...self.state.invoices]
             // const index = arrQuotes.findIndex(payment => payment.id === id)
             // arrQuotes.splice(index, 1)

@@ -186,7 +186,7 @@ export default class Expenses extends Component {
     saveBulk (e) {
         const action = e.target.id
         const self = this
-        axios.post('/api/expense/bulk', { bulk: this.state.bulk }).then(function (response) {
+        axios.post('/api/expense/bulk', { bulk: this.state.bulk, action: action }).then(function (response) {
             // const arrQuotes = [...self.state.invoices]
             // const index = arrQuotes.findIndex(payment => payment.id === id)
             // arrQuotes.splice(index, 1)
@@ -317,7 +317,7 @@ export default class Expenses extends Component {
                 const columnList = Object.keys(expense).filter(key => {
                     return ignoredColumns && !ignoredColumns.includes(key)
                 }).map(key => {
-                    return <ExpensePresenter companies={companies} customers={customers}
+                    return <ExpensePresenter key={key} companies={companies} customers={customers}
                         toggleViewedEntity={this.toggleViewedEntity}
                         field={key} entity={expense}/>
                 })

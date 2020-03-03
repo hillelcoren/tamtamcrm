@@ -84,7 +84,7 @@ class RecurringQuoteController extends Controller
         ), $request->all());
 
         $recurringQuote = (new RecurringQuoteRepository(new RecurringQuote))->save($arrRecurring,
-            RecurringQuoteFactory::create($request->customer_id, auth()->user()->account_user()->id, $quote->total));
+            RecurringQuoteFactory::create($request->customer_id, auth()->user()->account_user()->account_id, $quote->total));
         return response()->json($recurringQuote);
     }
 

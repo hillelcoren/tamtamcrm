@@ -17,14 +17,14 @@ class AccountUserTransformable
     {
         return [
             // 'id' => $company_user->id,
-             'account_id' => $company_user->account_id,
+            'account_id' => $company_user->account_id,
             // 'user_id' => $company_user->user_id,
             // 'company_id' => $company_user->company_id,
             'permissions' => $company_user->permissions ?: '',
             'settings' => $company_user->settings,
-            'is_owner' => (bool) $company_user->is_owner,
-            'is_admin' => (bool) $company_user->is_admin,
-            'is_locked' => (bool) $company_user->is_locked,
+            'is_owner' => (bool)$company_user->is_owner,
+            'is_admin' => (bool)$company_user->is_admin,
+            'is_locked' => (bool)$company_user->is_locked,
             'updated_at' => (int)$company_user->updated_at,
             'archived_at' => (int)$company_user->deleted_at,
             'created_at' => (int)$company_user->created_at,

@@ -113,8 +113,8 @@ class UserController extends Controller
 
     public function destroy(int $id)
     {
-        $user = User::withTrashed()->where('id', '=', $id)->first();
-        $this->user_repo->newDelete($user);
+        $user = $this->user_repo->findUserById($id);
+        $this->user_repo->destroy($user);
         return response()->json([], 200);
     }
 

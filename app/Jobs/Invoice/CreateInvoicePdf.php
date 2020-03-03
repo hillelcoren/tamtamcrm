@@ -2,6 +2,7 @@
 
 namespace App\Jobs\Invoice;
 
+use App\Designs\Custom;
 use App\Designs\Designer;
 use App\Traits\Pdf\PdfMaker;
 use App\Design;

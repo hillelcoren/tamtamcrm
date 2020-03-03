@@ -2,6 +2,7 @@
 
 namespace App\Listeners\Activity;
 
+use App\Factory\NotificationFactory;
 use App\Repositories\NotificationRepository;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
@@ -35,8 +36,8 @@ class PaymentVoidedActivity implements ShouldQueue
         $fields['notifiable_type'] = get_class($event->payment);
         $fields['type'] = get_class($this);
         $fields['data'] = json_encode($fields['data']);
-        $this->notification_repo->create($fields);
 
-        $this->notification_repo->create($fields);
+        $notification = NotificationFactory::create($event->payment->account_id, $event->payment->user_id);
+        $this->notification_repo->save($notification, $fields);
     }
 }

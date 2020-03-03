@@ -43,6 +43,8 @@ trait AccountTransformable
         $obj->enabled_tax_rates = (int)$account->enabled_tax_rates;
         $obj->updated_at = (int)$account->updated_at;
         $obj->deleted_at = (int)$account->deleted_at;
+        $obj->slack_webhook_url = (string)$account->slack_webhook_url;
+        $obj->google_analytics_url = (string)$account->google_analytics_url;
         return $obj;
     }
 

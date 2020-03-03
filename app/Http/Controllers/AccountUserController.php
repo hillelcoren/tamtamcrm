@@ -63,30 +63,30 @@ class CompanyUserController extends Controller
 //
     }
 
-
-    public function update(UpdateAccountUserRequest $request, User $user)
+    public function update(UpdateCompanyUserRequest $request, User $user)
     {
-        $company = auth()->user()->account_user();
+        $account = auth()->user()->company();
 
-        if (auth()->user()->isAdmin()) {
-            $user_array = $request->all();
 
-            if (array_key_exists('account', $user_array)) {
-                ;
-            }
-            unset($user_array['company_user']);
+        $account_user = AccountUser::whereUserId($user->id)->whereAccountId($account->id)->first();
 
-            $user->fill($user_array);
-            $user->save();
+        if (!$company_user) {
+            throw new ModelNotFoundException("Company User record not found");
+            return;
         }
 
-        $company_user = AccountUser::whereUserId($user->id)->whereAccountId($company->id)->first();
+        if (auth()->user()->isAdmin()) {
+            $account_user->fill($request->input('account_user'));
+        } else {
+            $account_user->fill($request->input('account_user')['settings']);
+            $account_user->fill($request->input('account_user')['notifications']);
+        }
 
-        $company_user->fill($request->input('company_user'));
-        $company_user->save();
+        $account_user->save();
 
-        return response()->json($company_user->fresh());
+        return response()->json($account_user->fresh());
     }
+
 
     /**
      * Remove the specified resource from storage.

@@ -12,6 +12,14 @@ export default class TaxRateDropdown extends Component {
         this.getTaxRates = this.getTaxRates.bind(this)
     }
 
+    componentDidMount () {
+        if (!this.props.taxRates || !this.props.taxRates.length) {
+            this.getTaxRates()
+        } else {
+            this.setState({ taxRates: this.props.taxRates })
+        }
+    }
+
     renderErrorFor (field) {
         if (this.hasErrorFor(field)) {
             return (
@@ -24,14 +32,6 @@ export default class TaxRateDropdown extends Component {
 
     hasErrorFor (field) {
         return this.props.errors && !!this.props.errors[field]
-    }
-
-    componentDidMount () {
-        if (!this.props.taxRates || !this.props.taxRates.length) {
-            this.getTaxRates()
-        } else {
-            this.setState({ taxRates: this.props.taxRates })
-        }
     }
 
     getTaxRates () {

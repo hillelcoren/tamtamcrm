@@ -2,7 +2,6 @@ import React from 'react'
 import { FormGroup, Label, Input, Card, CardBody, CardHeader } from 'reactstrap'
 import PaymentTypeDropdown from '../common/PaymentTypeDropdown'
 import CompanyDropdown from '../common/CompanyDropdown'
-import CustomerTypeDropdown from '../common/CustomerTypeDropdown'
 import CurrencyDropdown from '../common/CurrencyDropdown'
 import UserDropdown from '../common/UserDropdown'
 import GroupSettingsDropdown from '../common/GroupSettingsDropdown'
@@ -49,13 +48,6 @@ export default function SettingsForm (props) {
                 <CompanyDropdown
                     data-namespace="customer"
                     company_id={props.customer.company_id}
-                    errors={props.errors}
-                    handleInputChanges={props.onChange}
-                />
-
-                <CustomerTypeDropdown
-                    data-namespace="customer"
-                    customer_type={props.customer.customer_type}
                     errors={props.errors}
                     handleInputChanges={props.onChange}
                 />

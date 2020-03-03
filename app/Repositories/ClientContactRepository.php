@@ -6,6 +6,7 @@ use App\Customer;
 use App\ClientContact;
 use App\Factory\ClientContactFactory;
 use App\Repositories\Base\BaseRepository;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 
 /**
@@ -28,7 +29,7 @@ class ClientContactRepository extends BaseRepository
      * @param Customer $customer
      * @return bool
      */
-    public function save($data, Customer $customer): bool
+    public function save(array $data, Customer $customer): bool
     {
         if (isset($data['contacts'])) {
             $contacts = collect($data['contacts']);
@@ -62,8 +63,20 @@ class ClientContactRepository extends BaseRepository
             }
 
             $update_contact->fill($contact);
-            $update_contact->save();
 
+            if (array_key_exists('password', $contact)) {
+
+                if (strlen($contact['password']) == 0) {
+
+                    $update_contact->password = '';
+
+                } else {
+                    $update_contact->password = Hash::make($contact['password']);
+                }
+
+            }
+
+            $update_contact->save();
         });
 
         //always made sure we have one blank contact to maintain state

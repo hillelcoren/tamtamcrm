@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Rules\Payment;
 
 use App\Invoice;

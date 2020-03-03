@@ -6,7 +6,6 @@ import {
 } from 'reactstrap'
 import axios from 'axios'
 import CustomerDropdown from '../common/CustomerDropdown'
-import InvoiceDropdown from '../common/InvoiceDropdown'
 import PaymentTypeDropdown from '../common/PaymentTypeDropdown'
 import moment from 'moment'
 import FormBuilder from '../accounts/FormBuilder'
@@ -83,7 +82,7 @@ class EditPayment extends React.Component {
 
     handleCustomerChange (e) {
         var filteredData
-        if (e.target.value == '') {
+        if (e.target.value === '') {
             filteredData = this.props.invoices
         } else {
             filteredData = this.props.invoices.filter(function (invoice) {

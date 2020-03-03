@@ -405,8 +405,8 @@ class EditProduct extends React.Component {
 
                                 <FormGroup>
                                     {
-                                        this.state.images && this.state.images.map(image => {
-                                            return (<div className="col-md-3">
+                                        this.state.images && this.state.images.map((image, index) => {
+                                            return (<div key={index} className="col-md-3">
                                                 <div className="row">
                                                     <img src={`/storage/${image.src}`} alt=""
                                                         className="img-responsive img-thumbnail"/>

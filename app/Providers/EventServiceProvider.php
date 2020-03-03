@@ -19,6 +19,7 @@ use App\Listeners\Activity\PaymentVoidedActivity;
 use App\Listeners\Invoice\CreateInvoiceActivity;
 use App\Listeners\Invoice\CreateInvoiceHtmlBackup;
 use App\Listeners\Invoice\UpdateInvoiceActivity;
+use App\Listeners\Payment\PaymentNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 
 class EventServiceProvider extends ServiceProvider
@@ -37,6 +38,7 @@ class EventServiceProvider extends ServiceProvider
         //payments
         PaymentWasCreated::class => [
             PaymentCreatedActivity::class,
+            PaymentNotification::class,
         ],
         PaymentWasDeleted::class => [
             PaymentDeletedActivity::class,

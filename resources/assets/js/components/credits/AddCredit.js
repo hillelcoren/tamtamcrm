@@ -101,6 +101,7 @@ class AddCredit extends React.Component {
     handleClick () {
         axios.post('/api/credit', {
             total: this.state.total,
+            balance: this.state.total,
             public_notes: this.state.public_notes,
             private_notes: this.state.private_notes,
             customer_id: this.state.customer_id,
@@ -215,8 +216,8 @@ class AddCredit extends React.Component {
                                     {this.renderErrorFor('customer_id')}
                                 </FormGroup>
 
-                                {this.state.contacts.length && this.state.contacts.map(contact => (
-                                    <FormGroup check>
+                                {this.state.contacts.length && this.state.contacts.map((contact, index) => (
+                                    <FormGroup key={index} check>
                                         <Label check>
                                             <Input value={contact.id} onChange={this.handleContactChange}
                                                 type="checkbox"/> {`${contact.first_name} ${contact.last_name}`}

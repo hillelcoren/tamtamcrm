@@ -84,8 +84,7 @@ class QuoteTest extends TestCase
     public function it_can_create_a_quote()
     {
         $total = $this->faker->randomFloat();
-        $factory = (new QuoteFactory())->create($this->account_id, $this->user->id, $total, $this->customer,
-            $this->customer->getMergedSettings());
+        $factory = (new QuoteFactory())->create($this->account_id, $this->user->id, $this->customer);
 
         $data = [
             'account_id' => $this->account_id,

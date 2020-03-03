@@ -4,14 +4,23 @@ namespace App;
 
 use App\Helpers\Invoice\InvoiceSum;
 use App\Helpers\Invoice\InvoiceSumInclusive;
+use App\Jobs\Credit\CreateCreditPdf;
 use App\Services\Credit\CreditService;
+use App\Traits\MakesInvoiceValues;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\Storage;
+use Laracasts\Presenter\PresentableTrait;
 
 class Credit extends Model
 {
     use SoftDeletes;
+    use MakesInvoiceValues;
+    use PresentableTrait;
+
+    protected $presenter = 'App\Presenters\CreditPresenter';
 
     /**
      * @var array
@@ -42,8 +51,9 @@ class Credit extends Model
     ];
 
     const STATUS_DRAFT = 1;
-    const STAUS_PARTIAL = 2;
-    const STATUS_APPLIED = 3;
+    const STATUS_SENT = 2;
+    const STATUS_PARTIAL = 3;
+    const STATUS_APPLIED = 4;
 
     public function assigned_user()
     {
@@ -149,5 +159,36 @@ class Credit extends Model
     {
         $this->status_id = $status;
         $this->save();
+    }
+
+    /**
+     * @param null $invitation
+     * @return string
+     */
+    public function pdf_file_path($invitation = null)
+    {
+        $storage_path = 'storage/' . $this->customer->credit_filepath() . $this->number . '.pdf';
+
+        if (Storage::exists($storage_path)) {
+            return $storage_path;
+        }
+
+        if (!$invitation) {
+            CreateCreditPdf::dispatchNow($this, $this->account, $this->customer->primary_contact()->first());
+        } else {
+            CreateCreditPdf::dispatchNow($invitation->credit, $invitation->account, $invitation->contact);
+        }
+
+        return $storage_path;
+    }
+
+    public function markInvitationsSent()
+    {
+        $this->invitations->each(function ($invitation) {
+            if (!isset($invitation->sent_date)) {
+                $invitation->sent_date = Carbon::now();
+                $invitation->save();
+            }
+        });
     }
 }

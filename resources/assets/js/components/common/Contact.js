@@ -6,7 +6,7 @@ export default class Contact extends Component {
     constructor (props) {
         super(props)
         this.state = {
-            contacts: this.props.contacts ? this.props.contacts : [{ first_name: '', last_name: '', email: '', phone: '' }]
+            contacts: this.props.contacts && this.props.contacts.length ? this.props.contacts : [{ first_name: '', last_name: '', email: '', phone: '', password: '' }]
         }
 
         this.handleChange = this.handleChange.bind(this)
@@ -22,7 +22,7 @@ export default class Contact extends Component {
 
     addContact (e) {
         this.setState((prevState) => ({
-            contacts: [...prevState.contacts, { first_name: '', last_name: '', email: '', phone: '' }]
+            contacts: [...prevState.contacts, { first_name: '', last_name: '', email: '', phone: '', password: '' }]
         }), () => this.props.onChange(this.state.contacts))
     }
 

@@ -2,7 +2,10 @@
 
 namespace App\Services\Task;
 
+use App\ClientContact;
+use App\Factory\ClientContactFactory;
 use App\Factory\CustomerFactory;
+use App\Repositories\ClientContactRepository;
 use App\Repositories\CustomerRepository;
 use App\Repositories\TaskRepository;
 use App\Services\AbstractService;
@@ -45,7 +48,6 @@ class CreateDeal extends AbstractService
 
     public function run()
     {
-        $this->request->customer_type = 2;
         $account_id = 1;
         $factory = (new CustomerFactory())->create($account_id, $this->task->user_id);
 
@@ -53,21 +55,21 @@ class CreateDeal extends AbstractService
         $date->add(new DateInterval('P30D'));
         $due_date = $date->format('Y-m-d');
 
-        $customer =
-            $this->customer_repo->save($this->request->except('_token', '_method', 'valued_at', 'title', 'description'),
-                $factory);
-        if ($this->request->has('address_1') && !empty($this->request->address_1)) {
-            $customer->addresses()->create([
-                'company_id' => $this->request->company_id,
-                'job_title' => $this->request->job_title,
-                'address_1' => $this->request->address_1,
-                'address_2' => $this->request->address_2,
-                'zip' => $this->request->zip,
-                'city' => $this->request->city,
-                'country_id' => 225,
-                'status' => 1
-            ]);
-        }
+        $contacts [] = [
+            'first_name' => $this->request->first_name,
+            'last_name' => $this->request->last_name,
+            'email' => $this->request->email,
+            'phone' => $this->request->phone,
+        ];
+
+        $customer = $this->customer_repo->save([
+            'name' => $this->request->first_name . ' ' . $this->request->last_name,
+            'phone' => $this->request->phone,
+            'website' => $this->request->website,
+            'currency_id' => 1,
+            'default_payment_method' => 1,
+            'contacts' => $contacts
+        ], $factory);
 
         $this->task = $this->task_repo->save([
             'due_date' => $due_date,

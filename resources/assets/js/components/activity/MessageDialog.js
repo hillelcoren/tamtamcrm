@@ -1,5 +1,4 @@
 import * as React from 'react'
-import { Button, Modal, ModalHeader, ModalBody, ModalFooter, Input } from 'reactstrap'
 
 class MessageDialog extends React.Component {
     constructor (props) {
@@ -17,7 +16,7 @@ class MessageDialog extends React.Component {
     }
 
     render () {
-        const { mode, submitMessage, toggleOpenState, isDialogOpen } = this.props
+        const { mode, submitMessage } = this.props
         const { messageText } = this.state
         return (
 

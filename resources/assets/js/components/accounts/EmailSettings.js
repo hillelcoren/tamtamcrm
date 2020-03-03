@@ -1,8 +1,9 @@
 import React, { Component } from 'react'
 import FormBuilder from './FormBuilder'
-import { Button, Card, CardHeader, CardBody } from 'reactstrap'
+import { Button, Card, CardBody, CardHeader } from 'reactstrap'
 import axios from 'axios'
-import { ToastContainer, toast } from 'react-toastify'
+import { toast, ToastContainer } from 'react-toastify'
+import SignatureCanvas from 'react-signature-canvas'
 
 class EmailSettings extends Component {
     constructor (props) {
@@ -10,6 +11,7 @@ class EmailSettings extends Component {
 
         this.state = {
             id: localStorage.getItem('account_id'),
+            sigPad: {},
             settings: {}
         }
 
@@ -17,6 +19,7 @@ class EmailSettings extends Component {
         this.handleChange = this.handleChange.bind(this)
         this.handleSubmit = this.handleSubmit.bind(this)
         this.getAccount = this.getAccount.bind(this)
+        this.trim = this.trim.bind(this)
     }
 
     componentDidMount () {
@@ -52,25 +55,32 @@ class EmailSettings extends Component {
         }))
     }
 
-    handleSubmit (e) {
-        const formData = new FormData()
-        formData.append('settings', JSON.stringify(this.state.settings))
-        formData.append('_method', 'PUT')
+    trim () {
+        const value = this.state.sigPad.getTrimmedCanvas()
+            .toDataURL('image/png')
 
-        axios.post(`/api/accounts/${this.state.id}`, formData, {
-            headers: {
-                'content-type': 'multipart/form-data'
-            }
+        return new Promise((resolve, reject) => {
+            this.setState(prevState => ({
+                settings: {
+                    ...prevState.settings,
+                    email_signature: value
+                }
+            }), () => resolve(true))
         })
-            .then((response) => {
-                toast.success('Settings updated successfully')
-            })
-            .catch((error) => {
-                toast.error('There was an issue updating the settings')
-            })
     }
 
-    getProductFields () {
+    handleSubmit (e) {
+        this.trim().then(result => {
+            axios.put(`/api/accounts/${this.state.id}`, { settings: JSON.stringify(this.state.settings) }, {
+            }).then((response) => {
+                toast.success('Settings updated successfully')
+            }).catch((error) => {
+                toast.error(`There was an issue updating the settings ${error}`)
+            })
+        })
+    }
+
+    getFormFields () {
         const settings = this.state.settings
 
         const formFields = [
@@ -180,8 +190,16 @@ class EmailSettings extends Component {
                     <CardBody>
                         <FormBuilder
                             handleChange={this.handleSettingsChange}
-                            formFieldsRows={this.getProductFields()}
+                            formFieldsRows={this.getFormFields()}
                         />
+
+                        <SignatureCanvas canvasProps={{
+                            width: 800,
+                            height: 200,
+                            className: 'signatureCanvas'
+                        }} ref={(ref) => {
+                            this.state.sigPad = ref
+                        }}/>
 
                         <Button color="primary" onClick={this.handleSubmit}>Save</Button>
                     </CardBody>

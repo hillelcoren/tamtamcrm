@@ -40,6 +40,7 @@ class ClientContact extends Model implements HasLocalePreference
         'account_id',
         'customer_id',
         'token',
+        'password',
     ];
 
     protected $fillable = [
@@ -52,6 +53,7 @@ class ClientContact extends Model implements HasLocalePreference
         'custom_value4',
         'email',
         'is_primary',
+        'password'
     ];
 
     /**/

@@ -18,8 +18,10 @@ use App\Payment;
 
 $factory->define(Payment::class, function (Faker\Generator $faker) {
     $customer = factory(Customer::class)->create();
+    $user = factory(\App\User::class)->create();
     $invoice = factory(Invoice::class)->create();
     return [
+        'user_id' => $user->id,
         'account_id' => 1,
         'is_deleted' => false,
         'amount' => $faker->numberBetween(1,10),

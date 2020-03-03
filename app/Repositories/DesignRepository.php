@@ -33,7 +33,8 @@ class DesignRepository extends BaseRepository
         $this->model = $design;
     }
 
-    public function getModel() {
+    public function getModel()
+    {
         return $this->model;
     }
 

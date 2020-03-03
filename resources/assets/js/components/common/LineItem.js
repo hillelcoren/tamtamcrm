@@ -42,7 +42,7 @@ class LineItem extends Component {
                 }
             }
 
-            return <React.Fragment>
+            return <React.Fragment key={index}>
                 <Row className="border-bottom border-primary my-3" form>
                     {this.props.line_type === 1 &&
                     <Col md={3} data-id={index}>

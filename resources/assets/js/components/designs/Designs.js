@@ -12,6 +12,7 @@ import TableSearch from '../common/TableSearch'
 import FilterTile from '../common/FilterTile'
 import ViewEntity from '../common/ViewEntity'
 import DateFilter from '../common/DateFilter'
+import BulkActionDropdown from '../common/BulkActionDropdown'
 
 export default class Designs extends Component {
     constructor (props) {
@@ -26,6 +27,8 @@ export default class Designs extends Component {
                 title: null
             },
             errors: [],
+            dropdownButtonActions: ['download'],
+            bulk: [],
             ignoredColumns: ['settings', 'deleted_at', 'created_at'],
             filters: {
                 searchText: '',
@@ -42,6 +45,8 @@ export default class Designs extends Component {
         this.getFilters = this.getFilters.bind(this)
         this.updateIgnoredColumns = this.updateIgnoredColumns.bind(this)
         this.toggleViewedEntity = this.toggleViewedEntity.bind(this)
+        this.onChangeBulk = this.onChangeBulk.bind(this)
+        this.saveBulk = this.saveBulk.bind(this)
     }
 
     addUserToState (designs) {
@@ -94,6 +99,46 @@ export default class Designs extends Component {
         return true
     }
 
+    onChangeBulk (e) {
+        // current array of options
+        const options = this.state.bulk
+        let index
+
+        // check if the check box is checked or unchecked
+        if (e.target.checked) {
+            // add the numerical value of the checkbox to options array
+            options.push(+e.target.value)
+        } else {
+            // or remove the value from the unchecked checkbox from the array
+            index = options.indexOf(e.target.value)
+            options.splice(index, 1)
+        }
+
+        // update the state with the new array of options
+        this.setState({ bulk: options })
+    }
+
+    saveBulk (e) {
+        const action = e.target.id
+        const self = this
+        axios.post('/api/design/bulk', {
+            bulk: this.state.bulk,
+            action: action
+        }).then(function (response) {
+            // const arrQuotes = [...self.state.invoices]
+            // const index = arrQuotes.findIndex(payment => payment.id === id)
+            // arrQuotes.splice(index, 1)
+            // self.updateInvoice(arrQuotes)
+        })
+            .catch(function (error) {
+                self.setState(
+                    {
+                        error: error.response.data
+                    }
+                )
+            })
+    }
+
     resetFilters () {
         this.props.reset()
     }
@@ -133,6 +178,12 @@ export default class Designs extends Component {
                             data={this.state.cachedData}/>
                     </FormGroup>
                 </Col>
+
+                <Col>
+                    <BulkActionDropdown
+                        dropdownButtonActions={this.state.dropdownButtonActions}
+                        saveBulk={this.saveBulk}/>
+                </Col>
             </Row>
         )
     }
@@ -164,6 +215,7 @@ export default class Designs extends Component {
 
                 return <tr key={design.id}>
                     <td>
+                        <Input value={design.id} type="checkbox" onChange={this.onChangeBulk}/>
                         <ActionsMenu edit={editButton} delete={deleteButton} archive={archiveButton}
                             restore={restoreButton}/>
                     </td>

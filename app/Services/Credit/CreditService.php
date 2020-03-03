@@ -43,6 +43,20 @@ class CreditService
         return $this;
     }
 
+    public function setStatus($status)
+    {
+        $this->credit->status_id = $status;
+
+        return $this;
+    }
+
+    public function markSent()
+    {
+        $this->credit = (new MarkSent($this->credit->customer, $this->credit))->run();
+
+        return $this;
+    }
+
     /**
      * Saves the credit
      * @return Credit object

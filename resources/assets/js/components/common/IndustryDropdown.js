@@ -12,6 +12,14 @@ export default class IndustryDropdown extends Component {
         this.getIndustries = this.getIndustries.bind(this)
     }
 
+    componentDidMount () {
+        if (!this.props.industries || !this.props.industries.length) {
+            this.getIndustries()
+        } else {
+            this.setState({ industries: this.props.industries })
+        }
+    }
+
     renderErrorFor (field) {
         if (this.hasErrorFor(field)) {
             return (
@@ -24,14 +32,6 @@ export default class IndustryDropdown extends Component {
 
     hasErrorFor (field) {
         return this.props.errors && !!this.props.errors[field]
-    }
-
-    componentDidMount () {
-        if (!this.props.industries || !this.props.industries.length) {
-            this.getIndustries()
-        } else {
-            this.setState({ industries: this.props.industries })
-        }
     }
 
     getIndustries () {

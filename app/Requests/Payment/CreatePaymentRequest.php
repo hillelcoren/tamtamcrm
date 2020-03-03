@@ -65,7 +65,7 @@ class CreatePaymentRequest extends BaseFormRequest
     {
         $rules = [
             'amount' => 'numeric|required',
-            'amount' => [new PaymentAmountsBalanceRule(),new ValidCreditsPresentRule()],
+            'amount' => [new PaymentAmountsBalanceRule(), new ValidCreditsPresentRule()],
             'date' => 'required',
             'customer_id' => 'bail|required|exists:customers,id',
             'invoices.*.invoice_id' => 'required|distinct|exists:invoices,id',

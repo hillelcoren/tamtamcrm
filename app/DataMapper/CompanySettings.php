@@ -15,6 +15,8 @@ class CompanySettings extends BaseSettings
     /*Group settings based on functionality*/
     /*Invoice*/
     public $auto_archive_invoice = false;
+    public $email_subject_payment_partial = '';
+    public $email_template_payment_partial = '';
     public $lock_sent_invoices = false;
     public $update_products = true;
     public $fill_products = true;
@@ -89,6 +91,7 @@ class CompanySettings extends BaseSettings
     public $enabled_item_tax_rates = 0;
     public $invoice_design_id = '1';
     public $quote_design_id = '1';
+    public $credit_design_id = '1';
     public $invoice_footer = '';
     public $invoice_labels = '';
     public $tax_name1 = '';
@@ -184,6 +187,8 @@ class CompanySettings extends BaseSettings
     public $pdf_variables = [];
 
     public static $casts = [
+        'email_subject_payment_partial' => 'string',
+        'email_template_payment_partial' => 'string',
         'portal_design_id' => 'string',
         'fill_products' => 'bool',
         'update_products' => 'bool',
@@ -293,6 +298,7 @@ class CompanySettings extends BaseSettings
         'invoice_number_pattern' => 'string',
         'invoice_number_counter' => 'integer',
         'invoice_design_id' => 'string',
+        'credit_design_id' => 'string',
         'invoice_fields' => 'string',
         'invoice_taxes' => 'int',
         'enabled_item_tax_rates' => 'int',
@@ -426,7 +432,7 @@ class CompanySettings extends BaseSettings
         return $settings;
     }
 
-    private static function getEntityVariableDefaults()
+    public static function getEntityVariableDefaults()
     {
         $variables = [
             'client_details' => [
@@ -476,7 +482,16 @@ class CompanySettings extends BaseSettings
                 'credit_balance',
                 'credit_amount',
             ],
-            'table_columns' => [
+            'product_columns' => [
+                'product_key',
+                'notes',
+                'cost',
+                'quantity',
+                'discount',
+                'tax_name1',
+                'line_total'
+            ],
+            'task_columns' => [
                 'product_key',
                 'notes',
                 'cost',

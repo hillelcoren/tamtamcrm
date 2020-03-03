@@ -18,7 +18,7 @@ class StoreDesignRequest extends BaseFormRequest
     {
         return [
             //'name' => 'required',
-            'name' => 'required|unique:designs,name,null,null,account_id,'.auth()->user()->account_user()->account_id,
+            'name' => 'required|unique:designs,name,null,null,account_id,' . auth()->user()->account_user()->account_id,
             'design' => 'required',
         ];
     }

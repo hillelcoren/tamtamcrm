@@ -35,7 +35,8 @@ class TaxRateController extends Controller
 
     public function index(SearchRequest $request)
     {
-        $tax_rates = (new TaxRateFilter($this->tax_rate_repo))->filter($request, auth()->user()->account_user()->id);
+        $tax_rates =
+            (new TaxRateFilter($this->tax_rate_repo))->filter($request, auth()->user()->account_user()->account_id);
         return response()->json($tax_rates);
     }
 
@@ -47,7 +48,7 @@ class TaxRateController extends Controller
      */
     public function store(CreateTaxRateRequest $request)
     {
-        $tax_rate = TaxRateFactory::create(auth()->user()->account_user()->id, auth()->user()->id);
+        $tax_rate = TaxRateFactory::create(auth()->user()->account_user()->account_id, auth()->user()->id);
         $this->tax_rate_repo->save($request->all(), $tax_rate);
 
         return response()->json($this->transformTaxRate($tax_rate));

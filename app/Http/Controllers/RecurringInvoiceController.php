@@ -77,7 +77,7 @@ class RecurringInvoiceController extends Controller
         ), $request->all());
 
         $recurringInvoice = (new RecurringInvoiceRepository(new RecurringInvoice))->save($arrRecurring,
-            RecurringInvoiceFactory::create($request->customer_id, auth()->user()->account_user()->id,
+            RecurringInvoiceFactory::create($request->customer_id, auth()->user()->account_user()->account_id,
                 $invoice->total));
         return response()->json($recurringInvoice);
     }

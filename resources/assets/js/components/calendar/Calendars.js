@@ -11,12 +11,6 @@ import UserDropdown from '../common/UserDropdown'
 import CustomerDropdown from '../common/CustomerDropdown'
 import EventTypeDropdown from '../common/EventTypeDropdown'
 
-const Container = styled.div`
-  display: flex;
-  flex-direction: column;
-  max-width: 900px;
-  margin: 1rem auto;
-`
 const Controls = styled.div`
   display: flex;
   justify-content: space-between;

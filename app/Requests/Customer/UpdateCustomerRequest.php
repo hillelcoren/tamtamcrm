@@ -18,11 +18,17 @@ class UpdateCustomerRequest extends BaseFormRequest
     {
         return [
             'settings' => new ValidClientGroupSettingsRule(),
-            'customer_type' => 'required',
-            'first_name' => ['required'],
-            'last_name' => ['required'],
-            //'email' => ['required', 'email', Rule::unique('customers')->ignore($this->segment(3))],
-            'contacts.*.email' => ['nullable', 'distinct']
+            'name' => ['required'],
+            'contacts.*.email' => ['nullable', 'distinct'],
+            'contacts.*.password' => [
+                'sometimes',
+                'string',
+                'min:10',             // must be at least 10 characters in length
+                'regex:/[a-z]/',      // must contain at least one lowercase letter
+                'regex:/[A-Z]/',      // must contain at least one uppercase letter
+                'regex:/[0-9]/',      // must contain at least one digit
+                'regex:/[@$!%*#?&]/', // must contain a special character
+            ]
         ];
     }
 
@@ -31,7 +37,15 @@ class UpdateCustomerRequest extends BaseFormRequest
         $input = $this->all();
         $cleaned_contacts = [];
 
-        foreach ($input['contacts'] as $contact) {
+        foreach ($input['contacts'] as $key => $contact) {
+            if (isset($contact['password'])) {
+                $contact['password'] = str_replace("*", "", $contact['password']);
+
+                if (strlen($contact['password']) == 0) {
+                    unset($input['contacts'][$key]['password']);
+                }
+            }
+
             if (trim($contact['first_name']) !== '' && trim($contact['last_name']) !== '') {
                 $cleaned_contacts[] = $contact;
             }

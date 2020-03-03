@@ -7,6 +7,7 @@ use App\Jobs\Company\CreateCompany;
 //use App\Jobs\Account\CreateCompanyToken;
 use App\Jobs\User\CreateUser;
 use App\Domain;
+use App\Notifications\Ninja\NewAccountCreated;
 use App\User;
 use App\Notifications\NewDomainCreated;
 use App\Utils\Traits\UserSessionAttributes;
@@ -75,8 +76,8 @@ class CreateDomain
         }
 
         $user->fresh();
-        /*Notification::route('slack', config('ninja.notification.slack'))
-                    ->notify(new NewAccountCreated($user, $company));*/
+
+        $account->notification(new NewAccountCreated($user, $account))->ninja();
         return $domain;
     }
 }

@@ -1,5 +1,4 @@
 import React, { Component } from 'react'
-import { Button } from 'reactstrap'
 import InvoiceLineInputs from './InvoiceLineInputs'
 
 export default class InvoiceLine extends Component {

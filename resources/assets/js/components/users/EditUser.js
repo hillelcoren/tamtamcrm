@@ -26,7 +26,6 @@ import DepartmentDropdown from '../common/DepartmentDropdown'
 import FormBuilder from '../accounts/FormBuilder'
 import SuccessMessage from '../common/SucessMessage'
 import ErrorMessage from '../common/ErrorMessage'
-import AccountDropdown from '../common/AccountDropdown'
 
 class EditUser extends React.Component {
     constructor (props) {
@@ -290,7 +289,7 @@ class EditUser extends React.Component {
             const is_admin = assignedAccounts.length > 0 && assignedAccounts[0].is_admin === true
 
             return (
-                <React.Fragment>
+                <React.Fragment key={account.id}>
                     <div>
                         <FormGroup check inline>
                             <Label check>
@@ -472,6 +471,7 @@ class EditUser extends React.Component {
                                 </Row>
 
                                 <Row form>
+                                    <h4>Accounts</h4>
                                     <Col md={6}>
                                         {accountList}
                                     </Col>

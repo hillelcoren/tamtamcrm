@@ -37,7 +37,6 @@ export default class Customers extends Component {
                             <div className="col-12 col-sm-6 col-md-9 text-center text-sm-left">
                                 <span className="float-right pulse" title="online now">
                                     <EditCustomer
-                                        customer_type={this.props.customer_type}
                                         id={customer.id}
                                         action={this.updateCustomers}
                                         customers={this.state.customers}
@@ -119,7 +118,6 @@ export default class Customers extends Component {
             <div className="data-table m-md-3 m-0">
 
                 <AddCustomer
-                    customer_type={this.props.customer_type}
                     action={this.updateCustomers}
                     customers={this.state.customers}
                 />

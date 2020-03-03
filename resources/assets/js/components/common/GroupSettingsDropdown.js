@@ -12,6 +12,14 @@ export default class GroupSettingsDropdown extends Component {
         this.getGroups = this.getGroups.bind(this)
     }
 
+    componentDidMount () {
+        if (!this.props.groups || !this.props.groups.length) {
+            this.getGroups()
+        } else {
+            this.setState({ groups: this.props.groups })
+        }
+    }
+
     renderErrorFor (field) {
         if (this.hasErrorFor(field)) {
             return (
@@ -24,14 +32,6 @@ export default class GroupSettingsDropdown extends Component {
 
     hasErrorFor (field) {
         return this.props.errors && !!this.props.errors[field]
-    }
-
-    componentDidMount () {
-        if (!this.props.groups || !this.props.groups.length) {
-            this.getGroups()
-        } else {
-            this.setState({ groups: this.props.groups })
-        }
     }
 
     getGroups () {

@@ -80,10 +80,6 @@ class MessageContainer extends React.Component {
     }
 
     createMessage (messageText) {
-        const { activeUser } = this.props
-        const messageId = this.state.messages.length
-            ? this.state.messages[this.state.messages.length - 1].id + 1
-            : 1
         const newMessage = {
             comment: messageText,
             parent_id: null,
@@ -201,8 +197,8 @@ class MessageContainer extends React.Component {
 
                     <h2>Event Invitations</h2>
                     {events && events.length ? (
-                        events.map((event) => (
-                            <Event
+                        events.map((event, index) => (
+                            <Event key={index}
                                 action={this.updateEvents}
                                 events={this.state.events}
                                 event={event}
@@ -216,8 +212,8 @@ class MessageContainer extends React.Component {
                             </CardHeader>
                             <CardBody>
                                 <ListGroup className="m-3">
-                                    {notifications.map((notification) => (
-                                        <React.Fragment>
+                                    {notifications.map((notification, index) => (
+                                        <React.Fragment key={index}>
                                             <ListGroupItem color="dark"
                                                 className="d-flex justify-content-between align-items-center">
                                                 {`${notification.data.message}  by ${notification.author}`}

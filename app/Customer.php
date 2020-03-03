@@ -4,6 +4,9 @@ namespace App;
 
 use App\DataMapper\CompanySettings;
 use App\DataMapper\CustomerSettings;
+use App\Factory\CreditFactory;
+use App\Factory\InvoiceFactory;
+use App\Factory\QuoteFactory;
 use App\Traits\GeneratesCounter;
 use Exception;
 use Illuminate\Database\Eloquent\Model;
@@ -36,12 +39,10 @@ class Customer extends Model implements HasLocalePreference
      */
     protected $fillable = [
         'id_number',
-        'first_name',
+        'name',
         'credits',
         'last_name',
-        'email',
         'status',
-        'job_title',
         'company_id',
         'currency_id',
         'phone',
@@ -439,5 +440,32 @@ class Customer extends Model implements HasLocalePreference
     {
         return $this->gateway_tokens()->whereCompanyGatewayId($company_gateway_id)
                     ->whereGatewayTypeId($payment_method_id)->first();
+    }
+
+    public function setInvoiceDefaults(): Invoice
+    {
+        $invoice_factory = InvoiceFactory::create(auth()->user()->id, $this->account_id, $this);
+        $invoice_factory->terms = $this->getSetting('invoice_terms');
+        $invoice_factory->footer = $this->getSetting('invoice_footer');
+        $invoice_factory->public_notes = isset($this->public_notes) ? $this->public_notes : '';
+        return $invoice_factory;
+    }
+
+    public function setQuoteDefaults(): Quote
+    {
+        $quote_factory = QuoteFactory::create($this->account_id, auth()->user()->id, $this);
+        $quote_factory->terms = $this->getSetting('quote_terms');
+        $quote_factory->footer = $this->getSetting('quote_footer');
+        $quote_factory->public_notes = isset($this->public_notes) ? $this->public_notes : '';
+        return $quote_factory;
+    }
+
+    public function setCreditDefaults(): Credit
+    {
+        $credit_factory = CreditFactory::create($this->account_id, auth()->user()->id, $this);
+        $credit_factory->terms = $this->getSetting('credit_terms');
+        $credit_factory->footer = $this->getSetting('credit_footer');
+        $credit_factory->public_notes = isset($this->public_notes) ? $this->public_notes : '';
+        return $credit_factory;
     }
 }

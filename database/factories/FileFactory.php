@@ -44,6 +44,7 @@ $factory->define(File::class, function (Faker $faker) {
         'custom_value1' => null,
         'custom_value2' => null,
         'custom_value3' => null,
-        'custom_value4' => null
+        'custom_value4' => null,
+        'deleted_at' => null
     ];
 });

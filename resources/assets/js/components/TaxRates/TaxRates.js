@@ -6,10 +6,7 @@ import DataTable from '../common/DataTable'
 import DeleteModal from '../common/DeleteModal'
 import RestoreModal from '../common/RestoreModal'
 import {
-    Card, CardBody, FormGroup, Input, Row, Col, ButtonDropdown,
-    DropdownToggle,
-    DropdownMenu,
-    DropdownItem
+    Card, CardBody, FormGroup, Input, Row, Col
 } from 'reactstrap'
 import DisplayColumns from '../common/DisplayColumns'
 import ActionsMenu from '../common/ActionsMenu'
@@ -105,7 +102,7 @@ export default class TaxRates extends Component {
     saveBulk (e) {
         const action = e.target.id
         const self = this
-        axios.post('/api/user/bulk', { bulk: this.state.bulk }).then(function (response) {
+        axios.post('/api/user/bulk', { bulk: this.state.bulk, action: action }).then(function (response) {
             // const arrQuotes = [...self.state.invoices]
             // const index = arrQuotes.findIndex(payment => payment.id === id)
             // arrQuotes.splice(index, 1)

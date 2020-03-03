@@ -61,13 +61,9 @@ export default function CustomerTabs (props) {
     })
 
     const [customer, setCustomerValues] = useState({
-        first_name: props.customer ? props.customer.name.split(' ').slice(0, -1).join(' ') : '',
-        last_name: props.customer ? props.customer.name.split(' ').slice(-1).join(' ') : '',
-        email: props.customer ? props.customer.email : '',
-        job_title: props.customer ? props.customer.job_title : '',
+        name: props.customer ? props.customer.name : '',
         company_id: props.customer ? props.customer.company_id : '',
         phone: props.customer ? props.customer.phone : '',
-        customer_type: props.customer ? props.customer.customer_type : '',
         group_settings_id: props.customer ? props.customer.group_settings_id : null,
         currency_id: props.customer ? props.customer.currency_id : '',
         default_payment_method: props.customer ? props.customer.default_payment_method : '',
@@ -126,17 +122,13 @@ export default function CustomerTabs (props) {
         console.log('contacts 2', cleanedContacts)
 
         const formdata = {
-            first_name: customer.first_name,
-            last_name: customer.last_name,
-            email: customer.email,
+            name: customer.name,
             phone: customer.phone,
-            job_title: customer.job_title,
             company_id: customer.company_id,
             description: customer.description,
             public_notes: customer.public_notes,
             private_notes: customer.private_notes,
             website: customer.website,
-            customer_type: customer.customer_type,
             currency_id: customer.currency_id,
             size_id: customer.size_id,
             industry_id: customer.industry_id,
@@ -177,17 +169,13 @@ export default function CustomerTabs (props) {
         console.log('contacts 2', cleanedContacts)
 
         const formdata = {
-            first_name: customer.first_name,
-            last_name: customer.last_name,
-            email: customer.email,
+            name: customer.name,
             phone: customer.phone,
-            job_title: customer.job_title,
             company_id: customer.company_id,
             description: customer.description,
             public_notes: customer.public_notes,
             private_notes: customer.private_notes,
             website: customer.website,
-            customer_type: customer.customer_type,
             currency_id: customer.currency_id,
             size_id: customer.size_id,
             industry_id: customer.industry_id,

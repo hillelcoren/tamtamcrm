@@ -72,7 +72,6 @@ class QuoteRepository extends BaseRepository implements QuoteRepositoryInterface
             }
         }
 
-
         if (isset($data['invitations'])) {
             $invitations = collect($data['invitations']);
 

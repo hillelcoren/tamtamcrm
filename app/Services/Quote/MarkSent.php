@@ -2,6 +2,7 @@
 
 namespace App\Services\Quote;
 
+use App\Customer;
 use App\Events\Quote\QuoteWasMarkedSent;
 use App\Quote;
 use App\Services\AbstractService;
@@ -11,7 +12,12 @@ class MarkSent extends AbstractService
     private $client;
     private $quote;
 
-    public function __construct($client, $quote)
+    /**
+     * MarkSent constructor.
+     * @param Customer $client
+     * @param Quote $quote
+     */
+    public function __construct(Customer $client, Quote $quote)
     {
         $this->client = $client;
         $this->quote = $quote;

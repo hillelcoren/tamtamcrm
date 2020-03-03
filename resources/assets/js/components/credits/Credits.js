@@ -5,10 +5,7 @@ import AddCredit from './AddCredit'
 import EditCredit from './EditCredit'
 import CustomerDropdown from '../common/CustomerDropdown'
 import {
-    Badge, FormGroup, Input, Card, CardBody, Col, Row, ButtonDropdown,
-    DropdownToggle,
-    DropdownMenu,
-    DropdownItem
+    FormGroup, Input, Card, CardBody, Col, Row
 } from 'reactstrap'
 import RestoreModal from '../common/RestoreModal'
 import DeleteModal from '../common/DeleteModal'
@@ -105,7 +102,7 @@ export default class Credits extends Component {
     saveBulk (e) {
         const action = e.target.id
         const self = this
-        axios.post('/api/credit/bulk', { bulk: this.state.bulk }).then(function (response) {
+        axios.post('/api/credit/bulk', { bulk: this.state.bulk, action: action }).then(function (response) {
             // const arrQuotes = [...self.state.invoices]
             // const index = arrQuotes.findIndex(payment => payment.id === id)
             // arrQuotes.splice(index, 1)
@@ -232,6 +229,7 @@ export default class Credits extends Component {
                         >
                             <option value="">Select Status</option>
                             <option value='draft'>Draft</option>
+                            <option value='sent'>Sent</option>
                             <option value='partial'>Partial</option>
                             <option value='applied'>Applied</option>
                             <option value='active'>Active</option>
@@ -289,7 +287,7 @@ export default class Credits extends Component {
                 const columnList = Object.keys(credit).filter(key => {
                     return ignoredColumns && !ignoredColumns.includes(key)
                 }).map(key => {
-                    return <CreditPresenter customers={customers} toggleViewedEntity={this.toggleViewedEntity}
+                    return <CreditPresenter key={key} customers={customers} toggleViewedEntity={this.toggleViewedEntity}
                         field={key} entity={credit}/>
                 })
                 return (

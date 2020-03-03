@@ -12,7 +12,10 @@ export default class FileUploads extends Component {
             loading: false
         }
         this.addFile = this.addFile.bind(this)
-        this.getFiles = this.getFiles.bind(this)
+
+        if (this.props.entity.id) {
+            this.getFiles = this.getFiles.bind(this)
+        }
     }
 
     componentDidMount () {

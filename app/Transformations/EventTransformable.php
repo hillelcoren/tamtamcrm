@@ -24,8 +24,7 @@ trait EventTransformable
         $prop->id = (int)$event->id;
         $prop->location = $event->location;
         $prop->customer_id = $customer->id;
-        $prop->first_name = $customer->first_name;
-        $prop->last_name = $customer->last_name;
+        $prop->name = $customer->name;
         $prop->title = $event->title;
         $prop->beginDate = date("D M d Y H:i:s", strtotime($event->beginDate));
         $prop->endDate = date("D M d Y H:i:s", strtotime($event->endDate));

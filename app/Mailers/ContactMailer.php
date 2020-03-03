@@ -250,7 +250,7 @@ class ContactMailer extends Mailer
         //$invitation = $payment->invitation ?: $payment->invoice->invitations[0];
 
 
-        $accountName = $invoice->customer->first_name . ' ' . $invoice->customer->last_name;
+        $accountName = $invoice->customer->name;
 
         if ($refunded > 0) {
             $emailSubject = trans('texts.refund_subject');

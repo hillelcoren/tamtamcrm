@@ -110,7 +110,7 @@ class EditTaskTimes extends Component {
     render () {
         const { currentIndex, times, showSuccess, showError } = this.state
         const timeList = times.length ? times.map((time, index) => {
-            return <div
+            return <div key={index}
                 className="list-group-item list-group-item-action flex-column align-items-start">
                 <div className="d-flex w-100 justify-content-between">
                     <h5 className="mb-1">{time.date}</h5>
@@ -162,7 +162,7 @@ class EditTaskTimes extends Component {
             <React.Fragment>
                 {showSuccessMessage}
                 {showErrorMessage}
-                <div className="list-group" className={this.state.dropdown2Open ? 'collapse show' : 'collapse'}>
+                <div className={`list-group ${this.state.dropdown2Open ? 'collapse show' : 'collapse'}`}>
                     {timeList}
                 </div>
 

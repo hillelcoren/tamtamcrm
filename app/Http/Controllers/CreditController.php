@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\Credit\CreditWasCreated;
 use App\Factory\CloneCreditFactory;
 use App\Factory\CloneCreditToQuoteFactory;
 use App\Filters\CreditFilter;
@@ -77,9 +78,8 @@ class CreditController extends Controller
     public function store(CreateCreditRequest $request)
     {
         $customer = Customer::find($request->input('customer_id'));
-        $credit = $this->credit_repo->save($request->all(),
-            CreditFactory::create(auth()->user()->account_user()->account_id, auth()->user()->id, $request->total,
-                $customer, $customer->getMergedSettings()));
+        $credit = $this->credit_repo->save($request->all(), $customer->setCreditDefaults());
+        event(new CreditWasCreated($credit, $credit->account));
         return response()->json($this->transformCredit($credit));
     }
 
@@ -190,10 +190,10 @@ class CreditController extends Controller
                 }
                 break;
             case 'mark_sent':
-                $credit->markSent();
+                $credit->service()->markSent()->save();
 
                 if (!$bulk) {
-                    return $this->itemResponse($credit);
+                    return response()->json($this->transformCredit($credit));
                 }
                 break;
             case 'download':

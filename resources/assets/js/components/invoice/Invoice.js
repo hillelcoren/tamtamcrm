@@ -2,10 +2,7 @@ import React, { Component } from 'react'
 import axios from 'axios'
 import EditInvoice from './EditInvoice'
 import {
-    FormGroup, Input, Card, CardBody, Row, Col, ButtonDropdown,
-    DropdownToggle,
-    DropdownMenu,
-    DropdownItem
+    FormGroup, Input, Card, CardBody, Row, Col
 } from 'reactstrap'
 import DataTable from '../common/DataTable'
 import CustomerDropdown from '../common/CustomerDropdown'
@@ -172,7 +169,7 @@ export default class Invoice extends Component {
                 const columnList = Object.keys(invoice).filter(key => {
                     return this.state.ignoredColumns && !this.state.ignoredColumns.includes(key)
                 }).map(key => {
-                    return <InvoicePresenter customers={customers} toggleViewedEntity={this.toggleViewedEntity}
+                    return <InvoicePresenter key={key} customers={customers} toggleViewedEntity={this.toggleViewedEntity}
                         field={key} entity={invoice}/>
                 })
 

@@ -3,9 +3,12 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Relations\Pivot;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class AccountUser extends Pivot
 {
+    use SoftDeletes;
+
     //   protected $guarded = ['id'];
     /**
      * The attributes that should be cast to native types.
@@ -19,6 +22,7 @@ class AccountUser extends Pivot
         'settings' => 'object',
     ];
     protected $fillable = [
+        'notifications',
         'account_id',
         'permissions',
         'settings',

@@ -97,7 +97,7 @@ class ExpenseController extends Controller
     public function store(CreateExpenseRequest $request)
     {
         $expense = $this->expense_repo->save($request->all(),
-            ExpenseFactory::create(auth()->user()->account_user()->id, auth()->user()->id));
+            ExpenseFactory::create(auth()->user()->account_user()->id, auth()->user()->account_id));
 
         return response()->json($expense);
     }

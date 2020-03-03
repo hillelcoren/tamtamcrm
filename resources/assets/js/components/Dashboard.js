@@ -1,4 +1,4 @@
-import React, { Component, lazy, Suspense } from 'react'
+import React, { Component } from 'react'
 import {
     Row, Col, Nav,
     NavItem,
@@ -399,6 +399,7 @@ class Dashboard extends Component {
 
         const paymentActive = formatData(this.state.payments, 1, start, end, 'amount', 'status_id')
         const paymentRefunded = formatData(this.state.payments, 6, start, end, 'refunded', 'status_id')
+        const paymentCompleted = formatData(this.state.payments, 4, start, end, 'amount', 'status_id')
 
         const quoteActive = formatData(this.state.quotes, 1, start, end, 'total', 'status_id')
         const quoteApproved = formatData(this.state.quotes, 4, start, end, 'total', 'status_id')
@@ -467,6 +468,11 @@ class Dashboard extends Component {
                         avg: paymentRefunded && Object.keys(paymentRefunded).length ? paymentRefunded.avg : 0,
                         pct: paymentRefunded && Object.keys(paymentRefunded).length ? paymentRefunded.pct : 0,
                         value: paymentRefunded && Object.keys(paymentRefunded).length ? paymentRefunded.value : 0
+                    },
+                    Completed: {
+                        avg: paymentCompleted && Object.keys(paymentCompleted).length ? paymentCompleted.avg : 0,
+                        pct: paymentCompleted && Object.keys(paymentCompleted).length ? paymentCompleted.pct : 0,
+                        value: paymentCompleted && Object.keys(paymentCompleted).length ? paymentCompleted.value : 0
                     }
                 },
                 datasets: [
@@ -486,6 +492,15 @@ class Dashboard extends Component {
                         borderWidth: 1,
                         borderDash: [8, 5],
                         data: paymentRefunded && Object.keys(paymentRefunded).length ? Object.values(paymentRefunded.data) : []
+                    },
+                    {
+                        label: 'Completed',
+                        backgroundColor: 'transparent',
+                        borderColor: brandSuccess,
+                        pointHoverBackgroundColor: '#fff',
+                        borderWidth: 1,
+                        borderDash: [8, 5],
+                        data: paymentCompleted && Object.keys(paymentCompleted).length ? Object.values(paymentCompleted.data) : []
                     }
                 ]
             },
@@ -755,14 +770,14 @@ class Dashboard extends Component {
 
         const charts = this.state.invoices.length ? this.getChartData().map((entry, index) => {
             const buttons = Object.keys(entry.buttons).map((key, value) => {
-                return <Button
+                return <Button key={value}
                     color="outline-secondary"
                     onClick={() => this.onRadioBtnClick(key, entry.name)}
                     active={this.state.radioSelected === key}>{`${key} £${entry.buttons[key].value}`}</Button>
             })
 
             const footerButtons = Object.keys(entry.buttons).map((key, value) => {
-                return <Col sm={12} md
+                return <Col key={value} sm={12} md
                     className="mb-sm-2 mb-0">
                     <div
                         className="text-muted">{key}
@@ -775,7 +790,7 @@ class Dashboard extends Component {
                 </Col>
             })
 
-            return (<Row>
+            return (<Row key={index}>
                 <Col>
                     <Card>
                         <CardBody>

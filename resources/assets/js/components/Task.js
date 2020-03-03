@@ -63,6 +63,19 @@ class Task extends Component {
             })
     }
 
+    deleteLead (id) {
+        const self = this
+
+        axios.delete('/api/leads/' + id)
+            .then(function (response) {
+                const filteredArray = self.props.tasks.filter(item => item.id !== id)
+                self.props.action(filteredArray)
+            })
+            .catch(function (error) {
+                console.log(error)
+            })
+    }
+
     render () {
         const { tasks, loading, column } = this.props
         const filter = column.id
@@ -77,11 +90,16 @@ class Task extends Component {
                 tasks.filter(i => i.task_status === Number(filter))
                     .map((i, index) => {
                         let contributors = ''
-                        
+
                         const deleteButton = !i.deleted_at
                             ? <i id="delete" className="fa fa-times" onClick={() => this.api(i.id)}/>
                             : <RestoreModal id={i.id} entities={tasks} updateState={this.props.action}
                                 url={`/api/tasks/restore/${i.id}`}/>
+
+                        const deleteLeadButton = !i.deleted_at
+                            ? <i id="delete" className="fa fa-times" onClick={() => this.deleteLead(i.id)}/>
+                            : <RestoreModal id={i.id} entities={tasks} updateState={this.props.action}
+                                url={`/api/leads/restore/${i.id}`}/>
 
                         if (i.users && i.users.length) {
                             contributors = i.users.map((user, index) => {
@@ -109,13 +127,15 @@ class Task extends Component {
                                 task={i}
                             />
 
+                        const deleteButtonDisplay = this.props.task_type === 2 ? deleteLeadButton : deleteButton
+
                         return (
                             <div style={divStyle} data-task={i.id} id={i.id}
                                 className="col-12 col-md-12 mcell-task card" key={index}>
 
                                 <span className="task-name">
                                     {edit}
-                                    {deleteButton}
+                                    {deleteButtonDisplay}
                                 </span>
 
                                 <h3>{i.title}</h3>

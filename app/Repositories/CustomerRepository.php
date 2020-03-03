@@ -144,11 +144,6 @@ class CustomerRepository extends BaseRepository implements CustomerRepositoryInt
     public function save(array $data, Customer $customer): ?Customer
     {
         $customer->fill($data);
-
-        if (isset($data['password'])) {
-            $customer->password = bcrypt($data['password']);
-        }
-
         $customer->save();
 
         if ($customer->id_number == "" || !$customer->id_number) {

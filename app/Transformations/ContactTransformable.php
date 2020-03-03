@@ -25,6 +25,7 @@ class ContactTransformable
         $prop->custom_value2 = $contact->custom_value2 ?: '';
         $prop->custom_value3 = $contact->custom_value3 ?: '';
         $prop->custom_value4 = $contact->custom_value4 ?: '';
+        $prop->password = isset($contact->password) ? '*****' : '';
 
         return $prop;
     }

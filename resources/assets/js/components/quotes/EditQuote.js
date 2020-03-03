@@ -112,16 +112,8 @@ class EditInvoice extends Component {
         this.total = 0
     }
 
-    toggleTab (tab) {
-        if (this.state.activeTab !== tab) {
-            this.setState({ activeTab: tab })
-        }
-    }
-
-    toggleMenu (event) {
-        this.setState({
-            dropdownOpen: !this.state.dropdownOpen
-        })
+    componentWillMount () {
+        window.addEventListener('resize', this.handleWindowSizeChange)
     }
 
     componentDidMount () {
@@ -142,14 +134,22 @@ class EditInvoice extends Component {
         }
     }
 
-    componentWillMount () {
-        window.addEventListener('resize', this.handleWindowSizeChange)
-    }
-
     // make sure to remove the listener
     // when the component is not mounted anymore
     componentWillUnmount () {
         window.removeEventListener('resize', this.handleWindowSizeChange)
+    }
+
+    toggleMenu (event) {
+        this.setState({
+            dropdownOpen: !this.state.dropdownOpen
+        })
+    }
+
+    toggleTab (tab) {
+        if (this.state.activeTab !== tab) {
+            this.setState({ activeTab: tab })
+        }
     }
 
     handleWindowSizeChange () {
@@ -291,10 +291,10 @@ class EditInvoice extends Component {
             })
     }
 
-    downloadPdf (response) {
+    downloadPdf (response, id) {
         const linkSource = `data:application/pdf;base64,${response.data.data}`
         const downloadLink = document.createElement('a')
-        const fileName = 'vct_illustration.pdf'
+        const fileName = `quote_${id}.pdf`
 
         downloadLink.href = linkSource
         downloadLink.download = fileName
@@ -311,7 +311,7 @@ class EditInvoice extends Component {
         axios.post(`/api/quote/${this.state.invoice_id}/${action}`, data)
             .then((response) => {
                 if (action === 'download') {
-                    this.downloadPdf(response)
+                    this.downloadPdf(response, this.state.invoice_id)
                 }
 
                 this.setState({
@@ -382,7 +382,6 @@ class EditInvoice extends Component {
             }
 
             if (product.unit_tax > 0 && this.state.tax === 0) {
-                const n = parseFloat(total)
                 const tax_percentage = lexieTotal * product.unit_tax / 100
                 tax_total += tax_percentage
             }
@@ -513,6 +512,7 @@ class EditInvoice extends Component {
             company_id: this.state.company_id,
             line_items: this.state.data,
             total: this.state.total,
+            balance: this.props.invoice && this.props.invoice.balance ? this.props.invoice.balance : this.state.total,
             po_number: this.state.po_number,
             sub_total: this.state.sub_total,
             tax_total: this.state.tax_total,
@@ -758,10 +758,10 @@ class EditInvoice extends Component {
         const contactsForm = <Card>
             <CardHeader>Invitations</CardHeader>
             <CardBody>
-                {this.state.contacts.length && this.state.contacts.map(contact => {
+                {this.state.contacts.length && this.state.contacts.map((contact, index) => {
                     const invitations = this.state.invitations.length ? this.state.invitations.filter(invitation => parseInt(invitation.client_contact_id) === contact.id) : []
                     const checked = invitations.length ? 'checked="checked"' : ''
-                    return <FormGroup check>
+                    return <FormGroup key={index} check>
                         <Label check>
                             <Input checked={checked} value={contact.id} onChange={this.handleContactChange}
                                 type="checkbox"/> {`${contact.first_name} ${contact.last_name}`}

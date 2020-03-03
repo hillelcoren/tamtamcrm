@@ -6,6 +6,7 @@ use App\Customer;
 use App\Factory\CloneInvoiceFactory;
 use App\Factory\CloneQuoteFactory;
 use App\Factory\NotificationFactory;
+use App\Jobs\Invoice\ZipInvoices;
 use App\Jobs\Order\QuoteOrders;
 use App\Jobs\RecurringQuote\SaveRecurringQuote;
 use App\Repositories\Interfaces\InvoiceRepositoryInterface;
@@ -96,9 +97,7 @@ class QuoteController extends Controller
     public function store(CreateQuoteRequest $request)
     {
         $customer = Customer::find($request->input('customer_id'));
-        $quote = $this->quote_repo->save($request->all(),
-            QuoteFactory::create(auth()->user()->account_user()->account_id, auth()->user()->id, $request->total,
-                $customer, $customer->getMergedSettings()));
+        $quote = $this->quote_repo->save($request->all(), $customer->setQuoteDefaults());
         SaveRecurringQuote::dispatchNow($request, $quote->account, $quote);
         QuoteOrders::dispatchNow($quote);
         $notification = NotificationFactory::create(auth()->user()->account_user()->account_id, auth()->user()->id);
@@ -139,6 +138,19 @@ class QuoteController extends Controller
      */
     public function action(Request $request, Quote $quote, $action)
     {
+        return $this->performAction($request, $quote, $action);
+    }
+
+    /**
+     * @param Request $request
+     * @param Quote $quote
+     * @param $action
+     * @param bool $bulk
+     * @return JsonResponse
+     * @throws FileNotFoundException
+     */
+    public function performAction(Request $request, Quote $quote, $action, $bulk = false)
+    {
         switch ($action) {
             case 'clone_to_invoice':
                 $invoice = $this->invoice_repo->save($request->all(),
@@ -159,7 +171,11 @@ class QuoteController extends Controller
                 break;
             case 'mark_sent':
                 $quote = $quote->service()->markSent();
-                return response()->json($quote);
+
+                if (!$bulk) {
+                    return response()->json($quote);
+                }
+
                 break;
             case
             'mark_approved':
@@ -187,17 +203,6 @@ class QuoteController extends Controller
                 return response()->json(['message' => "The requested action `{$action}` is not available."], 400);
                 break;
         }
-    }
-
-    /**
-     * @param Request $request
-     * @return mixed
-     */
-    public function filterQuotes(Request $request)
-    {
-        $quotes = (new QuoteFilter($this->quote_repo))->filterBySearchCriteria($request->all(),
-            auth()->user()->account_user()->account_id);
-        return response()->json($quotes);
     }
 
     /**
@@ -255,15 +260,43 @@ class QuoteController extends Controller
         return response()->json([], 200);
     }
 
-    public function bulk()
+    public function bulk(Request $request)
     {
+        die('here');
         $action = request()->input('action');
 
         $ids = request()->input('ids');
-        $quotes = Quote::withTrashed()->find($ids);
-        $quotes->each(function ($quote, $key) use ($action) {
-            $this->quote_repo->{$action}($quote);
+        $quotes = Quote::withTrashed()->whereIn('id', $ids)->get();
+
+        if (!$quotes) {
+            return response()->json(['message' => 'No Quotes Found']);
+        }
+
+        /*
+         * Download Invoice/s
+         */
+
+        if ($action == 'download' && $quotes->count() > 1) {
+            /*$quotes->each(function ($quote) {
+
+                if (auth()->user()->cannot('view', $quote)) {
+                    return response()->json(['message' => 'Insufficient privileges to access quote ' . $quote->number]);
+                }
+            });*/
+
+            ZipInvoices::dispatch($quotes, $quotes->first()->account, auth()->user()->email);
+
+            return response()->json(['message' => 'Email Sent!'], 200);
+        }
+
+        /*
+           * Send the other actions to the switch
+           */
+        $quotes->each(function ($quote, $key) use ($action, $request) {
+            $this->performAction($request, $quote, $action, true);
         });
-        return response()->json(Quote::withTrashed()->whereIn('id', $ids));
+
+        /* Need to understand which permission are required for the given bulk action ie. view / edit */
+        return response()->json(Quote::withTrashed()->whereIn('id', $ids)->get());
     }
 }

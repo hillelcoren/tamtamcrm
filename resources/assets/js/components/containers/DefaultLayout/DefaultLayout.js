@@ -6,7 +6,6 @@ import PrivateRoute from '../../PrivateRoute'
 
 import {
     AppAside,
-    AppFooter,
     AppHeader,
     AppSidebar,
     AppSidebarFooter,
@@ -21,7 +20,6 @@ import navigation from '../../_nav'
 // routes config
 import routes from '../../routes'
 import DefaultAside from './DefaultAside'
-import DefaultFooter from './DefaultFooter'
 import DefaultHeader from './DefaultHeader'
 import AccountList from '../../common/AccountList'
 

@@ -45,10 +45,10 @@ class UpdateUserRequest extends BaseFormRequest
     protected function prepareForValidation()
     {
         $input = $this->all();
-        
+
         if (isset($input['company_user'])) {
 
-            foreach($input['company_user'] as $key => $company_user) {
+            foreach ($input['company_user'] as $key => $company_user) {
 
                 if (!isset($company_user['is_admin'])) {
                     $input['company_user'][$key]['is_admin'] = false;

@@ -3,15 +3,17 @@ import React from 'react'
 
 export default function CreditPresenter (props) {
     const colors = {
-        1: 'primary',
-        2: 'warning',
-        3: 'success'
+        1: 'secondary',
+        2: 'primary',
+        3: 'warning',
+        4: 'success'
     }
 
     const statuses = {
         1: 'Draft',
-        2: 'Partial',
-        3: 'Applied'
+        2: 'Sent',
+        3: 'Partial',
+        4: 'Applied'
     }
 
     const { field, entity } = props
@@ -23,12 +25,12 @@ export default function CreditPresenter (props) {
     switch (field) {
         case 'status_id':
             return <td onClick={() => props.toggleViewedEntity(entity)} data-label="Status">{status}</td>
-        case 'customer_id':
+        case 'customer_id': {
             const index = props.customers.findIndex(customer => customer.id === entity[field])
             const customer = props.customers[index]
             return <td onClick={() => props.toggleViewedEntity(entity, entity.number)}
-                data-label="Customer">{`${customer.first_name} ${customer.last_name}`}</td>
-
+                data-label="Customer">{customer.name}</td>
+        }
         default:
             return <td onClick={() => props.toggleViewedEntity(entity, entity.number)} key={field}
                 data-label={field}>{entity[field]}</td>

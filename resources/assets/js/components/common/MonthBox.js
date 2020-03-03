@@ -17,15 +17,15 @@ export default class MonthBox extends Component {
         })
     }
 
+    _handleClick (e) {
+        this.props.onClick && this.props.onClick(e)
+    }
+
     render () {
         return (
             <div className="box" onClick={this._handleClick}>
                 <label>{this.state.value}</label>
             </div>
         )
-    }
-
-    _handleClick (e) {
-        this.props.onClick && this.props.onClick(e)
     }
 }

@@ -32,6 +32,32 @@ class Account extends Model
 
     protected $presenter = 'App\Presenters\AccountPresenter';
 
+    const ENTITY_RECURRING_INVOICE = 'recurring_invoice';
+    const ENTITY_CREDIT = 'credit';
+    const ENTITY_QUOTE = 'quote';
+    const ENTITY_TASK = 'task';
+    const ENTITY_EXPENSE = 'expense';
+    const ENTITY_PROJECT = 'project';
+    const ENTITY_VENDOR = 'vendor';
+    const ENTITY_TICKET = 'ticket';
+    const ENTITY_PROPOSAL = 'proposal';
+    const ENTITY_RECURRING_EXPENSE = 'expense';
+    const ENTITY_RECURRING_TASK = 'task';
+
+    public static $modules = [
+        self::ENTITY_RECURRING_INVOICE => 1,
+        self::ENTITY_CREDIT => 2,
+        self::ENTITY_QUOTE => 4,
+        self::ENTITY_TASK => 8,
+        self::ENTITY_EXPENSE => 16,
+        self::ENTITY_PROJECT => 32,
+        self::ENTITY_VENDOR => 64,
+        self::ENTITY_TICKET => 128,
+        self::ENTITY_PROPOSAL => 256,
+        self::ENTITY_RECURRING_EXPENSE => 512,
+        self::ENTITY_RECURRING_TASK => 1024,
+    ];
+
     protected $fillable = [
         'fill_products',
         'industry_id',
@@ -182,10 +208,20 @@ class Account extends Model
     {
         //todo need to return the company channel here for hosted users
         //else the env variable for selfhosted
-        if (config('taskmanager.environment') == 'selfhosted') {
-            return config('taskmanager.notification.slack');
-        } else {
-            return $this->settings->system_notifications_slack;
-        }
+        //
+        return $this->slack_webhook_url;
+
+    }
+
+    public function account_users()
+    {
+        return $this->hasMany(AccountUser::class);
+    }
+
+    public function owner()
+    {
+        $c = $this->account_users->where('is_owner', true)->first();
+
+        return User::find($c->user_id);
     }
 }

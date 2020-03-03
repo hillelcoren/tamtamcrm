@@ -64,7 +64,7 @@ class CompanyController extends Controller
         $data = $request->except('company_logo');
         $data['settings']['company_logo'] = null;
         $company = $this->company_repo->save($data,
-            (new CompanyFactory)->create(auth()->user()->id, auth()->user()->account_user()->id));
+            (new CompanyFactory)->create(auth()->user()->id, auth()->user()->account_user()->account_id));
 
         if ($request->company_logo !== null) {
             $this->uploadLogo($request->file('company_logo'), auth()->user()->account_user(), $company);

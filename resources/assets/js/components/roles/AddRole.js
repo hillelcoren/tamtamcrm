@@ -129,7 +129,6 @@ class AddRole extends React.Component {
     }
 
     render () {
-        const permissionsList = this.buildPermissionList()
         const { message } = this.state
 
         return (

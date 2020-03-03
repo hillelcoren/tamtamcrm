@@ -53,9 +53,6 @@ export default class QuoteDropdown extends Component {
 
         const quotes = this.props.quotes ? this.props.quotes : this.state.quotes
 
-        const empty = this.props.quotes && !Object.keys(this.props.quotes).length
-            ? <option value="">No quotes found for selected customer</option> : <option value="">Select quote</option>
-
         if (!quotes) {
             quoteList = <option value="">Loading...</option>
         } else {

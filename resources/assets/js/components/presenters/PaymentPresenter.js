@@ -21,16 +21,20 @@ export default function PaymentPresenter (props) {
     const paymentInvoices = entity.invoices && Object.keys(entity.invoices).length > 0 ? Array.prototype.map.call(entity.invoices, s => s.number).toString() : null
 
     switch (field) {
-        case 'date':
+        case 'date': {
             const date = entity[field].length ? moment(entity[field]).format('DD/MMM/YYYY') : ''
             return <td data-label="Date">{date}</td>
+        }
+
         case 'status':
             return <td onClick={() => props.toggleViewedEntity(entity, entity.number)} data-label="Status">{status}</td>
-        case 'customer_id':
+
+        case 'customer_id': {
             const index = props.customers.findIndex(customer => customer.id === entity[field])
             const customer = props.customers[index]
             return <td onClick={() => props.toggleViewedEntity(entity, entity.number)}
-                data-label="Customer">{`${customer.first_name} ${customer.last_name}`}</td>
+                data-label="Customer">{customer.name}</td>
+        }
 
         case 'invoices':
             return <td data-label="Invoices">{paymentInvoices}</td>

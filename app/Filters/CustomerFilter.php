@@ -34,7 +34,7 @@ class CustomerFilter extends QueryFilter
     public function filter(SearchRequest $request, int $account_id)
     {
         $recordsPerPage = !$request->per_page ? 0 : $request->per_page;
-        $orderBy = !$request->column || $request->column === 'name' ? 'first_name' : $request->column;
+        $orderBy = !$request->column ? 'name' : $request->column;
         $orderDir = !$request->order ? 'asc' : $request->order;
 
         $this->query = $this->model->select('*');
@@ -49,12 +49,6 @@ class CustomerFilter extends QueryFilter
 
         if ($request->filled('group_settings_id')) {
             $this->query->whereGroupSettingsId($request->group_settings_id);
-        }
-
-        if ($request->filled('customer_type')) {
-            $this->query->whereCustomerType($request->customer_type);
-        } else {
-            $this->query->whereCustomerType(1);
         }
 
         if ($request->has('search_term') && !empty($request->search_term)) {
@@ -92,8 +86,8 @@ class CustomerFilter extends QueryFilter
             return $this->query;
         }
         return $this->query->where(function ($query) use ($filter) {
-            $query->where('first_name', 'like', '%' . $filter . '%')->orWhere('last_name', 'like', '%' . $filter . '%')
-                  ->orWhere('email', 'like', '%' . $filter . '%')->orWhere('custom_value1', 'like', '%' . $filter . '%')
+            $query->where('name', 'like', '%' . $filter . '%')->orWhere('email', 'like', '%' . $filter . '%')
+                  ->orWhere('custom_value1', 'like', '%' . $filter . '%')
                   ->orWhere('custom_value2', 'like', '%' . $filter . '%')
                   ->orWhere('custom_value3', 'like', '%' . $filter . '%')
                   ->orWhere('custom_value4', 'like', '%' . $filter . '%');

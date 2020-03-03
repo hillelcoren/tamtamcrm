@@ -2,7 +2,9 @@ import React from 'react'
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter, Input, FormGroup, Label } from 'reactstrap'
 import axios from 'axios'
 import AddButtons from '../common/AddButtons'
-import DesignDropdown from "../common/DesignDropdown";
+import DesignDropdown from '../common/DesignDropdown'
+import CKEditor from '@ckeditor/ckeditor5-react'
+import ClassicEditor from '@ckeditor/ckeditor5-build-classic'
 
 class AddDesign extends React.Component {
     constructor (props) {
@@ -104,6 +106,20 @@ class AddDesign extends React.Component {
                             <Label for="name">Design <span className="text-danger">*</span></Label>
                             <DesignDropdown handleInputChanges={this.handleInput.bind(this)} />
                         </FormGroup>
+
+                        <CKEditor
+                            editor={ClassicEditor}
+                            data={this.state.design}
+                            onInit={editor => {
+                                // You can store the "editor" and use when it is needed.
+                                console.log('Editor is ready to use!', editor)
+                            }}
+                            onChange={(event, editor) => {
+                                const data = editor.getData()
+                                this.setState({ design: data }, () => { console.log('design', this.state.design) })
+                            }}
+                        />
+
                     </ModalBody>
 
                     <ModalFooter>

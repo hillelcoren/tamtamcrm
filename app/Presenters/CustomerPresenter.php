@@ -13,15 +13,20 @@ class CustomerPresenter extends EntityPresenter
     /**
      * @return string
      */
+    /**
+     * @return string
+     */
     public function name()
     {
+        $contact = $this->entity->primary_contact->first();
 
-        $contact = $this->entity;
         $contact_name = 'No Contact Set';
+
         if ($contact) {
             $contact_name = $contact->first_name . ' ' . $contact->last_name;
         }
-        return $contact_name;
+
+        return $this->entity->name ?: $contact_name;
     }
 
     public function primary_contact_name()
@@ -32,7 +37,8 @@ class CustomerPresenter extends EntityPresenter
 
     public function email()
     {
-        return $this->entity->first() !== null ? $this->entity->first()->email : 'No Email Set';
+        return $this->entity->primary_contact->first() !==
+        null ? $this->entity->primary_contact->first()->email : 'No Email Set';
     }
 
     public function address()

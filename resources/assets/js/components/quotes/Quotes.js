@@ -2,10 +2,7 @@ import React, { Component } from 'react'
 import axios from 'axios'
 import EditQuote from './EditQuote'
 import {
-    FormGroup, Input, Card, CardBody, Col, Row, ButtonDropdown,
-    DropdownToggle,
-    DropdownMenu,
-    DropdownItem
+    FormGroup, Input, Card, CardBody, Col, Row
 } from 'reactstrap'
 import DataTable from '../common/DataTable'
 import CustomerDropdown from '../common/CustomerDropdown'
@@ -112,7 +109,7 @@ export default class Quotes extends Component {
     saveBulk (e) {
         const action = e.target.id
         const self = this
-        axios.post('/api/quote/bulk', { bulk: this.state.bulk }).then(function (response) {
+        axios.post('/api/quote/bulk', { bulk: this.state.bulk, action: action }).then(function (response) {
             // const arrQuotes = [...self.state.invoices]
             // const index = arrQuotes.findIndex(payment => payment.id === id)
             // arrQuotes.splice(index, 1)
@@ -189,7 +186,7 @@ export default class Quotes extends Component {
                 const columnList = Object.keys(user).filter(key => {
                     return this.state.ignoredColumns && !this.state.ignoredColumns.includes(key)
                 }).map(key => {
-                    return <QuotePresenter customers={customers} toggleViewedEntity={this.toggleViewedEntity}
+                    return <QuotePresenter key={key} customers={customers} toggleViewedEntity={this.toggleViewedEntity}
                         field={key} entity={user}/>
                 })
 

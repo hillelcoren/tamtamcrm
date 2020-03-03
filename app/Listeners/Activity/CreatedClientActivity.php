@@ -37,6 +37,8 @@ class CreatedClientActivity implements ShouldQueue
         $fields['notifiable_type'] = get_class($event->client);
         $fields['type'] = get_class($this);
         $fields['data'] = json_encode($fields['data']);
-        $this->notification_repo->create($fields);
+
+        $notification = NotificationFactory::create($event->client->account_id, $event->client->user_id);
+        $this->notification_repo->save($notification, $fields);
     }
 }

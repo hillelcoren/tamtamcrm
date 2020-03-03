@@ -84,10 +84,9 @@ class InvoiceTest extends TestCase
 
     public function testMarkInvoicePaidInvoice()
     {
-        $total = $this->faker->randomFloat();
         $user = factory(User::class)->create();
         $customer = factory(Customer::class)->create();
-        $factory = (new InvoiceFactory())->create($user->id, 1, $customer, $total, $customer->getMergedSettings());
+        $factory = (new InvoiceFactory())->create($user->id, 1, $customer);
 
         $data = [
             'account_id' => 1,
@@ -128,14 +127,16 @@ class InvoiceTest extends TestCase
         $total = $this->faker->randomFloat();
         $user = factory(User::class)->create();
         $factory =
-            (new InvoiceFactory())->create($user->id, 1, $this->customer, $total, $this->customer->getMergedSettings());
+            (new InvoiceFactory())->create($user->id, 1, $this->customer);
 
+        $total = $this->faker->randomFloat();
 
         $data = [
             'account_id' => 1,
             'user_id' => $user->id,
             'customer_id' => $this->customer->id,
-            'total' => $this->faker->randomFloat(),
+            'total' => $total,
+            'balance' => $total,
             'tax_total' => $this->faker->randomFloat(),
             'discount_total' => $this->faker->randomFloat(),
             'status_id' => 1,

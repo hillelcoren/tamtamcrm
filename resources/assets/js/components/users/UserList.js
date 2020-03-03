@@ -3,10 +3,7 @@ import axios from 'axios'
 import EditUser from './EditUser'
 import AddUser from './AddUser'
 import {
-    FormGroup, Input, Card, CardBody, Row, Col, ButtonDropdown,
-    DropdownToggle,
-    DropdownMenu,
-    DropdownItem
+    FormGroup, Input, Card, CardBody, Row, Col
 } from 'reactstrap'
 import DataTable from '../common/DataTable'
 import DepartmentDropdown from '../common/DepartmentDropdown'
@@ -125,7 +122,7 @@ export default class UserList extends Component {
     saveBulk (e) {
         const action = e.target.id
         const self = this
-        axios.post('/api/user/bulk', { bulk: this.state.bulk }).then(function (response) {
+        axios.post(`/api/user/bulk/${action}`, { bulk: this.state.bulk }).then(function (response) {
             // const arrQuotes = [...self.state.invoices]
             // const index = arrQuotes.findIndex(payment => payment.id === id)
             // arrQuotes.splice(index, 1)
@@ -318,7 +315,7 @@ export default class UserList extends Component {
                 const columnList = Object.keys(user).filter(key => {
                     return ignoredColumns && !ignoredColumns.includes(key)
                 }).map(key => {
-                    return <UserPresenter toggleViewedEntity={this.toggleViewedEntity}
+                    return <UserPresenter key={key} toggleViewedEntity={this.toggleViewedEntity}
                         field={key} entity={user}/>
                 })
 

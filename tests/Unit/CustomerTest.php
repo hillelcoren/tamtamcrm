@@ -75,16 +75,14 @@ class CustomerTest extends TestCase
     {
         $data = [
             'account_id' => $this->account_id,
-            'first_name' => $this->faker->firstName,
-            'email' => $this->faker->email,
+            'name' => $this->faker->firstName
         ];
         $customer = new CustomerRepository(new Customer, new ClientContactRepository(new ClientContact));
         $factory = (new CustomerFactory())->create($this->account_id, $this->user->id, $this->company->id);
         $created = $customer->save($data, $factory);
         $found = $customer->findCustomerById($created->id);
         $this->assertInstanceOf(Customer::class, $found);
-        $this->assertEquals($data['first_name'], $found->first_name);
-        $this->assertEquals($data['email'], $found->email);
+        $this->assertEquals($data['name'], $found->name);
     }
 
     /** @test */
@@ -93,11 +91,11 @@ class CustomerTest extends TestCase
         $cust = factory(Customer::class)->create();
         $customer = new CustomerRepository($cust, new ClientContactRepository(new ClientContact));
         $update = [
-            'first_name' => $this->faker->firstName,
+            'name' => $this->faker->firstName,
         ];
         $updated = $customer->save($update, $cust);
         $this->assertInstanceOf(Customer::class, $updated);
-        //$this->assertEquals($update['first_name'], $cust->first_name);
+        //$this->assertEquals($update['name'], $cust->name);
         $this->assertDatabaseHas('customers', $update);
     }
 
@@ -108,13 +106,9 @@ class CustomerTest extends TestCase
 
         $data = [
             'account_id' => $this->account_id,
-            'first_name' => $this->faker->firstName,
-            'last_name' => $this->faker->lastName,
-            'email' => $this->faker->email,
+            'name' => $this->faker->firstName,
             'company_id' => $this->company->id,
-            'job_title' => $this->faker->jobTitle,
-            'phone' => $this->faker->phoneNumber,
-            'customer_type' => 1
+            'phone' => $this->faker->phoneNumber
         ];
 
         $contacts = [];
@@ -127,11 +121,10 @@ class CustomerTest extends TestCase
         $customer = new CustomerRepository(new Customer, new ClientContactRepository(new ClientContact));
         $created = $customer->save($data, $factory);
         $this->assertInstanceOf(Customer::class, $created);
-        $this->assertEquals($data['first_name'], $created->first_name);
-        $this->assertEquals($data['email'], $created->email);
+        $this->assertEquals($data['name'], $created->name);
         $collection = collect($data)->except('password');
         $this->assertDatabaseHas('customers', $collection->all());
-        
+
         $clients = (new ClientContactRepository(new ClientContact))->save($contacts, $created);
         $this->assertTrue($clients);
     }

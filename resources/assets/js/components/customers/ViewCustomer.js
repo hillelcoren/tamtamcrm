@@ -23,23 +23,13 @@ class ViewCustomer extends React.Component {
     }
 
     render () {
-        alert(this.state.customer.first_name)
+        alert(this.state.customer.name)
         return (
             <div>
                 <Form>
                     <FormGroup>
-                        <Label column sm="4">First Name </Label>
-                        <span> {this.state.customer.first_name} </span>
-                    </FormGroup>
-
-                    <FormGroup>
-                        <Label column sm="4"> Last Name </Label>
-                        <span>{this.state.customer.last_name}</span>
-                    </FormGroup>
-
-                    <FormGroup>
-                        <Label column sm="4"> Email </Label>
-                        <span>{this.state.customer.email}</span>
+                        <Label column sm="4"> Name </Label>
+                        <span>{this.state.customer.name}</span>
                     </FormGroup>
 
                     <FormGroup>
@@ -70,11 +60,6 @@ class ViewCustomer extends React.Component {
                     <FormGroup>
                         <Label column sm="4"> Company Name </Label>
                         <span>{this.state.customer.company_name} </span>
-                    </FormGroup>
-
-                    <FormGroup>
-                        <Label column sm="4"> Job Title </Label>
-                        <span>{this.state.customer.job_title} </span>
                     </FormGroup>
                 </Form>
             </div>

@@ -1,6 +1,4 @@
 import React, { Component } from 'react'
-import PropTypes from 'prop-types'
-import ReactDOM from 'react-dom'
 import Picker from 'react-month-picker'
 import MonthBox from './MonthBox'
 

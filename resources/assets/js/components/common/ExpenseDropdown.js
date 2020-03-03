@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import axios from 'axios'
 import { Input } from 'reactstrap'
-import Select from 'react-select'
 
 export default class ExpenseDropdown extends Component {
     constructor (props) {

@@ -2,7 +2,6 @@
 
 namespace App\Notifications;
 
-use App\Mail\Signup\NewSignup;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
@@ -23,10 +22,13 @@ class NewAccountCreated extends Notification implements ShouldQueue
 
     protected $account;
 
-    public function __construct($user, $account)
+    public $is_system;
+
+    public function __construct($user, $account, $is_system = false)
     {
         $this->user = $user;
         $this->account = $account;
+        $this->is_system = $is_system;
     }
 
     /**
@@ -37,28 +39,26 @@ class NewAccountCreated extends Notification implements ShouldQueue
      */
     public function via($notifiable)
     {
-        return ['mail'];
-        //return ['slack','mail'];
+        return ['slack', 'mail'];
     }
 
     /**
      * Get the mail representation of the notification.
      *
      * @param mixed $notifiable
-     * @return MailMessage
+     * @return \Illuminate\Notifications\Messages\MailMessage
      */
     public function toMail($notifiable)
     {
 
         $user_name = $this->user->first_name . " " . $this->user->last_name;
         $email = $this->user->email;
-        //$ip = $this->user->ip;
-        $ip = '';
+        $ip = $this->user->ip;
 
         $data = [
             'title' => trans('texts.new_signup'),
             'message' => trans('texts.new_signup_text', ['user' => $user_name, 'email' => $email, 'ip' => $ip]),
-            'url' => config('taskmanager.web_url'),
+            'url' => config('ninja.web_url'),
             'button' => trans('texts.account_login'),
             'signature' => $this->account->settings->email_signature,
             'logo' => $this->account->present()->logo(),
@@ -85,11 +85,13 @@ class NewAccountCreated extends Notification implements ShouldQueue
     public function toSlack($notifiable)
     {
 
+        $this->user->setAccount($this->account);
+
         $user_name = $this->user->first_name . " " . $this->user->last_name;
         $email = $this->user->email;
         $ip = $this->user->ip;
 
-        return (new SlackMessage)->success()->to("#devv2")->from("System")
+        return (new SlackMessage)->success()->from(trans('texts.notification_bot'))
                                  ->image('https://app.invoiceninja.com/favicon.png')
                                  ->content("A new account has been created by {$user_name} - {$email} - from IP: {$ip}");
     }

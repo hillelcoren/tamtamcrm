@@ -22,22 +22,28 @@ export default function ExpensePresenter (props) {
 
     switch (field) {
         case 'expense_date':
-        case 'payment_date':
+        case 'payment_date': {
             const date = moment(entity[field]).format('D/MMM/YYYY')
             return <td data-label="Date">{date}</td>
+        }
+
         case 'status':
             return <td onClick={() => props.toggleViewedEntity(entity, entity.transaction_reference)}
                 data-label="Status">{status}</td>
-        case 'customer_id':
+
+        case 'customer_id': {
             const customerIndex = props.customers.findIndex(customer => customer.id === entity[field])
             const customer = props.customers[customerIndex]
             return <td onClick={() => props.toggleViewedEntity(entity, entity.number)}
-                data-label="Customer">{`${customer.first_name} ${customer.last_name}`}</td>
-        case 'company_id':
+                data-label="Customer">{customer.name}</td>
+        }
+
+        case 'company_id': {
             const companyIndex = props.companies.findIndex(company => company.id === entity[field])
             const company = props.companies[companyIndex]
             return <td onClick={() => props.toggleViewedEntity(entity, entity.number)}
                 data-label="Company">{company.name}</td>
+        }
 
         case 'invoices':
             return <td data-label="Invoices">{paymentInvoices}</td>

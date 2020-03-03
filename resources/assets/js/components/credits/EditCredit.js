@@ -80,28 +80,44 @@ class EditCredit extends React.Component {
         }
     }
 
+    downloadPdf (response, id) {
+        const linkSource = `data:application/pdf;base64,${response.data.data}`
+        const downloadLink = document.createElement('a')
+        const fileName = `credit_${id}.pdf`
+
+        downloadLink.href = linkSource
+        downloadLink.download = fileName
+        downloadLink.click()
+    }
+
     changeStatus (action) {
         if (!this.state.id) {
             return false
         }
 
-        const data = this.getPostData()
+        const data = this.getFormData()
 
         axios.post(`/api/credit/${this.state.id}/${action}`, data)
             .then((response) => {
-                if (response.data) {
-                    this.props.credits.push(response.data)
-                    this.props.action(this.props.credits)
+                if (action === 'download') {
+                    this.downloadPdf(response, this.state.id)
                 }
-                this.setState({ showSuccessMessage: true })
+
+                this.setState({
+                    showSuccessMessage: true,
+                    showErrorMessage: false
+                })
             })
             .catch((error) => {
-                this.setState({ showErrorMessage: true })
+                this.setState({
+                    showErrorMessage: true,
+                    showSuccessMessage: false
+                })
                 console.warn(error)
             })
     }
 
-    getPostData () {
+    getFormData () {
         const data = {
             total: this.state.total,
             customer_id: this.state.customer_id,
@@ -117,7 +133,7 @@ class EditCredit extends React.Component {
     }
 
     handleClick () {
-        const data = this.getPostData()
+        const data = this.getFormData()
         axios.put(`/api/credit/${this.state.id}`, data)
             .then((response) => {
                 const index = this.props.credits.findIndex(credit => credit.id === this.props.credit.id)
@@ -162,6 +178,9 @@ class EditCredit extends React.Component {
         const sendEmailButton = <DropdownItem className="primary" onClick={() => this.changeStatus('email')}>Send
             Email</DropdownItem>
 
+        const downloadButton = <DropdownItem className="primary"
+                                             onClick={() => this.changeStatus('download')}>Download</DropdownItem>
+
         const cloneToQuote = <DropdownItem className="primary" onClick={() => this.changeStatus('clone_to_quote')}>Clone
             To
             Quote</DropdownItem>
@@ -170,8 +189,7 @@ class EditCredit extends React.Component {
             To
             Credit</DropdownItem>
 
-        const changeStatusButton = <DropdownItem color="primary" onClick={() => this.changeStatus('mark_paid')}>Mark
-            Paid</DropdownItem>
+        const changeStatusButton = <DropdownItem color="primary" onClick={() => this.changeStatus('mark_sent')}>Mark Sent</DropdownItem>
 
         const dropdownMenu = <Dropdown isOpen={this.state.dropdownOpen} toggle={this.toggleMenu}>
             <DropdownToggle caret>
@@ -181,6 +199,7 @@ class EditCredit extends React.Component {
             <DropdownMenu>
                 <DropdownItem header>Header</DropdownItem>
                 {changeStatusButton}
+                {downloadButton}
                 {sendEmailButton}
                 {cloneToCredit}
                 {cloneToQuote}
@@ -188,7 +207,7 @@ class EditCredit extends React.Component {
         </Dropdown>
 
         const successMessage = this.state.showSuccessMessage === true
-            ? <SuccessMessage message="Invoice was updated successfully"/> : null
+            ? <SuccessMessage message="Credit was updated successfully"/> : null
         const errorMessage = this.state.showErrorMessage === true
             ? <ErrorMessage message="Something went wrong"/> : null
 

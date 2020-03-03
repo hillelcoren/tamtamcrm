@@ -1,5 +1,4 @@
 import React, { Component } from 'react'
-import FormBuilder from './FormBuilder'
 import {
     Button,
     Card,
@@ -13,9 +12,7 @@ import {
     TabContent,
     FormGroup,
     Input,
-    Label,
-    Row,
-    Col
+    Label
 } from 'reactstrap'
 import axios from 'axios'
 import { ToastContainer, toast } from 'react-toastify'
@@ -140,7 +137,7 @@ class CustomFieldSettings extends Component {
                                 const catId = `custom_value${idx}`
                                 const ageId = `age-${idx}`
                                 return (
-                                    <Form inline>
+                                    <Form key={idx} inline>
                                         <FormGroup className="mb-4" key={idx}>
                                             <Label htmlFor={catId}>{`Custom Field #${idx + 1}`}</Label>
                                             <Input
@@ -187,7 +184,7 @@ class CustomFieldSettings extends Component {
                                 const catId = `custom_value${idx}`
                                 const ageId = `age-${idx}`
                                 return (
-                                    <Form inline>
+                                    <Form key={idx} inline>
                                         <FormGroup className="mb-4" key={idx}>
                                             <Label htmlFor={catId}>{`Custom Field #${idx + 1}`}</Label>
                                             <Input
@@ -233,7 +230,7 @@ class CustomFieldSettings extends Component {
                                 const catId = `custom_value${idx}`
                                 const ageId = `age-${idx}`
                                 return (
-                                    <Form inline>
+                                    <Form key={idx} inline>
                                         <FormGroup className="mb-4" key={idx}>
                                             <Label htmlFor={catId}>{`Custom Field #${idx + 1}`}</Label>
                                             <Input
@@ -280,7 +277,7 @@ class CustomFieldSettings extends Component {
                                 const catId = `custom_name${idx}`
                                 const ageId = `age-${idx}`
                                 return (
-                                    <Form inline>
+                                    <Form key={idx} inline>
                                         <FormGroup className="mb-4" key={idx}>
                                             <Label htmlFor={catId}>{`Custom Field #${idx + 1}`}</Label>
                                             <Input
@@ -327,7 +324,7 @@ class CustomFieldSettings extends Component {
                                 const catId = `custom_value${idx}`
                                 const ageId = `age-${idx}`
                                 return (
-                                    <Form inline>
+                                    <Form key={idx} inline>
                                         <FormGroup className="mb-4" key={idx}>
                                             <label htmlFor={catId}>{`Custom Field #${idx + 1}`}</label>
                                             <Input
@@ -374,7 +371,7 @@ class CustomFieldSettings extends Component {
                                 const catId = `custom_value${idx}`
                                 const ageId = `age-${idx}`
                                 return (
-                                    <Form inline>
+                                    <Form key={idx} inline>
                                         <FormGroup className="mb-4" key={idx}>
                                             <label htmlFor={catId}>{`Custom Field #${idx + 1}`}</label>
                                             <Input

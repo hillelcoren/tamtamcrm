@@ -127,7 +127,7 @@ export default class Companies extends Component {
     saveBulk (e) {
         const action = e.target.id
         const self = this
-        axios.post('/api/company/bulk', { bulk: this.state.bulk }).then(function (response) {
+        axios.post('/api/company/bulk', { bulk: this.state.bulk, action: action }).then(function (response) {
             // const arrQuotes = [...self.state.invoices]
             // const index = arrQuotes.findIndex(payment => payment.id === id)
             // arrQuotes.splice(index, 1)
@@ -249,7 +249,7 @@ export default class Companies extends Component {
                 const columnList = Object.keys(brand).filter(key => {
                     return ignoredColumns && !ignoredColumns.includes(key)
                 }).map(key => {
-                    return <CompanyPresenter toggleViewedEntity={this.toggleViewedEntity}
+                    return <CompanyPresenter key={key} toggleViewedEntity={this.toggleViewedEntity}
                         field={key} entity={brand}/>
                 })
                 return <tr key={brand.id}>

@@ -1,6 +1,5 @@
-/* eslint-disable no-unused-vars */
 import React from 'react'
-import { Button, Modal, ModalHeader, ModalBody, ModalFooter, Input, FormGroup, Label, Form } from 'reactstrap'
+import { Button, Modal, ModalHeader, ModalBody, ModalFooter, Input, FormGroup, Label, Form, DropdownItem } from 'reactstrap'
 import axios from 'axios'
 import UserDropdown from '../common/UserDropdown'
 import TaskStatusDropdown from '../common/TaskStatusDropdown'
@@ -98,7 +97,6 @@ class EditLeadForm extends React.Component {
             job_title: this.state.job_title,
             company_name: this.state.company_name,
             description: this.state.description,
-            customer_type: this.props.customer_type,
             title: this.state.title,
             valued_at: this.state.valued_at,
             contributors: this.state.selectedUsers,
@@ -189,10 +187,13 @@ class EditLeadForm extends React.Component {
     render () {
         const { submitSuccess, loading } = this.state
         const sourceTypeOptions = this.buildSourceTypeOptions()
+        const button = this.props.listView && this.props.listView === true
+            ? <DropdownItem onClick={this.toggle}><i className="fa fa-edit"/>Edit</DropdownItem>
+            : <Button className="mr-2 ml-2" color="primary" onClick={this.toggle}>Edit Lead</Button>
 
         return (
             <React.Fragment>
-                <Button color="success" onClick={this.toggle}>Edit Lead</Button>
+                {button}
                 <Modal isOpen={this.state.modal} toggle={this.toggle} className={this.props.className}>
                     <ModalHeader toggle={this.toggle}>
                         Edit Lead

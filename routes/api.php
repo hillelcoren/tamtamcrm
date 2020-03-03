@@ -279,6 +279,7 @@ Route::group(['middleware' => ['jwt.auth', 'api-header']], function () {
     Route::put('tasks/complete/{task}',
         'TaskController@markAsCompleted')->middleware('role:null,taskcontroller.markascompleted');
     Route::delete('tasks/{task}', 'TaskController@destroy')->middleware('role:null,taskcontroller.destroy');
+   
     Route::post('tasks/filterTasks/{task_type}',
         'TaskController@filterTasks')->middleware('role:null,taskcontroller.filtertasks');
     Route::put('tasks/status/{task_id}',
@@ -297,6 +298,10 @@ Route::group(['middleware' => ['jwt.auth', 'api-header']], function () {
     Route::put('tasks/timer/{task_id}', 'TaskController@updateTimer')->middleware('role:null,taskcontroller.update');
     Route::put('tasks/lead/{lead_id}', 'LeadController@update')->middleware('role:null,taskcontroller.update');
     Route::delete('tasks/archive/{task_id}', 'TaskController@archive');
+
+    Route::delete('leads/archive/{lead_id}', 'LeadController@archive');
+    Route::delete('leads/{lead}', 'LeadController@destroy')->middleware('role:null,taskcontroller.destroy');
+    Route::post('leads/restore/{id}', 'LeadController@restore');
 
     Route::group(['middleware' => ['role:Manager']], function () {
 

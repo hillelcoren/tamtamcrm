@@ -21,7 +21,12 @@ class MarkPaid extends AbstractService
     private $customer_service;
     private $invoice;
 
-    public function __construct($customer_service, $invoice)
+    /**
+     * MarkPaid constructor.
+     * @param CustomerService $customer_service
+     * @param Invoice $invoice
+     */
+    public function __construct(CustomerService $customer_service, Invoice $invoice)
     {
         $this->customer_service = $customer_service;
         $this->invoice = $invoice;

@@ -30,7 +30,7 @@ const ContactInputs = (props) => {
                     </Row>
 
                     <Row form>
-                        <Col md={6}>
+                        <Col md={4}>
                             <FormGroup>
                                 <Label for="exampleEmail">Email</Label>
                                 <Input type="text"
@@ -40,13 +40,24 @@ const ContactInputs = (props) => {
                                 />
                             </FormGroup>
                         </Col>
-                        <Col md={6}>
+                        <Col md={4}>
                             <FormGroup>
                                 <Label for="examplePassword">Phone</Label>
                                 <Input type="text"
                                     data-id={idx}
                                     value={props.contacts[idx].phone}
                                     data-field="phone"
+                                />
+                            </FormGroup>
+                        </Col>
+
+                        <Col md={4}>
+                            <FormGroup>
+                                <Label for="examplePassword">Password</Label>
+                                <Input type="text"
+                                    data-id={idx}
+                                    value={props.contacts[idx].password}
+                                    data-field="password"
                                 />
                             </FormGroup>
                         </Col>

@@ -1,3 +1,10 @@
+
+.signatureCanvas {
+  background-color: #FFF;
+  width: 100%;
+  border: 1px solid #999;
+}
+
 // If you want to override variables do it here
 @import "variables";
 
@@ -29,3 +36,5 @@
 @import "ie-fix";
 
 @import "monthpicker";
+
+@import "html_editor";

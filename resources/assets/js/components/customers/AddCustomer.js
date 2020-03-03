@@ -1,5 +1,5 @@
 import React from 'react'
-import { Button, Modal, ModalHeader, ModalBody, ModalFooter, Input, FormGroup, Label, Form } from 'reactstrap'
+import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap'
 import axios from 'axios'
 import CustomerTabs from './CustomerTabs'
 import AddButtons from '../common/AddButtons'
@@ -9,16 +9,12 @@ class AddCustomer extends React.Component {
         super(props)
         this.state = {
             modal: false,
-            first_name: '',
-            last_name: '',
-            email: '',
-            customer_type: this.props.customer_type,
+            name: '',
             default_payment_method: null,
             group_settings_id: null,
             phone: '',
             address_1: '',
             address_2: '',
-            job_title: '',
             company__id: '',
             custom_value1: '',
             custom_value2: '',
@@ -39,19 +35,15 @@ class AddCustomer extends React.Component {
     handleClick (event) {
         this.setState({ loading: true })
         const formData = {
-            first_name: this.state.first_name,
-            last_name: this.state.last_name,
-            email: this.state.email,
+            name: this.state.name,
             phone: this.state.phone,
             address_1: this.state.address_1,
             address_2: this.state.address_2,
             zip: this.state.zip,
             city: this.state.city,
-            job_title: this.state.job_title,
             company_id: this.state.company_id,
             group_settings_id: this.state.group_settings_id,
             description: this.state.description,
-            customer_type: this.state.customer_type,
             default_payment_method: this.state.default_payment_method,
             custom_value1: this.state.custom_value1,
             custom_value2: this.state.custom_value2,
@@ -70,17 +62,13 @@ class AddCustomer extends React.Component {
                 this.props.customers.push(newCustomer)
                 this.props.action(this.props.customers)
                 this.setState({
-                    first_name: null,
-                    last_name: null,
-                    email: null,
+                    name: null,
                     phone: null,
                     address_1: null,
                     address_2: null,
                     zip: null,
                     city: null,
-                    job_title: null,
                     default_payment_method: null,
-                    customer_type: null,
                     company_id: null,
                     description: null
                 })

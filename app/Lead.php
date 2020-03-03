@@ -11,9 +11,17 @@ namespace App;
 
 use App\Services\Lead\LeadService;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use Laracasts\Presenter\PresentableTrait;
 
 class Lead extends Model
 {
+    use SoftDeletes;
+    use PresentableTrait;
+
+    protected $presenter = 'App\Presenters\LeadPresenter';
+    const STATUS_COMPLETED = 100;
+
     protected $fillable = [
         'first_name',
         'last_name',

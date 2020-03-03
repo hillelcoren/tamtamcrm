@@ -4,10 +4,7 @@ import EditProduct from './EditProduct'
 import AddProduct from './AddProduct'
 import DataTable from '../common/DataTable'
 import {
-    FormGroup, Input, Card, CardBody, Col, Row, ButtonDropdown,
-    DropdownToggle,
-    DropdownMenu,
-    DropdownItem
+    FormGroup, Input, Card, CardBody, Col, Row
 } from 'reactstrap'
 import CategoryDropdown from '../common/CategoryDropdown'
 import CompanyDropdown from '../common/CompanyDropdown'
@@ -132,7 +129,7 @@ export default class ProductList extends Component {
     saveBulk (e) {
         const action = e.target.id
         const self = this
-        axios.post('/api/product/bulk', { bulk: this.state.bulk }).then(function (response) {
+        axios.post('/api/product/bulk', { bulk: this.state.bulk, action: action }).then(function (response) {
             // const arrQuotes = [...self.state.invoices]
             // const index = arrQuotes.findIndex(payment => payment.id === id)
             // arrQuotes.splice(index, 1)
