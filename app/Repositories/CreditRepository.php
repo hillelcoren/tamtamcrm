@@ -77,12 +77,16 @@ class CreditRepository extends BaseRepository implements CreditRepositoryInterfa
                         unset($invitation['id']);
                     }
 
-                    $new_invitation = CreditInvitationFactory::create($credit->account_id, $credit->user_id);
-                    $new_invitation->fill($invitation);
-                    $new_invitation->credit_id = $credit->id;
-                    $new_invitation->client_contact_id = $invitation['client_contact_id'];
-                    $new_invitation->save();
+                    //make sure we are creating an invite for a contact who belongs to the client only!
+                    $contact = ClientContact::find($invitation['client_contact_id']);
 
+                    if ($credit->customer_id == $contact->customer_id) {
+                        $new_invitation = CreditInvitationFactory::create($credit->account_id, $credit->user_id);
+                        $new_invitation->fill($invitation);
+                        $new_invitation->credit_id = $credit->id;
+                        $new_invitation->client_contact_id = $invitation['client_contact_id'];
+                        $new_invitation->save();
+                    }
                 }
             }
         }

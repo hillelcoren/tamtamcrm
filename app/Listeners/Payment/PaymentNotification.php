@@ -2,7 +2,7 @@
 
 namespace App\Listeners\Payment;
 
-use App\Notifications\Payment\NewPaymentNotification;
+use App\Notifications\Admin\NewPaymentNotification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Queue\InteractsWithQueue;
@@ -28,8 +28,6 @@ class PaymentNotification implements ShouldQueue
     {
         $payment = $event->payment;
 
-        return true;
-
         //$invoices = $payment->invoices;
 
         if (!empty($payment->account->account_users)) {
@@ -40,7 +38,7 @@ class PaymentNotification implements ShouldQueue
 
         if (isset($payment->account->slack_webhook_url)) {
             Notification::route('slack', $payment->account->slack_webhook_url)
-                ->notify(new NewPaymentNotification($payment, $payment->account, true));
+                        ->notify(new NewPaymentNotification($payment, $payment->account, true));
         }
     }
 }

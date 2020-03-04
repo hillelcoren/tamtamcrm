@@ -51,8 +51,8 @@ class EmailOrder implements ShouldQueue
     {
         $email_builder = $this->email_builder;
 
-        Mail::to($this->customer->contacts->first()->email, $this->customer->present()->name())->send(new TemplateEmail($email_builder,
-            $this->customer->user, $this->customer));
+        Mail::to($this->customer->contacts->first()->email, $this->customer->present()->name())
+            ->send(new TemplateEmail($email_builder, $this->customer->user, $this->customer));
 
         if (count(Mail::failures()) > 0) {
             return $this->logMailError($errors);

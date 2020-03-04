@@ -11,9 +11,11 @@ use App\Factory\NotificationFactory;
 use App\Jobs\Order\InvoiceOrders;
 use App\Jobs\RecurringInvoice\SaveRecurringInvoice;
 use App\Notification;
+use App\Payment;
 use App\Quote;
 use App\Repositories\NotificationRepository;
 use App\Repositories\QuoteRepository;
+use App\Utils\Number;
 use Exception;
 use Illuminate\Http\Request;
 use App\Repositories\Interfaces\InvoiceRepositoryInterface;
@@ -29,6 +31,8 @@ use App\Filters\InvoiceFilter;
 use App\Repositories\TaskRepository;
 use App\Task;
 use App\Traits\CheckEntityStatus;
+use Illuminate\Notifications\Messages\MailMessage;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Storage;
 
 class InvoiceController extends Controller
@@ -163,7 +167,8 @@ class InvoiceController extends Controller
                 break;
             case 'mark_paid':
                 if ($invoice->balance < 0 || $invoice->status_id == Invoice::STATUS_PAID ||
-                    $invoice->is_deleted === true) {
+                    $invoice->is_deleted === true
+                ) {
                     return response()->json('Invoice cannot be marked as paid', 400);
                 }
                 $invoice = $invoice->service()->markPaid();

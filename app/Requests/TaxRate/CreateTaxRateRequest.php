@@ -14,7 +14,8 @@ class CreateTaxRateRequest extends BaseFormRequest
     public function rules()
     {
         return [
-            'name' => 'required|unique:tax_rates,name,null,null,account_id,' . auth()->user()->account_user()->account_id,
+            'name' => 'required|unique:tax_rates,name,null,null,account_id,' .
+                auth()->user()->account_user()->account_id,
             'rate' => 'required|numeric',
         ];
     }

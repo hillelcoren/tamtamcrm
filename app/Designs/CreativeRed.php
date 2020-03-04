@@ -9,7 +9,7 @@ class CreativeRed extends AbstractDesign
     {
     }
 
-    public function header()
+    public function include()
     {
 
         return '

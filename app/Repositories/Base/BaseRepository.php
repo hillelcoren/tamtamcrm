@@ -108,6 +108,17 @@ class BaseRepository implements BaseRepositoryInterface
 
     /**
      * @param $entity
+     * @param $type
+     *
+     * @return string
+     */
+    private function getEventClass($entity, $type)
+    {
+        return 'App\Events\\' . ucfirst(class_basename($entity)) . 'Was' . $type;
+    }
+
+    /**
+     * @param $entity
      */
     public function archive($entity)
     {
@@ -116,6 +127,12 @@ class BaseRepository implements BaseRepositoryInterface
         }
 
         $entity->delete();
+
+        $className = $this->getEventClass($entity, 'Archived');
+
+        if (class_exists($className)) {
+            event(new $className($entity));
+        }
     }
 
     /**
@@ -133,6 +150,12 @@ class BaseRepository implements BaseRepositoryInterface
             $entity->is_deleted = false;
             $entity->save();
         }
+
+        $className = $this->getEventClass($entity, 'Restored');
+
+        if (class_exists($className)) {
+            event(new $className($entity, $fromDeleted));
+        }
     }
 
     /**
@@ -146,6 +169,12 @@ class BaseRepository implements BaseRepositoryInterface
         $entity->is_deleted = true;
         $entity->save();
         $entity->delete();
+
+        $className = $this->getEventClass($entity, 'Deleted');
+
+        if (class_exists($className)) {
+            event(new $className($entity));
+        }
     }
 
     /**

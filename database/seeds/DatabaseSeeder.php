@@ -10,7 +10,8 @@ class DatabaseSeeder extends Seeder {
      * @return void
      */
     public function run() {
-        $this->call(GatewaySeeder::class);
+        //$this->call(GatewaySeeder::class);
+        $this->call(DesignSeeder::class);
         //$this->call(PaymentTypeSeeder::class);
         //$this->call(IndustrySeeder::class);
         //$this->call(FrequencySeeder::class);

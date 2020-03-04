@@ -46,6 +46,9 @@ trait Refundable
 
         $credit_note->save();
 
+        $credit_note->number = $this->customer->getNextCreditNumber($this->customer);
+        $credit_note->save();
+
         $this->createActivity($data, $credit_note->id);
 
         //determine if we need to refund via gateway
@@ -142,6 +145,9 @@ trait Refundable
         $credit_note->line_items = $line_items;
         $credit_note->save();
 
+        $credit_note->number = $this->customer->getNextCreditNumber($this->customer);
+        $credit_note->save();
+
         //determine if we need to refund via gateway
         if ($data['gateway_refund'] !== false) {
             //todo process gateway refund, on success, reduce the credit note balance to 0
@@ -203,7 +209,7 @@ trait Refundable
         $credit_note->assigned_user_id = isset($this->assigned_user_id) ?: null;
         $credit_note->date = $data['date'];
         $credit_note->number = $this->getNextCreditNumber($this->customer);
-        $credit_note->status_id = Credit::STATUS_DRAFT;
+        $credit_note->status_id = Credit::STATUS_SENT;
         $credit_note->customer_id = $this->customer->id;
         $credit_note->total = $data['amount'];
         $credit_note->balance = $data['amount'];

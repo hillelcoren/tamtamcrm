@@ -6,13 +6,15 @@ import DesignDropdown from '../common/DesignDropdown'
 import CKEditor from '@ckeditor/ckeditor5-react'
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic'
 
+import {config} from '../common/HtmlEditor'
+
 class AddDesign extends React.Component {
     constructor (props) {
         super(props)
         this.state = {
             modal: false,
             name: '',
-            design: null,
+            design: { header: null, footer: null, body: null },
             loading: false,
             errors: []
         }
@@ -107,19 +109,71 @@ class AddDesign extends React.Component {
                             <DesignDropdown handleInputChanges={this.handleInput.bind(this)} />
                         </FormGroup>
 
-                        <CKEditor
-                            editor={ClassicEditor}
-                            data={this.state.design}
-                            onInit={editor => {
-                                // You can store the "editor" and use when it is needed.
-                                console.log('Editor is ready to use!', editor)
-                            }}
-                            onChange={(event, editor) => {
-                                const data = editor.getData()
-                                this.setState({ design: data }, () => { console.log('design', this.state.design) })
-                            }}
-                        />
+                        <FormGroup>
+                            <Label for="name">Header <span className="text-danger">*</span></Label>
+                            <CKEditor
+                                config={config}
+                                editor={ClassicEditor}
+                                data={this.state.design.header}
+                                onInit={editor => {
+                                    // You can store the "editor" and use when it is needed.
+                                    console.log('Editor is ready to use!', editor)
+                                }}
+                                onChange={(event, editor) => {
+                                    const data = editor.getData()
+                                    this.setState(prevState => ({
+                                        design: { // object that we want to update
+                                            ...prevState.design, // keep all other key-value pairs
+                                            header: data // update the value of specific key
+                                        }
+                                    }), () => console.log('design', this.state.design))
+                                }}
+                            />
+                        </FormGroup>
 
+                        <FormGroup>
+                            <Label for="name">Body <span className="text-danger">*</span></Label>
+                            <CKEditor
+                                config={config}
+                                editor={ClassicEditor}
+                                data={this.state.design.body}
+                                onInit={editor => {
+                                    // You can store the "editor" and use when it is needed.
+                                    console.log('Editor is ready to use!', editor)
+                                }}
+                                onChange={(event, editor) => {
+                                    const data = editor.getData()
+                                    this.setState(prevState => ({
+                                        design: { // object that we want to update
+                                            ...prevState.design, // keep all other key-value pairs
+                                            body: data // update the value of specific key
+                                        }
+                                    }), () => console.log('design', this.state.design))
+                                }}
+                            />
+                        </FormGroup>
+
+                        <FormGroup>
+                            <Label for="name">Footer <span className="text-danger">*</span></Label>
+                            <CKEditor
+                                config={config}
+                                editor={ClassicEditor}
+                                data={this.state.design.footer}
+                                onInit={editor => {
+                                    // You can store the "editor" and use when it is needed.
+                                    console.log('Editor is ready to use!', editor)
+                                }}
+                                onChange={(event, editor) => {
+                                    const data = editor.getData()
+                                    this.setState(prevState => ({
+                                        design: { // object that we want to update
+                                            ...prevState.design, // keep all other key-value pairs
+                                            footer: data // update the value of specific key
+                                        }
+                                    }), () => console.log('design', this.state.design))
+                                }}
+                            />
+                        </FormGroup>
                     </ModalBody>
 
                     <ModalFooter>

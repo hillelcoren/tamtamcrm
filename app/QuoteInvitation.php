@@ -8,6 +8,7 @@ use App\Traits\Inviteable;
 use App\Customer;
 use App\Quote;
 use App\User;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -75,5 +76,11 @@ class QuoteInvitation extends Model
         return sprintf('<img src="data:image/svg+xml;base64,%s"></img><p/>%s: %s', $this->signature_base64,
             ctrans('texts.signed'),
             $this->createClientDate($this->signature_date, $this->contact->client->timezone()->name));
+    }
+
+    public function markViewed()
+    {
+        $this->viewed_date = Carbon::now();
+        $this->save();
     }
 }

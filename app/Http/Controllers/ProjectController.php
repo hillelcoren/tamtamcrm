@@ -32,7 +32,8 @@ class ProjectController extends Controller
 
     public function index(Request $request)
     {
-        $projects = (new ProjectFilter($this->project_repo))->filter($request, auth()->user()->account_user()->account_id);
+        $projects =
+            (new ProjectFilter($this->project_repo))->filter($request, auth()->user()->account_user()->account_id);
         return response()->json($projects);
     }
 
@@ -44,7 +45,8 @@ class ProjectController extends Controller
     public function store(CreateProjectRequest $request)
     {
         $project = $this->project_repo->save($request->all(),
-            ProjectFactory::create(auth()->user()->id, $request->customer_id, auth()->user()->account_user()->account_id));
+            ProjectFactory::create(auth()->user()->id, $request->customer_id,
+                auth()->user()->account_user()->account_id));
 
         return response()->json($this->transformProject($project));
     }

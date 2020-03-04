@@ -29,7 +29,7 @@ export default class Designs extends Component {
             errors: [],
             dropdownButtonActions: ['download'],
             bulk: [],
-            ignoredColumns: ['settings', 'deleted_at', 'created_at'],
+            ignoredColumns: ['settings', 'deleted_at', 'created_at', 'design'],
             filters: {
                 searchText: '',
                 status: 'active',

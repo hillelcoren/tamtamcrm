@@ -4,6 +4,7 @@ import { Button, Card, CardBody, CardHeader } from 'reactstrap'
 import axios from 'axios'
 import { toast, ToastContainer } from 'react-toastify'
 import SignatureCanvas from 'react-signature-canvas'
+import styles from './style.module.css'
 
 class EmailSettings extends Component {
     constructor (props) {
@@ -193,13 +194,8 @@ class EmailSettings extends Component {
                             formFieldsRows={this.getFormFields()}
                         />
 
-                        <SignatureCanvas canvasProps={{
-                            width: 800,
-                            height: 200,
-                            className: 'signatureCanvas'
-                        }} ref={(ref) => {
-                            this.state.sigPad = ref
-                        }}/>
+                        <SignatureCanvas canvasProps={{ className: styles.sigPad }}
+                            ref={(ref) => { this.state.sigPad = ref }} />
 
                         <Button color="primary" onClick={this.handleSubmit}>Save</Button>
                     </CardBody>

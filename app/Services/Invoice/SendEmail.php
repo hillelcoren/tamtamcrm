@@ -2,6 +2,7 @@
 
 namespace App\Services\Invoice;
 
+use App\Events\Invoice\InvoiceWasEmailed;
 use App\Helpers\Email\InvoiceEmail;
 use App\Invoice;
 use App\Jobs\Invoice\EmailInvoice;
@@ -39,5 +40,9 @@ class SendEmail extends AbstractService
                 EmailInvoice::dispatch($email_builder, $invitation);
             }
         });
+
+        if ($this->invoice->invitations->count() > 0) {
+            event(new InvoiceWasEmailed($this->invoice->invitations->first()));
+        }
     }
 }

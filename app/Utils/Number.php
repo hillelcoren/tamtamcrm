@@ -51,6 +51,10 @@ class Number
     {
         $currency = $client->currency;
 
+        if(empty($currency)) {
+            return true;
+        }
+
         $thousand = $currency->thousand_separator;
         $decimal = $currency->decimal_separator;
         $precision = $currency->precision;

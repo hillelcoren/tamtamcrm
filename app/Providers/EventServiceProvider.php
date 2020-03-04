@@ -4,9 +4,12 @@ namespace App\Providers;
 
 use App\Events\Client\ClientWasCreated;
 use App\Events\Invoice\InvoiceWasCreated;
+use App\Events\Invoice\InvoiceWasEmailed;
+use App\Events\Invoice\InvoiceWasEmailedAndFailed;
 use App\Events\Invoice\InvoiceWasMarkedSent;
 use App\Events\Invoice\InvoiceWasPaid;
 use App\Events\Invoice\InvoiceWasUpdated;
+use App\Events\Misc\InvitationWasViewed;
 use App\Events\Payment\PaymentWasCreated;
 use App\Events\Payment\PaymentWasDeleted;
 use App\Events\PaymentWasRefunded;
@@ -18,7 +21,11 @@ use App\Listeners\Activity\PaymentRefundedActivity;
 use App\Listeners\Activity\PaymentVoidedActivity;
 use App\Listeners\Invoice\CreateInvoiceActivity;
 use App\Listeners\Invoice\CreateInvoiceHtmlBackup;
+use App\Listeners\Invoice\InvoiceEmailActivity;
+use App\Listeners\Invoice\InvoiceEmailedNotification;
+use App\Listeners\Invoice\InvoiceEmailFailedActivity;
 use App\Listeners\Invoice\UpdateInvoiceActivity;
+use App\Listeners\Misc\InvitationViewedListener;
 use App\Listeners\Payment\PaymentNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 
@@ -61,6 +68,16 @@ class EventServiceProvider extends ServiceProvider
         ],
         InvoiceWasPaid::class => [
             CreateInvoiceHtmlBackup::class,
+        ],
+        InvoiceWasEmailed::class => [
+            InvoiceEmailActivity::class,
+            InvoiceEmailedNotification::class,
+        ],
+        InvoiceWasEmailedAndFailed::class => [
+            InvoiceEmailFailedActivity::class,
+        ],
+        InvitationWasViewed::class => [
+            InvitationViewedListener::class
         ],
     ];
 

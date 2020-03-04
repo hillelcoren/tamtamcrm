@@ -3,6 +3,7 @@
 namespace App\Events\Invoice;
 
 use App\Invoice;
+use App\InvoiceInvitation;
 use Illuminate\Queue\SerializesModels;
 
 /**
@@ -14,15 +15,15 @@ class InvoiceWasEmailed
     /**
      * @var Invoice
      */
-    public $invoice;
+    public $invitation;
 
     /**
      * Create a new event instance.
      *
      * @param Invoice $invoice
      */
-    public function __construct(Invoice $invoice)
+    public function __construct(InvoiceInvitation $invitation)
     {
-        $this->invoice = $invoice;
+        $this->invitation = $invitation;
     }
 }

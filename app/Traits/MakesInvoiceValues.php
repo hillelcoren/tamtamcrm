@@ -244,6 +244,9 @@ trait MakesInvoiceValues
         $data['$credit_amount'] =  &$data['$total'];
         $data['$credit_balance'] =  &$data['$balance'];
         $data['$credit.amount'] = &$data['$total'];
+        $data['$credit_number'] = &$data['$number'];
+        $data['$credit_no'] = &$data['$number'];
+        $data['$credit.credit_no'] = &$data['$number'];
 
         $data['$date'] = $this->date ?: '&nbsp;';
         $data['$invoice.date'] = &$data['$date'];

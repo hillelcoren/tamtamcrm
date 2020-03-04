@@ -1,3 +1,5 @@
+
+
 @component('email.components.layout')
 
     @slot('header')
@@ -6,7 +8,7 @@
         @endcomponent
     @endslot
 
-    @lang($message)
+    @lang($test)
 
     @component('email.components.button', ['url' => $url])
         @lang($button)
