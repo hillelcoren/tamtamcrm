@@ -310,13 +310,37 @@ class EditInvoice extends Component {
 
         axios.post(`/api/quote/${this.state.invoice_id}/${action}`, data)
             .then((response) => {
+                let message = `${action} completed successfully`
+
+                if (action === 'clone_to_quote') {
+                    this.props.invoices.push(response.data)
+                    this.props.action(this.props.invoices)
+                    message = `Quote was cloned successfully. Quote ${response.data.number} has been created`
+                }
+
                 if (action === 'download') {
                     this.downloadPdf(response, this.state.invoice_id)
+                    message = 'The PDF file has been downloaded'
+                }
+
+                if (action === 'clone_to_invoice') {
+                    message = `The quote was successfully converted to an invoice. Invoice ${response.data.number} has been created`
+                }
+
+                if (action === 'mark_approved') {
+                    message = 'The quote has been marked as approved'
+                }
+
+                if (action === 'mark_sent') {
+                    message = 'The quote has been marked as sent'
+                }
+
+                if (action === 'email') {
+                    message = 'The email has been sent successfully'
                 }
 
                 this.setState({
-                    status: status,
-                    showSuccessMessage: true,
+                    showSuccessMessage: message,
                     showErrorMessage: false
                 })
             })
@@ -594,7 +618,8 @@ class EditInvoice extends Component {
     }
 
     buildForm () {
-        const changeStatusButton = <DropdownItem color="primary" onClick={() => this.changeStatus('mark_sent')}>Mark Sent</DropdownItem>
+        const changeStatusButton = <DropdownItem color="primary" onClick={() => this.changeStatus('mark_sent')}>Mark
+            Sent</DropdownItem>
 
         const approveButton = this.state.status !== 4
             ? <DropdownItem className="primary"
@@ -602,15 +627,15 @@ class EditInvoice extends Component {
 
         const sendEmailButton = this.state.status === 1
             ? <DropdownItem className="primary" onClick={() => this.changeStatus('email')}>Send
-                    Email</DropdownItem> : null
+                Email</DropdownItem> : null
 
         const downloadButton = <DropdownItem className="primary"
             onClick={() => this.changeStatus('download')}>Download</DropdownItem>
 
         const cloneInvoiceButton = <DropdownItem className="primary"
             onClick={() => this.changeStatus('clone_to_invoice').bind(this)}>Convert
-                to
-                Invoice</DropdownItem>
+            to
+            Invoice</DropdownItem>
 
         const cloneButton = <DropdownItem className="primary"
             onClick={() => this.changeStatus('clone_to_quote').bind(this)}>Clone Quote
@@ -633,7 +658,7 @@ class EditInvoice extends Component {
         const dropdownMenu = this.state.invoice_id
             ? <Dropdown isOpen={this.state.dropdownOpen} toggle={this.toggleMenu}>
                 <DropdownToggle caret>
-                        Actions
+                    Actions
                 </DropdownToggle>
 
                 <DropdownMenu>
@@ -647,12 +672,12 @@ class EditInvoice extends Component {
                     {cloneInvoiceButton}
                     {cloneButton}
                     {this.props.task_id ? <DropdownItem className="primary" onClick={this.handleTaskChange}>Get
-                            Products</DropdownItem> : null}
+                        Products</DropdownItem> : null}
                 </DropdownMenu>
             </Dropdown> : null
 
-        const successMessage = this.state.showSuccessMessage === true
-            ? <SuccessMessage message="Quote was updated successfully"/> : null
+        const successMessage = this.state.showSuccessMessage !== false && this.state.showSuccessMessage !== ''
+            ? <SuccessMessage message={this.state.showSuccessMessage}/> : null
         const errorMessage = this.state.showErrorMessage === true
             ? <ErrorMessage message="Something went wrong"/> : null
 
@@ -880,7 +905,7 @@ class EditInvoice extends Component {
                             onClick={() => {
                                 this.toggleTab('1')
                             }}>
-                       Details
+                            Details
                         </NavLink>
                     </NavItem>
 
@@ -890,7 +915,7 @@ class EditInvoice extends Component {
                             onClick={() => {
                                 this.toggleTab('2')
                             }}>
-                       Contacts
+                            Contacts
                         </NavLink>
                     </NavItem>
 
@@ -900,7 +925,7 @@ class EditInvoice extends Component {
                             onClick={() => {
                                 this.toggleTab('3')
                             }}>
-                       Items
+                            Items
                         </NavLink>
                     </NavItem>
 
@@ -910,7 +935,7 @@ class EditInvoice extends Component {
                             onClick={() => {
                                 this.toggleTab('4')
                             }}>
-                       Notes
+                            Notes
                         </NavLink>
                     </NavItem>
                     {documentTabLink}
@@ -985,7 +1010,7 @@ class EditInvoice extends Component {
                     <Modal isOpen={this.state.modal} toggle={this.toggle} className={this.props.className}
                         size="lg">
                         <ModalHeader toggle={this.toggle}>
-                                Quote
+                            Quote
                         </ModalHeader>
 
                         <ModalBody>
@@ -1004,7 +1029,7 @@ class EditInvoice extends Component {
             <div>
 
                 {success && <div className="alert alert-success" role="alert">
-                        Products added to task successfully
+                    Products added to task successfully
                 </div>}
 
                 {form}
@@ -1014,6 +1039,4 @@ class EditInvoice extends Component {
     }
 }
 
-export
-default
-EditInvoice
+export default EditInvoice

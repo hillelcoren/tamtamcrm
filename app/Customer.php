@@ -412,17 +412,22 @@ class Customer extends Model implements HasLocalePreference
 
     public function invoice_filepath()
     {
-        return $this->id . '/invoices/';
+        return $this->account->id . '/' . $this->id . '/invoices/';
     }
 
     public function quote_filepath()
     {
-        return $this->id . '/quotes/';
+        return $this->account->id . '/' . $this->id . '/quotes/';
     }
 
     public function credit_filepath()
     {
-        return $this->id . '/credits/';
+        return $this->account->id . '/' . $this->id . '/credits/';
+    }
+
+    public function company_filepath()
+    {
+        return $this->account->id . '/';
     }
 
     /**
@@ -442,30 +447,12 @@ class Customer extends Model implements HasLocalePreference
                     ->whereGatewayTypeId($payment_method_id)->first();
     }
 
-    public function setInvoiceDefaults(): Invoice
+    public function setCompanyDefaults($data, $entity_name)
     {
-        $invoice_factory = InvoiceFactory::create(auth()->user()->id, $this->account_id, $this);
-        $invoice_factory->terms = $this->getSetting('invoice_terms');
-        $invoice_factory->footer = $this->getSetting('invoice_footer');
-        $invoice_factory->public_notes = isset($this->public_notes) ? $this->public_notes : '';
-        return $invoice_factory;
-    }
+        $data['terms'] = $this->getSetting($entity_name.'_terms');
+        $data['footer'] =$this->getSetting($entity_name.'_footer');
+        $data['public_notes'] = isset($this->public_notes) ? $this->public_notes : '';
 
-    public function setQuoteDefaults(): Quote
-    {
-        $quote_factory = QuoteFactory::create($this->account_id, auth()->user()->id, $this);
-        $quote_factory->terms = $this->getSetting('quote_terms');
-        $quote_factory->footer = $this->getSetting('quote_footer');
-        $quote_factory->public_notes = isset($this->public_notes) ? $this->public_notes : '';
-        return $quote_factory;
-    }
-
-    public function setCreditDefaults(): Credit
-    {
-        $credit_factory = CreditFactory::create($this->account_id, auth()->user()->id, $this);
-        $credit_factory->terms = $this->getSetting('credit_terms');
-        $credit_factory->footer = $this->getSetting('credit_footer');
-        $credit_factory->public_notes = isset($this->public_notes) ? $this->public_notes : '';
-        return $credit_factory;
+        return $data;
     }
 }

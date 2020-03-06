@@ -97,7 +97,9 @@ class QuoteController extends Controller
     public function store(CreateQuoteRequest $request)
     {
         $customer = Customer::find($request->input('customer_id'));
-        $quote = $this->quote_repo->save($request->all(), $customer->setQuoteDefaults());
+        $data = $customer->setCompanyDefaults($request->all(), 'invoice');
+        $quote = $this->quote_repo->save($data,
+            QuoteFactory::create(auth()->user()->account_user()->account_id, auth()->user()->id, $customer));
         SaveRecurringQuote::dispatchNow($request, $quote->account, $quote);
         QuoteOrders::dispatchNow($quote);
         $notification = NotificationFactory::create(auth()->user()->account_user()->account_id, auth()->user()->id);
@@ -176,6 +178,11 @@ class QuoteController extends Controller
                     return response()->json($quote);
                 }
 
+                break;
+            case 'approve':
+                break;
+            case 'convert':
+                //convert  quote to an invoice make sure we link the two entities!!!
                 break;
             case
             'mark_approved':
@@ -298,5 +305,17 @@ class QuoteController extends Controller
 
         /* Need to understand which permission are required for the given bulk action ie. view / edit */
         return response()->json(Quote::withTrashed()->whereIn('id', $ids)->get());
+    }
+
+    public function downloadPdf($invitation_key)
+    {
+        $invitation = $this->quote_repo->getInvitationByKey($invitation_key);
+        $contact = $invitation->contact;
+        $quote = $invitation->quote;
+
+        $file_path = $quote->service()->getQuotePdf($contact);
+
+        return response()->download($file_path);
+
     }
 }

@@ -101,7 +101,7 @@ class InvoiceRepository extends BaseRepository implements InvoiceRepositoryInter
         /* Always carry forward the initial invoice amount this is important for tracking client balance changes later......*/
         $starting_amount = $invoice->total;
 
-        if (!$invoice->id) {
+        if (!empty($data) && !$invoice->id) {
             $customer = Customer::find($data['customer_id']);
             $invoice->uses_inclusive_taxes = $customer->getSetting('inclusive_taxes');
         }

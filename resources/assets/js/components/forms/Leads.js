@@ -191,11 +191,15 @@ export default class Leads extends Component {
                 ignored_columns={this.state.ignoredColumns}/> : null
         return (
             <Row form>
-                <Col md={3}>
+                <Col className="h-100" md={3}>
                     <TableSearch onChange={this.filterLeads}/>
                 </Col>
 
-                <Col md={2}>
+                <Col md={8}>
+                    {columnFilter}
+                </Col>
+
+                <Col className="h-100" md={2}>
                     <FormGroup>
                         <Input type='select'
                             onChange={this.filterLeads}
@@ -210,26 +214,22 @@ export default class Leads extends Component {
                     </FormGroup>
                 </Col>
 
-                <Col>
+                <Col className="h-100" md={2}>
                     <BulkActionDropdown
                         dropdownButtonActions={this.state.dropdownButtonActions}
                         saveBulk={this.saveBulk}/>
                 </Col>
 
-                <Col>
+                <Col className="h-100" md={2}>
                     <CsvImporter filename="leads.csv"
                         url={`/api/leads?search_term=${searchText}&status=${status_id}&start_date=${start_date}&end_date=${end_date}&page=1&per_page=5000`}/>
                 </Col>
 
-                <Col md={2}>
+                <Col className="h-100" md={2}>
                     <FormGroup>
                         <DateFilter onChange={this.filterLeads} update={this.addUserToState}
                             data={this.state.cachedData}/>
                     </FormGroup>
-                </Col>
-
-                <Col md={8}>
-                    {columnFilter}
                 </Col>
             </Row>
         )

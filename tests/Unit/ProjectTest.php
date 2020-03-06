@@ -13,10 +13,10 @@ use Illuminate\Support\Collection;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use App\User;
 
-class ProjectTest extends TestCase {
-    
-    use DatabaseTransactions,
-            WithFaker;
+class ProjectTest extends TestCase
+{
+
+    use DatabaseTransactions, WithFaker;
 
     /**
      * @var int
@@ -27,7 +27,8 @@ class ProjectTest extends TestCase {
 
     private $customer;
 
-    public function setUp() : void {
+    public function setUp(): void
+    {
         parent::setUp();
         $this->beginDatabaseTransaction();
         $this->user = factory(User::class)->create();
@@ -35,7 +36,8 @@ class ProjectTest extends TestCase {
     }
 
     /** @test */
-    public function it_can_show_all_the_projects() {
+    public function it_can_show_all_the_projects()
+    {
         $insertedproject = factory(Project::class)->create();
         $projectRepo = new ProjectRepository(new Project);
         $list = $projectRepo->listProjects()->toArray();
@@ -45,15 +47,17 @@ class ProjectTest extends TestCase {
     }
 
     /** @test */
-    public function it_can_delete_the_project() {
+    public function it_can_delete_the_project()
+    {
         $project = factory(Project::class)->create();
         $projectRepo = new ProjectRepository($project);
-        $deleted = $projectRepo->deleteProject($project->id);
+        $deleted = $projectRepo->newDelete($project);
         $this->assertTrue($deleted);
     }
 
     /** @test */
-    public function it_can_update_the_project() {
+    public function it_can_update_the_project()
+    {
         $project = factory(Project::class)->create();
         $title = $this->faker->word;
         $data = ['title' => $title];
@@ -65,7 +69,8 @@ class ProjectTest extends TestCase {
     }
 
     /** @test */
-    public function it_can_show_the_project() {
+    public function it_can_show_the_project()
+    {
         $project = factory(Project::class)->create();
         $projectRepo = new ProjectRepository(new Project);
         $found = $projectRepo->findProjectById($project->id);
@@ -74,7 +79,8 @@ class ProjectTest extends TestCase {
     }
 
     /** @test */
-    public function it_can_create_a_project() {
+    public function it_can_create_a_project()
+    {
         $data = [
             'account_id' => $this->account_id,
             'user_id' => $this->user->id,
@@ -93,20 +99,23 @@ class ProjectTest extends TestCase {
     /**
      * @codeCoverageIgnore
      */
-    public function it_errors_creating_the_project_when_required_fields_are_not_passed() {
+    public function it_errors_creating_the_project_when_required_fields_are_not_passed()
+    {
         $this->expectException(\Illuminate\Database\QueryException::class);
         $product = new ProjectRepository(new Project);
         $product->createProject([]);
     }
 
     /** @test */
-    public function it_errors_finding_a_project() {
+    public function it_errors_finding_a_project()
+    {
         $this->expectException(\Illuminate\Database\Eloquent\ModelNotFoundException::class);
         $category = new ProjectRepository(new Project);
         $category->findProjectById(999);
     }
 
-    public function tearDown() : void {
+    public function tearDown(): void
+    {
         parent::tearDown();
     }
 

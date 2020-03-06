@@ -29,10 +29,10 @@ class InvoiceEmail extends EmailBuilder
         /* Use default translations if a custom message has not been set*/
         if (iconv_strlen($body_template) == 0) {
             $body_template = trans('texts.invoice_message', [
-                    'invoice' => $invoice->number,
-                    'company' => $invoice->account->present()->name(),
-                    'amount' => Number::formatMoney($invoice->balance, $invoice->customer),
-                ], null, $invoice->customer->locale());
+                'invoice' => $invoice->number,
+                'company' => $invoice->account->present()->name(),
+                'amount' => Number::formatMoney($invoice->balance, $invoice->customer),
+            ], null, $invoice->customer->locale());
         }
 
         $subject_template = $client->getSetting('email_subject_' . $reminder_template);

@@ -10,6 +10,7 @@ export default class DesignDropdown extends Component {
         }
 
         this.getDesigns = this.getDesigns.bind(this)
+        this.handleChange = this.handleChange.bind(this)
     }
 
     componentDidMount () {
@@ -34,16 +35,10 @@ export default class DesignDropdown extends Component {
         return this.props.errors && !!this.props.errors[field]
     }
 
-    handleChange (value, name) {
-        const e = {
-            target: {
-                id: name,
-                name: name,
-                value: value.id
-            }
-        }
-
-        this.props.handleInputChanges(e)
+    handleChange (e) {
+        const design_id = parseInt(e.target.value)
+        const design = this.state.designs.filter((e) => e.id === design_id)
+        this.props.handleInputChanges(design)
     }
 
     getDesigns () {
@@ -64,7 +59,7 @@ export default class DesignDropdown extends Component {
             designList = <option value="">Loading...</option>
         } else {
             designList = this.state.designs.map((design, index) => (
-                <option key={index} value={design.name}>{design.name}</option>
+                <option key={index} value={design.id}>{design.name}</option>
             ))
         }
 
@@ -72,7 +67,7 @@ export default class DesignDropdown extends Component {
 
         return (
             <FormGroup className="mr-2">
-                <Input value={this.props.design} onChange={this.props.handleInputChanges} type="select"
+                <Input value={this.props.design} onChange={this.handleChange} type="select"
                     name={name} id={name}>
                     <option value="">Choose Design</option>
                     {designList}

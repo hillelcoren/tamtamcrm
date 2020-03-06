@@ -367,4 +367,6 @@ Route::group(['middleware' => 'api-header'], function () {
     Route::post('tasks/deal', 'TaskController@createDeal');
     Route::post('tasks/lead', 'LeadController@store');
     Route::get('lead/convert/{id}', 'LeadController@convert');
+
+    Route::post('preview', 'PreviewController@show');
 });

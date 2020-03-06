@@ -20,7 +20,18 @@ class StoreGroupSettingRequest extends BaseFormRequest
     {
         $input = $this->all();
 
-        $input['settings'] = CustomerSettings::defaults();
+        $group_settings = CustomerSettings::defaults();
+
+        if (array_key_exists('settings', $input) && !empty($input['settings'])) {
+
+            foreach ($input['settings'] as $key => $value) {
+                $group_settings->{$key} = $value;
+            }
+
+        }
+
+        $input['settings'] = $group_settings;
+
 
         $this->replace($input);
     }

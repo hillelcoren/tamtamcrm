@@ -99,12 +99,33 @@ class EditCredit extends React.Component {
 
         axios.post(`/api/credit/${this.state.id}/${action}`, data)
             .then((response) => {
+                let message = `${action} completed successfully`
+
+                if (action === 'clone_to_credit') {
+                    this.props.credits.push(response.data)
+                    this.props.action(this.props.credits)
+                    message = `Credit was cloned successfully. Quote ${response.data.number} has been created`
+                }
+
                 if (action === 'download') {
                     this.downloadPdf(response, this.state.id)
+                    message = 'The PDF file has been downloaded'
+                }
+
+                if (action === 'clone_to_quote') {
+                    message = `The credit was successfully converted to a quote. Quote ${response.data.number} has been created`
+                }
+
+                if (action === 'mark_sent') {
+                    message = 'The quote has been marked as sent'
+                }
+
+                if (action === 'email') {
+                    message = 'The email has been sent successfully'
                 }
 
                 this.setState({
-                    showSuccessMessage: true,
+                    showSuccessMessage: message,
                     showErrorMessage: false
                 })
             })
@@ -179,7 +200,7 @@ class EditCredit extends React.Component {
             Email</DropdownItem>
 
         const downloadButton = <DropdownItem className="primary"
-                                             onClick={() => this.changeStatus('download')}>Download</DropdownItem>
+            onClick={() => this.changeStatus('download')}>Download</DropdownItem>
 
         const cloneToQuote = <DropdownItem className="primary" onClick={() => this.changeStatus('clone_to_quote')}>Clone
             To
@@ -189,7 +210,8 @@ class EditCredit extends React.Component {
             To
             Credit</DropdownItem>
 
-        const changeStatusButton = <DropdownItem color="primary" onClick={() => this.changeStatus('mark_sent')}>Mark Sent</DropdownItem>
+        const changeStatusButton = <DropdownItem color="primary" onClick={() => this.changeStatus('mark_sent')}>Mark
+            Sent</DropdownItem>
 
         const dropdownMenu = <Dropdown isOpen={this.state.dropdownOpen} toggle={this.toggleMenu}>
             <DropdownToggle caret>
@@ -206,8 +228,8 @@ class EditCredit extends React.Component {
             </DropdownMenu>
         </Dropdown>
 
-        const successMessage = this.state.showSuccessMessage === true
-            ? <SuccessMessage message="Credit was updated successfully"/> : null
+        const successMessage = this.state.showSuccessMessage !== false && this.state.showSuccessMessage !== ''
+            ? <SuccessMessage message={this.state.showSuccessMessage}/> : null
         const errorMessage = this.state.showErrorMessage === true
             ? <ErrorMessage message="Something went wrong"/> : null
 
@@ -257,7 +279,8 @@ class EditCredit extends React.Component {
                             <InputGroupAddon addonType="prepend">
                                 <InputGroupText><i className="fa fa-user-o"/></InputGroupText>
                             </InputGroupAddon>
-                            <Input value={this.state.public_notes} className={this.hasErrorFor('public_notes') ? 'is-invalid' : ''}
+                            <Input value={this.state.public_notes}
+                                className={this.hasErrorFor('public_notes') ? 'is-invalid' : ''}
                                 type="text" name="public_notes"
                                 onChange={this.handleInput.bind(this)}/>
                             {this.renderErrorFor('public_notes')}
@@ -268,7 +291,8 @@ class EditCredit extends React.Component {
                             <InputGroupAddon addonType="prepend">
                                 <InputGroupText><i className="fa fa-user-o"/></InputGroupText>
                             </InputGroupAddon>
-                            <Input value={this.state.private_notes} className={this.hasErrorFor('private_notes') ? 'is-invalid' : ''}
+                            <Input value={this.state.private_notes}
+                                className={this.hasErrorFor('private_notes') ? 'is-invalid' : ''}
                                 type="text" name="private_notes"
                                 onChange={this.handleInput.bind(this)}/>
                             {this.renderErrorFor('private_notes')}

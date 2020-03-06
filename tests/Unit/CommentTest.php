@@ -12,15 +12,16 @@ use App\Repositories\CommentRepository;
 use Illuminate\Support\Collection;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 
-class CommentTest extends TestCase {
+class CommentTest extends TestCase
+{
 
-    use DatabaseTransactions,
-        WithFaker;
+    use DatabaseTransactions, WithFaker;
 
     private $user;
     private $task;
 
-    public function setUp(): void {
+    public function setUp(): void
+    {
         parent::setUp();
         $this->beginDatabaseTransaction();
         $this->user = factory(User::class)->create();
@@ -28,7 +29,8 @@ class CommentTest extends TestCase {
     }
 
     /** @test */
-    public function it_can_show_all_the_comments() {
+    public function it_can_show_all_the_comments()
+    {
         $insertedcomment = factory(Comment::class)->create();
         $commentRepo = new CommentRepository(new Comment);
         $list = $commentRepo->listComments()->toArray();
@@ -38,7 +40,8 @@ class CommentTest extends TestCase {
     }
 
     /** @test */
-    public function it_can_delete_the_comment() {
+    public function it_can_delete_the_comment()
+    {
         $comment = factory(Comment::class)->create();
         $commentRepo = new CommentRepository($comment);
         $deleted = $commentRepo->deleteComment($comment->id);
@@ -46,7 +49,8 @@ class CommentTest extends TestCase {
     }
 
     /** @test */
-    public function it_can_update_the_comment() {
+    public function it_can_update_the_comment()
+    {
         $comment = factory(Comment::class)->create();
         $data = [
             'comment' => $this->faker->sentence
@@ -60,7 +64,8 @@ class CommentTest extends TestCase {
     }
 
     /** @test */
-    public function it_can_show_the_comment() {
+    public function it_can_show_the_comment()
+    {
         $comment = factory(Comment::class)->create();
         $commentRepo = new CommentRepository(new Comment);
         $found = $commentRepo->findCommentById($comment->id);
@@ -69,7 +74,8 @@ class CommentTest extends TestCase {
     }
 
     /** @test */
-    public function it_can_attach_a_task() {
+    public function it_can_attach_a_task()
+    {
         $task = factory(Task::class)->create();
         $comment = factory(Comment::class)->create();
         $response = $task->comments()->attach($comment);
@@ -79,7 +85,8 @@ class CommentTest extends TestCase {
     }
 
     /** @test */
-    public function it_can_create_a_comment() {
+    public function it_can_create_a_comment()
+    {
         $data = [
             'account_id' => 1,
             'user_id' => $this->user->id,
@@ -95,20 +102,23 @@ class CommentTest extends TestCase {
     /**
      * @codeCoverageIgnore
      */
-    public function it_errors_creating_the_comment_when_required_fields_are_not_passed() {
+    public function it_errors_creating_the_comment_when_required_fields_are_not_passed()
+    {
         $this->expectException(\Illuminate\Database\QueryException::class);
         $comment = new CommentRepository(new Comment);
         $comment->createComment([]);
     }
 
     /** @test */
-    public function it_errors_finding_a_comment() {
+    public function it_errors_finding_a_comment()
+    {
         $this->expectException(\Illuminate\Database\Eloquent\ModelNotFoundException::class);
         $comment = new CommentRepository(new Comment);
         $comment->findCommentById(999);
     }
 
-    public function tearDown(): void {
+    public function tearDown(): void
+    {
         parent::tearDown();
     }
 

@@ -19,8 +19,7 @@ use Illuminate\Foundation\Testing\DatabaseTransactions;
 class CompanyUnitTest extends TestCase
 {
 
-    use WithFaker,
-        DatabaseTransactions;
+    use WithFaker, DatabaseTransactions;
 
     /**
      * @var int
@@ -52,7 +51,16 @@ class CompanyUnitTest extends TestCase
     {
         $brand = factory(Company::class)->create();
         $brandRepo = new CompanyRepository($brand, new CompanyContactRepository(new CompanyContact));
-        $deleted = $brandRepo->deleteBrand($brand->id);
+        $deleted = $brandRepo->newDelete($brand);
+        $this->assertTrue($deleted);
+    }
+
+    /** @test */
+    public function it_can_archive_the_brand()
+    {
+        $brand = factory(Company::class)->create();
+        $brandRepo = new CompanyRepository($brand, new CompanyContactRepository(new CompanyContact));
+        $deleted = $brandRepo->archive($brand);
         $this->assertTrue($deleted);
     }
 

@@ -21,17 +21,17 @@ class InvoiceSentNotification extends Notification implements ShouldQueue
 
     protected $invitation;
     protected $invoice;
-    protected $company;
+    protected $account;
     protected $settings;
     public $is_system;
     protected $contact;
 
-    public function __construct($invitation, $company, $is_system = false, $settings = null)
+    public function __construct($invitation, $account, $is_system = false, $settings = null)
     {
         $this->invitation = $invitation;
         $this->invoice = $invitation->invoice;
         $this->contact = $invitation->contact;
-        $this->company = $company;
+        $this->account = $account;
         $this->settings = $this->invoice->customer->getMergedSettings();
         $this->is_system = $is_system;
     }
@@ -57,7 +57,7 @@ class InvoiceSentNotification extends Notification implements ShouldQueue
     public function toMail($notifiable)
     {
 
-        $amount = Number::formatMoney($this->invoice->amount, $this->invoice->customer);
+        $amount = Number::formatMoney($this->invoice->total, $this->invoice->customer);
         $subject = trans('texts.notification_invoice_sent_subject', [
             'client' => $this->contact->present()->name(),
             'invoice' => $this->invoice->number,
@@ -72,12 +72,12 @@ class InvoiceSentNotification extends Notification implements ShouldQueue
             ]),
             'url' => config('ninja.site_url') . '/invoices/' . $this->invoice->id,
             'button' => trans('texts.view_invoice'),
-            'signature' => $this->settings->email_signature,
-            'logo' => $this->company->present()->logo(),
+            'signature' => !empty($this->settings) ? $this->settings->email_signature : '',
+            'logo' => $this->account->present()->logo(),
         ];
 
 
-        return (new MailMessage)->subject($subject)->view('email.admin.generic', $data);
+        return (new MailMessage)->subject($subject)->markdown('email.admin.generic', $data);
 
 
     }
@@ -99,24 +99,19 @@ class InvoiceSentNotification extends Notification implements ShouldQueue
         $logo = $this->account->present()->logo();
         $amount = Number::formatMoney($this->invoice->amount, $this->invoice->customer);
 
-        return (new SlackMessage)
-            ->from(ctrans('texts.notification_bot'))
-            ->success()
-            ->image('https://app.invoiceninja.com/favicon-v2.png')
-            ->content(trans('texts.notification_invoice_sent_subject',
-                [
-                    'amount' => $amount,
-                    'client' => $this->contact->present()->name(),
-                    'invoice' => $this->invoice->number
-                ]))
-            ->attachment(function ($attachment) use($amount){
-                $attachment->title(trans('texts.invoice_number_placeholder', ['invoice' => $this->invoice->number]), $this->invitation->getAdminLink())
-                           ->fields([
-                               trans('texts.client') => $this->contact->present()->name(),
-                               trans('texts.amount') => $amount,
-                           ]);
+        return (new SlackMessage)->from(trans('texts.notification_bot'))->success()
+                                 ->image('https://app.invoiceninja.com/favicon-v2.png')
+                                 ->content(trans('texts.notification_invoice_sent_subject', [
+                                     'amount' => $amount,
+                                     'client' => $this->contact->present()->name(),
+                                     'invoice' => $this->invoice->number
+                                 ]))->attachment(function ($attachment) use ($amount) {
+                $attachment->title(trans('texts.invoice_number_placeholder', ['invoice' => $this->invoice->number]),
+                    $this->invitation->getAdminLink())->fields([
+                    trans('texts.client') => $this->contact->present()->name(),
+                    trans('texts.amount') => $amount,
+                ]);
             });
-
     }
 
 }

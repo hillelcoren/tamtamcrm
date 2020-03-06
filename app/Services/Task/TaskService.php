@@ -45,6 +45,22 @@ class TaskService
      * @param bool $is_deal
      * @return Invoice|InvoiceSum|Task|null
      */
+    public function sendEmail()
+    {
+        $send_email = new SendEmail($this->task);
+
+        $this->task = $send_email->run();
+
+        return $this->task;
+    }
+
+    /**
+     * @param Request $request
+     * @param CustomerRepository $customer_repo
+     * @param TaskRepository $task_repo
+     * @param bool $is_deal
+     * @return Invoice|InvoiceSum|Task|null
+     */
     public function createDeal(Request $request,
         CustomerRepository $customer_repo,
         TaskRepository $task_repo,

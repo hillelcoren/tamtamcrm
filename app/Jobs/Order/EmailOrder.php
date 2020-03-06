@@ -27,18 +27,18 @@ class EmailOrder implements ShouldQueue
 
     private $email_builder;
 
-    private $order;
+    private $task;
 
     /**
      * EmailQuote constructor.
      * @param BuildEmail $email_builder
      * @param QuoteInvitation $quote_invitation
      */
-    public function __construct($order, $email_builder, $customer)
+    public function __construct($task, $email_builder, $customer)
     {
         $this->customer = $customer;
         $this->email_builder = $email_builder;
-        $this->order = $order;
+        $this->task = $task;
     }
 
     /**
@@ -62,6 +62,6 @@ class EmailOrder implements ShouldQueue
     private function logMailError($errors)
     {
         SystemLogger::dispatch($errors, SystemLog::CATEGORY_MAIL, SystemLog::EVENT_MAIL_SEND, SystemLog::TYPE_FAILURE,
-            $this->invoice->customer);
+            $this->task->customer);
     }
 }

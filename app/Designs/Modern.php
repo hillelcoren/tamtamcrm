@@ -20,9 +20,8 @@ class Modern extends AbstractDesign
 			        <meta charset="utf-8">
 			        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 			        <meta http-equiv="x-ua-compatible" content="ie=edge">
-			             <style>
-			        
-.bg-black{
+			        <style>
+			        .bg-black{
     background-color:#000
 }
 .bg-white{
@@ -519,8 +518,34 @@ class Modern extends AbstractDesign
 .pull-left {
 float: left;
 }
- 
-			        </style>
+                    body{font-size:85%}
+    				 .table_header_thead_class {text-align:left; text-align:left; color:#fff; background-color:#1a202c;}
+					 .table_header_td_class {padding-left:1rem;padding-right:1rem; padding-top:.5rem;padding-bottom:.5rem}
+					 .table_body_td_class {border-top-width:1px; border-bottom-width:1px; border-color:#1a202c; padding-left:1rem;padding-right:1rem; padding-top:1rem;padding-bottom:1rem;}
+					 @media screen {
+					 	div.div_header {
+						    display: flex;
+						  }
+						  div.div_footer {
+						    display: flex;
+						  }
+						}
+						@media print {
+						  div.div_footer {
+					     	display: flex; 
+							position: running(footer);
+					    	width: 100%;
+						  }
+						  div.div_header {
+			    		    display: flex; 
+							position: running(header);
+					    	width:100%;
+						  }
+						}
+						footer, header, hgroup, menu, nav, section {
+						    display: block;
+						}
+                    </style>
 			    </head>
 				<body>
         ';
@@ -531,8 +556,7 @@ float: left;
     {
 
         return '
-		
-				<div class="bg-orange-600 flex justify-between py-12 px-12">
+				<div class="div_header bg-orange-600 flex justify-between py-12 px-12" style="page-break-inside: avoid;">
 					<div class="w-1/2">
 						<h1 class="text-white font-bold text-5xl">$company.name</h1>
 					</div>
@@ -553,6 +577,7 @@ float: left;
     {
 
         return '
+			<section>
 			<div class="flex justify-between px-12 pt-12">
 			    <div class="w-1/2">
 			        $company_logo
@@ -579,13 +604,16 @@ float: left;
         ];
     }
 
-    public function table()
+    public function task_table()
     {
+    }
 
+    public function product_table()
+    {
         return '
 			<div class="px-12 pt-5 pb-20">
 			    <table class="w-full table-auto mt-8">
-			        <thead class="text-left text-white bg-gray-900">
+			        <thead class="text-left text-white bg-gray-900 display: table-header-group;">
 			            <tr>
 			                $table_header
 			            </tr>
@@ -598,27 +626,27 @@ float: left;
 			        <div class="w-1/2">
 			            $entity.public_notes
 			        </div>
-			        <div class="w-1/2 flex"">
-			            <div class="w-1/2 text-right flex flex-col">
+			        <div class="w-1/2 flex" style="page-break-inside: avoid;">
+			            <div class="w-1/2 text-right flex flex-col"  style="page-break-inside: avoid;">
 			                $total_tax_labels
 			                $line_tax_labels
 			            </div>
-			            <div class="w-1/2 text-right flex flex-col">
+			            <div class="w-1/2 text-right flex flex-col"  style="page-break-inside: avoid;">
 			                $total_tax_values
 			                $line_tax_values
 			            </div>
 			        </div>
 			    </div>
 			    <div class="flex px-4 mt-4 w-full items-end mt-5" style="page-break-inside: avoid;">
-			        <div class="w-1/2">
+			        <div class="w-1/2" style="page-break-inside: avoid;">
 			            <p class="font-semibold">$terms_label</p>
 			            $terms
 			        </div>
 			    </div>
 			    <div class="mt-8 px-4 py-2 bg-gray-900 text-white" style="page-break-inside: avoid;">
 			        <div class="w-1/2"></div>
-			        <div class="w-auto flex justify-end">
-			            <div class="w-56">
+			        <div class="w-auto flex justify-end" style="page-break-inside: avoid;">
+			            <div class="w-56" style="page-break-inside: avoid;">
 			                <p class="font-bold">$balance_due_label</p>
 			            </div>
 			            <p>$balance_due</p>
@@ -632,7 +660,9 @@ float: left;
     {
 
         return '
-			<div class="bg-orange-600 flex justify-between py-8 px-12" style="page-break-inside: avoid;">
+			</section>
+			<footer>
+			<div class="div_footer bg-orange-600 flex justify-between py-8 px-12" style="page-break-inside: avoid;">
 			    <div class="w-1/2">
 			        <!-- // -->
 			    </div>
@@ -645,7 +675,7 @@ float: left;
 			        </div>
 			    </div>
 			</div>
-			    </body>
+			</footer>
 			</html>
 		';
 

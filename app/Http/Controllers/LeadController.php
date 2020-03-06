@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\Lead\LeadWasCreated;
 use App\Factory\LeadFactory;
 use App\Filters\LeadFilter;
 use App\Lead;
@@ -59,6 +60,7 @@ class LeadController extends Controller
         $user = isset(auth()->user()->id) ? auth()->user()->id : 9874;
         $account_id = isset(auth()->user()->id) ? auth()->user()->account_user()->account_id : 1;
         $lead = $this->lead_repo->save(LeadFactory::create($account_id, $user), $request->all());
+        event(new LeadWasCreated($lead, $lead->account));
         return response()->json($this->transformLead($lead));
     }
 

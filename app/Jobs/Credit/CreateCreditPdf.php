@@ -47,7 +47,6 @@ class CreateCreditPdf implements ShouldQueue
 
     public function handle()
     {
-
         if (!$this->contact) {
             $this->contact = $this->credit->customer->primary_contact()->first();
         }
@@ -67,10 +66,11 @@ class CreateCreditPdf implements ShouldQueue
             $credit_design = new $class();
         }
 
-        $designer = new Designer($credit_design, $this->credit->customer->getSetting('pdf_variables'), 'credit');
+        $designer =
+            new Designer($this->credit, $credit_design, $this->credit->customer->getSetting('pdf_variables'), 'credit');
 
         //get invoice design
-        $html = $this->generateInvoiceHtml($designer->build($this->credit)->getHtml(), $this->credit, $this->contact);
+        $html = $this->generateInvoiceHtml($designer->build()->getHtml(), $this->credit, $this->contact);
 
         //todo - move this to the client creation stage so we don't keep hitting this unnecessarily
         Storage::makeDirectory($path, 0755);

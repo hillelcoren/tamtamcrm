@@ -15,6 +15,7 @@ use App\Payment;
 use App\Quote;
 use App\Repositories\NotificationRepository;
 use App\Repositories\QuoteRepository;
+use App\Transformations\QuoteTransformable;
 use App\Utils\Number;
 use Exception;
 use Illuminate\Http\Request;
@@ -38,7 +39,7 @@ use Illuminate\Support\Facades\Storage;
 class InvoiceController extends Controller
 {
 
-    use InvoiceTransformable, CheckEntityStatus;
+    use InvoiceTransformable, CheckEntityStatus, QuoteTransformable;
 
     private $invoice_repo;
 
@@ -76,11 +77,15 @@ class InvoiceController extends Controller
     public function store(CreateInvoiceRequest $request)
     {
         $customer = Customer::find($request->input('customer_id'));
-        $invoice = $this->invoice_repo->save($request->all(), $customer->setInvoiceDefaults());
+        $data = $customer->setCompanyDefaults($request->all(), 'invoice');
+        $invoice = $this->invoice_repo->save($data,
+            InvoiceFactory::create(auth()->user()->account_user()->account_id, auth()->user()->id, $customer));
         $invoice = StoreInvoice::dispatchNow($invoice, $request->all(),
             $invoice->account); //todo potentially this may return mixed ie PDF/$invoice... need to revisit when we implement UI
         InvoiceOrders::dispatchNow($invoice);
 
+        $invoice = StoreInvoice::dispatchNow($invoice, $request->all(),
+            $invoice->account);//todo potentially this may return mixed ie PDF/$invoice... need to revisit when we implement UI
         event(new InvoiceWasCreated($invoice));
         SaveRecurringInvoice::dispatchNow($request, $invoice->account, $invoice);
 
@@ -158,7 +163,7 @@ class InvoiceController extends Controller
             case 'clone_to_quote':
                 $quote = CloneInvoiceToQuoteFactory::create($invoice, auth()->user()->id);
                 (new QuoteRepository(new Quote))->save($request->all(), $quote);
-                // todo build the quote transformer and return response here
+                return response()->json($this->transformQuote($quote));
                 break;
             case 'history':
                 break;
@@ -167,8 +172,7 @@ class InvoiceController extends Controller
                 break;
             case 'mark_paid':
                 if ($invoice->balance < 0 || $invoice->status_id == Invoice::STATUS_PAID ||
-                    $invoice->is_deleted === true
-                ) {
+                    $invoice->is_deleted === true) {
                     return response()->json('Invoice cannot be marked as paid', 400);
                 }
                 $invoice = $invoice->service()->markPaid();

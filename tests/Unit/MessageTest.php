@@ -12,16 +12,16 @@ use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Collection;
 use App\Transformations\MessageUserTransformable;
 
-class MessageTest extends TestCase {
+class MessageTest extends TestCase
+{
 
-    use DatabaseTransactions,
-        MessageUserTransformable,
-        WithFaker;
+    use DatabaseTransactions, MessageUserTransformable, WithFaker;
 
     private $customer;
     private $user;
 
-    public function setUp(): void {
+    public function setUp(): void
+    {
         parent::setUp();
         $this->beginDatabaseTransaction();
         $this->customer = factory(Customer::class)->create();
@@ -29,14 +29,16 @@ class MessageTest extends TestCase {
     }
 
     /** @test */
-    public function it_can_transform_the_message() {
+    public function it_can_transform_the_message()
+    {
         $cust = $this->transformUser($this->customer, $this->user);
         //$this->assertInternalType('string', $customerFromDb->status);
         $this->assertInternalType('string', $cust->name);
     }
 
     /** @test */
-    public function it_can_delete_a_message() {
+    public function it_can_delete_a_message()
+    {
         $message = factory(Message::class)->create();
         $messageRepo = new MessageRepository($message);
         $delete = $messageRepo->deleteMessage();
@@ -44,8 +46,9 @@ class MessageTest extends TestCase {
     }
 
     /** @test */
-    public function it_can_create_a_message() {
-        
+    public function it_can_create_a_message()
+    {
+
         $data = [
             'user_id' => $this->user->id,
             'customer_id' => $this->customer->id,
@@ -64,14 +67,16 @@ class MessageTest extends TestCase {
         $this->assertDatabaseHas('messages', $collection->all());
     }
 
-    public function it_errors_creating_the_message_when_required_fields_are_not_passed() {
+    public function it_errors_creating_the_message_when_required_fields_are_not_passed()
+    {
         $this->expectException(\Illuminate\Database\QueryException::class);
         $messageRepo = new MessageRepository(new Message);
         $messageRepo->createMessage([]);
     }
 
     /** @test */
-    public function it_can_list_all_messages() {
+    public function it_can_list_all_messages()
+    {
 
         $data = [
             'user_id' => $this->user->id,
@@ -87,7 +92,8 @@ class MessageTest extends TestCase {
         $this->assertInstanceOf(Collection::class, $list);
     }
 
-    public function tearDown(): void {
+    public function tearDown(): void
+    {
         parent::tearDown();
         //$this->user = null;
         //$this->customer = null;

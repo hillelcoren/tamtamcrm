@@ -44,7 +44,7 @@ class Payment extends Model
     ];
 
     protected $casts = [
-        //'line_items' => 'object',
+        'exchange_rate' => 'float',
         'updated_at' => 'timestamp',
         'deleted_at' => 'timestamp',
         'is_deleted' => 'boolean',

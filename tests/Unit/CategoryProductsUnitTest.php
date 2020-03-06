@@ -9,18 +9,20 @@ use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use App\Product;
 
-class CategoryProductsUnitTest extends TestCase {
+class CategoryProductsUnitTest extends TestCase
+{
 
-    use DatabaseTransactions,
-        WithFaker;
+    use DatabaseTransactions, WithFaker;
 
-    public function setUp(): void {
+    public function setUp(): void
+    {
         parent::setUp();
         $this->beginDatabaseTransaction();
     }
 
     /** @test */
-    public function it_can_retrieve_the_products_from_the_category() {
+    public function it_can_retrieve_the_products_from_the_category()
+    {
         $category = factory(Category::class)->create();
         $product = factory(Product::class)->create();
         $categoryRepo = new CategoryRepository($category);
@@ -36,7 +38,8 @@ class CategoryProductsUnitTest extends TestCase {
     }
 
     /** @test */
-    public function it_can_associate_the_product_in_the_category() {
+    public function it_can_associate_the_product_in_the_category()
+    {
         $category = factory(Category::class)->create();
         $product = factory(Product::class)->create();
         $categoryRepo = new CategoryRepository($category);

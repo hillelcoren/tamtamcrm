@@ -1,8 +1,8 @@
-/* eslint-disable no-unused-vars */
 import React from 'react'
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter, Input, FormGroup, Label, Form } from 'reactstrap'
 import axios from 'axios'
 import UserDropdown from '../common/UserDropdown'
+import AddButtons from '../common/AddButtons'
 
 class AddLeadForm extends React.Component {
     constructor (props) {
@@ -172,7 +172,7 @@ class AddLeadForm extends React.Component {
 
         return (
             <React.Fragment>
-                <Button color="success" onClick={this.toggle}>+</Button>
+                <AddButtons toggle={this.toggle}/>
                 <Modal isOpen={this.state.modal} toggle={this.toggle} className={this.props.className}>
                     <ModalHeader toggle={this.toggle}>
                         Add Lead

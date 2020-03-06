@@ -10,18 +10,20 @@ use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use App\Product;
 
-class CategoryUnitTest extends TestCase {
+class CategoryUnitTest extends TestCase
+{
 
-    use DatabaseTransactions,
-        WithFaker;
+    use DatabaseTransactions, WithFaker;
 
-    public function setUp(): void {
+    public function setUp(): void
+    {
         parent::setUp();
         $this->beginDatabaseTransaction();
     }
 
     /** @test */
-    public function it_can_get_the_child_categories() {
+    public function it_can_get_the_child_categories()
+    {
         $parent = factory(Category::class)->create();
         $child = factory(Category::class)->create([
             'parent_id' => $parent->id
@@ -35,7 +37,8 @@ class CategoryUnitTest extends TestCase {
     }
 
     /** @test */
-    public function it_can_get_the_parent_category() {
+    public function it_can_get_the_parent_category()
+    {
         $parent = factory(Category::class)->create();
         $child = factory(Category::class)->create([
             'parent_id' => $parent->id
@@ -47,7 +50,8 @@ class CategoryUnitTest extends TestCase {
     }
 
     /** @test */
-    public function it_can_return_products_in_the_category() {
+    public function it_can_return_products_in_the_category()
+    {
         $category = factory(Category::class)->create();
         $categoryRepo = new CategoryRepository($category);
         $product = factory(Product::class)->create();
@@ -59,7 +63,8 @@ class CategoryUnitTest extends TestCase {
     }
 
     /** @test */
-    public function it_errors_looking_for_the_category_if_the_slug_is_not_found() {
+    public function it_errors_looking_for_the_category_if_the_slug_is_not_found()
+    {
         $category = factory(Category::class)->create();
         $this->expectException(\Illuminate\Database\Eloquent\ModelNotFoundException::class);
         $categoryRepo = new CategoryRepository($category);
@@ -67,7 +72,8 @@ class CategoryUnitTest extends TestCase {
     }
 
     /** @test */
-    public function it_can_get_the_category_by_slug() {
+    public function it_can_get_the_category_by_slug()
+    {
         $category = factory(Category::class)->create();
         $categoryRepo = new CategoryRepository($category);
         $cat = $categoryRepo->findCategoryBySlug($category->slug);
@@ -75,7 +81,8 @@ class CategoryUnitTest extends TestCase {
     }
 
     /** @test */
-    public function it_can_delete_file_only_in_the_database() {
+    public function it_can_delete_file_only_in_the_database()
+    {
         $category = factory(Category::class)->create();
         $categoryRepo = new CategoryRepository($category);
         $categoryRepo->deleteFile(['category' => $category->id]);
@@ -83,7 +90,8 @@ class CategoryUnitTest extends TestCase {
     }
 
     /** @test */
-    public function it_can_detach_the_products() {
+    public function it_can_detach_the_products()
+    {
         $category = factory(Category::class)->create();
         $product = factory(Product::class)->create();
         $categoryRepo = new CategoryRepository($category);
@@ -94,7 +102,8 @@ class CategoryUnitTest extends TestCase {
     }
 
     /** @test */
-    public function it_can_sync_products_in_the_category() {
+    public function it_can_sync_products_in_the_category()
+    {
         $category = factory(Category::class)->create();
         $product = factory(Product::class)->create();
         $categoryRepo = new CategoryRepository($category);
@@ -113,7 +122,8 @@ class CategoryUnitTest extends TestCase {
 //    }
 
     /** @test */
-    public function it_can_delete_a_category() {
+    public function it_can_delete_a_category()
+    {
         $category = factory(Category::class)->create();
         $categoryRepo = new CategoryRepository($category);
         $categoryRepo->deleteCategory();
@@ -121,7 +131,8 @@ class CategoryUnitTest extends TestCase {
     }
 
     /** @test */
-    public function it_can_list_all_the_categories() {
+    public function it_can_list_all_the_categories()
+    {
         $category = factory(Category::class)->create();
         $attributes = $category->getFillable();
         $categoryRepo = new CategoryRepository(new Category);
@@ -134,14 +145,16 @@ class CategoryUnitTest extends TestCase {
     }
 
     /** @test */
-    public function it_errors_finding_a_category() {
+    public function it_errors_finding_a_category()
+    {
         $this->expectException(\Illuminate\Database\Eloquent\ModelNotFoundException::class);
         $category = new CategoryRepository(new Category);
         $category->findCategoryById(999);
     }
 
     /** @test */
-    public function it_can_find_the_category() {
+    public function it_can_find_the_category()
+    {
         $category = factory(Category::class)->create();
         $categoryRepo = new CategoryRepository(new Category);
         $found = $categoryRepo->findCategoryById($category->id);
@@ -153,7 +166,8 @@ class CategoryUnitTest extends TestCase {
     }
 
     /** @test */
-    public function it_can_update_the_category() {
+    public function it_can_update_the_category()
+    {
         $category = factory(Category::class)->create();
         $cover = UploadedFile::fake()->image('file.png', 600, 600);
         //$parent = factory(Category::class)->create();
@@ -176,7 +190,8 @@ class CategoryUnitTest extends TestCase {
     }
 
     /** @test */
-    public function it_can_create_a_category() {
+    public function it_can_create_a_category()
+    {
         $cover = UploadedFile::fake()->image('file.png', 600, 600);
         $parent = factory(Category::class)->create();
         $params = [
@@ -198,7 +213,8 @@ class CategoryUnitTest extends TestCase {
     }
 
     /** @test */
-    public function it_can_create_root_category() {
+    public function it_can_create_root_category()
+    {
         $params = [
             'name' => 'Boys',
             'slug' => 'boys',
@@ -211,7 +227,8 @@ class CategoryUnitTest extends TestCase {
     }
 
     /** @test */
-    public function it_can_update_child_category_to_root_category() {
+    public function it_can_update_child_category_to_root_category()
+    {
         // suppose to have a child category
         $parent = factory(Category::class)->create();
         $child = factory(Category::class)->create();
@@ -227,7 +244,8 @@ class CategoryUnitTest extends TestCase {
     }
 
     /** @test */
-    public function it_can_update_root_category_to_child() {
+    public function it_can_update_root_category_to_child()
+    {
         $child = factory(Category::class)->create();
         $parent = factory(Category::class)->create();
 

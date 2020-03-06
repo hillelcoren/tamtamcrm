@@ -35,7 +35,7 @@ export default class Payments extends Component {
             custom_fields: [],
             dropdownButtonActions: ['download'],
             bulk: [],
-            ignoredColumns: ['paymentables', 'private_notes', 'created_at', 'user_id', 'id', 'customer', 'invoice_id', 'applied', 'assigned_user_id', 'deleted_at', 'updated_at', 'type_id', 'refunded', 'is_manual', 'task_id', 'company_id', 'invitation_id'],
+            ignoredColumns: ['currency_id', 'exchange_rate', 'exchange_currency_id', 'paymentables', 'private_notes', 'created_at', 'user_id', 'id', 'customer', 'invoice_id', 'applied', 'assigned_user_id', 'deleted_at', 'updated_at', 'type_id', 'refunded', 'is_manual', 'task_id', 'company_id', 'invitation_id'],
             filters: {
                 status_id: 'active',
                 customer_id: '',

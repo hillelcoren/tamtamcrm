@@ -12,10 +12,10 @@ use App\Repositories\FileRepository;
 use Illuminate\Support\Collection;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 
-class FileTest extends TestCase {
+class FileTest extends TestCase
+{
 
-    use DatabaseTransactions,
-        WithFaker;
+    use DatabaseTransactions, WithFaker;
 
     private $user;
     private $task;
@@ -25,7 +25,8 @@ class FileTest extends TestCase {
      */
     private $account_id = 1;
 
-    public function setUp() : void {
+    public function setUp(): void
+    {
         parent::setUp();
         $this->beginDatabaseTransaction();
         $this->user = factory(User::class)->create();
@@ -33,7 +34,8 @@ class FileTest extends TestCase {
     }
 
     /** @test */
-    public function it_can_show_all_the_files() {
+    public function it_can_show_all_the_files()
+    {
         $insertedfile = factory(File::class)->create();
         $fileRepo = new FileRepository(new File);
         $list = $fileRepo->listFiles()->toArray();
@@ -43,7 +45,8 @@ class FileTest extends TestCase {
     }
 
     /** @test */
-    public function it_can_delete_the_file() {
+    public function it_can_delete_the_file()
+    {
         $file = factory(File::class)->create();
         $fileRepo = new FileRepository($file);
         $deleted = $fileRepo->deleteFile($file->id);
@@ -51,7 +54,8 @@ class FileTest extends TestCase {
     }
 
     /** @test */
-    public function it_can_show_the_file() {
+    public function it_can_show_the_file()
+    {
         $file = factory(File::class)->create();
         $fileRepo = new FileRepository(new File);
         $found = $fileRepo->findFileById($file->id);
@@ -60,7 +64,8 @@ class FileTest extends TestCase {
     }
 
     /** @test */
-    public function it_can_create_a_file() {
+    public function it_can_create_a_file()
+    {
         $data = [
             'account_id' => $this->account_id,
             'documentable_id' => $this->task->id,
@@ -79,20 +84,23 @@ class FileTest extends TestCase {
     /**
      * @codeCoverageIgnore
      */
-    public function it_errors_creating_the_file_when_required_fields_are_not_passed() {
+    public function it_errors_creating_the_file_when_required_fields_are_not_passed()
+    {
         $this->expectException(\Illuminate\Database\QueryException::class);
         $product = new FileRepository(new File);
         $product->createFile([]);
     }
 
     /** @test */
-    public function it_errors_finding_a_file() {
+    public function it_errors_finding_a_file()
+    {
         $this->expectException(\Illuminate\Database\Eloquent\ModelNotFoundException::class);
         $file = new FileRepository(new File);
         $file->findFileById(999);
     }
 
-    public function tearDown() : void {
+    public function tearDown(): void
+    {
         parent::tearDown();
     }
 

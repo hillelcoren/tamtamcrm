@@ -19,7 +19,7 @@ class Custom extends AbstractDesign
 
     private $body;
 
-    private $table;
+    private $product_table;
 
     private $footer;
 
@@ -27,17 +27,19 @@ class Custom extends AbstractDesign
 
     public function __construct($design)
     {
-        $this->include = $design->include;
+        $this->include = isset($design->include) ? $design->include : '';
 
-        $this->header = $design->header;
+        $this->header = isset($design->header) ? $design->header : '';
 
-        $this->body = $design->body;
+        $this->body = isset($design->body) ? $design->body : '';
 
-        $this->table = $design->table;
+        $this->product_table = isset($design->product_table) ? $design->product_table : '';
 
-        $this->footer = $design->footer;
+        $this->task_table = isset($design->task_table) ? $design->task_table : '';
 
-        $this->table_styles = $design->table_styles;
+        $this->footer = isset($design->footer) ? $design->footer : '';
+
+        $this->table_styles = isset($design->table_styles) ? $design->table_styles : '';
 
     }
 
@@ -67,10 +69,15 @@ class Custom extends AbstractDesign
 
     }
 
-    public function table()
+    public function task_table()
     {
 
-        return $this->table;
+    }
+
+    public function product_table()
+    {
+
+        return $this->product_table;
 
     }
 

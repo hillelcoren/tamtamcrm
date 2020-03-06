@@ -67,6 +67,23 @@ class PaymentUnitTest extends TestCase
     }
 
     /** @test */
+    public function it_can_delete_the_payment()
+    {
+        $payment = factory(Payment::class)->create();
+        $invoiceRepo = new PaymentRepository($payment);
+        $deleted = $invoiceRepo->newDelete($payment);
+        $this->assertTrue($deleted);
+    }
+
+    public function it_can_archive_the_payment()
+    {
+        $payment = factory(Payment::class)->create();
+        $taskRepo = new PaymentRepository($payment);
+        $deleted = $taskRepo->archive($payment);
+        $this->assertTrue($deleted);
+    }
+
+    /** @test */
     public function it_can_get_the_payments()
     {
 
@@ -191,7 +208,7 @@ class PaymentUnitTest extends TestCase
         $client = CustomerFactory::create($this->account_id, $this->user->id);
         $client->save();
 
-        $invoice = InvoiceFactory::create($this->user->id, $this->account_id, $client);//stub the company and user_id
+        $invoice = InvoiceFactory::create($this->account_id, $this->user->id, $client);//stub the company and user_id
         $invoice->customer_id = $client->id;
 
         $invoice->partial = 5.0;
@@ -239,7 +256,7 @@ class PaymentUnitTest extends TestCase
         $client = CustomerFactory::create($this->account_id, $this->user->id);
         $client->save();
 
-        $invoice = InvoiceFactory::create($this->user->id, $this->account_id, $client);//stub the company and user_id
+        $invoice = InvoiceFactory::create($this->account_id, $this->user->id, $client);//stub the company and user_id
         $invoice->customer_id = $client->id;
 
         $invoice->partial = 5.0;
@@ -289,7 +306,7 @@ class PaymentUnitTest extends TestCase
         $client = CustomerFactory::create($this->account_id, $this->user->id);
         $client->save();
 
-        $invoice = InvoiceFactory::create($this->user->id, $this->account_id, $client);//stub the company and user_id
+        $invoice = InvoiceFactory::create($this->account_id, $this->user->id, $client);//stub the company and user_id
         $invoice->customer_id = $client->id;
         $invoice->status_id = Invoice::STATUS_SENT;
         //$invoice->uses_inclusive_Taxes = false;

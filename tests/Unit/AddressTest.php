@@ -16,8 +16,7 @@ use App\Repositories\CustomerRepository;
 class AddressTest extends TestCase
 {
 
-    use DatabaseTransactions,
-        WithFaker;
+    use DatabaseTransactions, WithFaker;
 
     public function setUp(): void
     {

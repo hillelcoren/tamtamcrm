@@ -1,4 +1,5 @@
 <?php
+
 namespace Tests\Unit;
 
 use App\Shop\Orders\Order;
@@ -11,15 +12,15 @@ use Illuminate\Foundation\Testing\WithFaker;
 
 class TaskStatusUnitTest extends TestCase
 {
-    
-    use DatabaseTransactions,
-        WithFaker;
 
-    public function setUp(): void {
+    use DatabaseTransactions, WithFaker;
+
+    public function setUp(): void
+    {
         parent::setUp();
         $this->beginDatabaseTransaction();
     }
-    
+
     /** @test */
     public function it_can_delete_the_order_status()
     {
@@ -28,7 +29,7 @@ class TaskStatusUnitTest extends TestCase
         $taskStatusRepo->deleteTaskStatus($os);
         $this->assertDatabaseMissing('task_statuses', $os->toArray());
     }
-    
+
     /** @test */
     public function it_lists_all_the_task_statuses()
     {
@@ -45,7 +46,7 @@ class TaskStatusUnitTest extends TestCase
             $this->assertDatabaseHas('task_statuses', ['column_color' => $list->column_color]);
         }
     }
-    
+
     /** @test */
     public function it_errors_getting_not_existing_order_status()
     {
@@ -53,7 +54,7 @@ class TaskStatusUnitTest extends TestCase
         $taskStatusRepo = new TaskStatusRepository(new TaskStatus);
         $taskStatusRepo->findTaskStatusById(999);
     }
-    
+
     /** @test */
     public function it_can_get_the_task_status()
     {
@@ -67,7 +68,7 @@ class TaskStatusUnitTest extends TestCase
         $this->assertEquals($create['title'], $os->title);
         $this->assertEquals($create['column_color'], $os->column_color);
     }
-    
+
     /** @test */
     public function it_can_update_the_task_status()
     {
@@ -83,7 +84,7 @@ class TaskStatusUnitTest extends TestCase
         $this->assertEquals($data['title'], $found->title);
         $this->assertEquals($data['column_color'], $found->column_color);
     }
-    
+
     /** @test */
     public function it_can_create_the_task_status()
     {
@@ -98,8 +99,9 @@ class TaskStatusUnitTest extends TestCase
         $this->assertEquals($create['title'], $taskStatus->title);
         $this->assertEquals($create['column_color'], $taskStatus->column_color);
     }
-    
-     public function it_errors_creating_the_task_when_required_fields_are_not_passed() {
+
+    public function it_errors_creating_the_task_when_required_fields_are_not_passed()
+    {
         $this->expectException(\Illuminate\Database\QueryException::class);
         $task = new TaskStatusRepository(new TaskStatus);
         $task->createTaskStatus([]);

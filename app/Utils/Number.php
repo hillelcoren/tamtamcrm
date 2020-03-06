@@ -51,7 +51,7 @@ class Number
     {
         $currency = $client->currency;
 
-        if(empty($currency)) {
+        if (empty($currency)) {
             return true;
         }
 

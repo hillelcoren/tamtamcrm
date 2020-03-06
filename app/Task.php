@@ -61,6 +61,11 @@ class Task extends Model
         return $this->belongsToMany(User::class);
     }
 
+    public function account()
+    {
+        return $this->belongsTo(Account::class);
+    }
+
     public function taskStatus()
     {
         return $this->belongsTo(TaskStatus::class, 'task_status');

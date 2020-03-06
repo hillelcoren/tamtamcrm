@@ -1,4 +1,5 @@
 <?php
+
 namespace Tests\Unit;
 
 use App\Factory\TaxRateFactory;
@@ -13,9 +14,7 @@ use App\User;
 class TaxRateUnitTest extends TestCase
 {
 
-    use DatabaseTransactions,
-        EventTransformable,
-        WithFaker;
+    use DatabaseTransactions, EventTransformable, WithFaker;
 
     private $user;
 
@@ -24,54 +23,54 @@ class TaxRateUnitTest extends TestCase
      */
     private $account_id = 1;
 
-    public function setUp () : void
+    public function setUp(): void
     {
-        parent::setUp ();
-        $this->beginDatabaseTransaction ();
-        $this->user = factory (User::class)->create ();
+        parent::setUp();
+        $this->beginDatabaseTransaction();
+        $this->user = factory(User::class)->create();
     }
 
     /** @test */
-    public function it_can_list_all_the_tax_rates ()
+    public function it_can_list_all_the_tax_rates()
     {
         $data = [
             'name' => $this->faker->word,
-            'rate' => $this->faker->randomFloat ()
+            'rate' => $this->faker->randomFloat()
         ];
 
-        $factory = (new TaxRateFactory())->create (1, $this->user->id);
+        $factory = (new TaxRateFactory())->create(1, $this->user->id);
         $taxRateRepo = new TaxRateRepository(new TaxRate);
-        $taxRateRepo->save ($data, $factory);
-        $lists = $taxRateRepo->listTaxRates ();
+        $taxRateRepo->save($data, $factory);
+        $lists = $taxRateRepo->listTaxRates();
         foreach ($lists as $list) {
-            $this->assertDatabaseHas ('tax_rates', [ 'name' => $list->name ]);
-            $this->assertDatabaseHas ('tax_rates', [ 'rate' => $list->rate ]);
+            $this->assertDatabaseHas('tax_rates', ['name' => $list->name]);
+            $this->assertDatabaseHas('tax_rates', ['rate' => $list->rate]);
         }
     }
 
     /** @test */
-    public function it_errors_when_the_tax_rate_is_not_found ()
+    public function it_errors_when_the_tax_rate_is_not_found()
     {
-        $this->expectException (\Illuminate\Database\Eloquent\ModelNotFoundException::class);
+        $this->expectException(\Illuminate\Database\Eloquent\ModelNotFoundException::class);
         $taxRateRepo = new TaxRateRepository(new TaxRate);
-        $taxRateRepo->findTaxRateById (999);
+        $taxRateRepo->findTaxRateById(999);
     }
 
     /** @test */
-    public function it_can_get_the_tax_rate ()
+    public function it_can_get_the_tax_rate()
     {
 
 
         $data = [
             'name' => $this->faker->word,
-            'rate' => $this->faker->randomFloat ()
+            'rate' => $this->faker->randomFloat()
         ];
 
         $taxRateRepo = new TaxRateRepository(new TaxRate);
-        $factory = (new TaxRateFactory())->create (1, $this->user->id);
-        $created = $taxRateRepo->save ($data, $factory);
-        $found = $taxRateRepo->findTaxRateById ($created->id);
-        $this->assertEquals ($data['name'], $found->name);
+        $factory = (new TaxRateFactory())->create(1, $this->user->id);
+        $created = $taxRateRepo->save($data, $factory);
+        $found = $taxRateRepo->findTaxRateById($created->id);
+        $this->assertEquals($data['name'], $found->name);
     }
 
     /** @test */
@@ -84,19 +83,19 @@ class TaxRateUnitTest extends TestCase
 //    }
 
     /** @test */
-    public function it_can_update_the_tax_rate ()
+    public function it_can_update_the_tax_rate()
     {
-        $taxRate = factory (TaxRate::class)->create ();
+        $taxRate = factory(TaxRate::class)->create();
         $taxRateRepo = new TaxRateRepository($taxRate);
         $update = [
             'account_id' => $this->account_id,
             'name' => $this->faker->word,
-            'rate' => $this->faker->randomFloat (),
+            'rate' => $this->faker->randomFloat(),
         ];
-        $updated = $taxRateRepo->save ($update, $taxRate);
-        $this->assertInstanceOf (TaxRate::class, $updated);
-        $this->assertEquals ($update['name'], $taxRate->name);
-        $this->assertEquals ($update['rate'], $taxRate->rate);
+        $updated = $taxRateRepo->save($update, $taxRate);
+        $this->assertInstanceOf(TaxRate::class, $updated);
+        $this->assertEquals($update['name'], $taxRate->name);
+        $this->assertEquals($update['rate'], $taxRate->rate);
 
     }
 
@@ -107,18 +106,18 @@ class TaxRateUnitTest extends TestCase
 //        $taxRateRepo = new TaxRateRepository(new TaxRate);
 //        $taxRateRepo->createTaxRate([]);
 //    }
-//    
+//
     /** @test */
-    public function it_can_create_a_tax_rate ()
+    public function it_can_create_a_tax_rate()
     {
         $data = [
             'name' => $this->faker->word,
-            'rate' => $this->faker->randomFloat (),
+            'rate' => $this->faker->randomFloat(),
         ];
         $taxRateRepo = new TaxRateRepository(new TaxRate);
-        $factory = (new TaxRateFactory())->create (1, $this->user->id);
-        $created = $taxRateRepo->save ($data, $factory);
-        $this->assertInstanceOf (TaxRate::class, $created);
-        $this->assertEquals ($data['name'], $created->name);
+        $factory = (new TaxRateFactory())->create(1, $this->user->id);
+        $created = $taxRateRepo->save($data, $factory);
+        $this->assertInstanceOf(TaxRate::class, $created);
+        $this->assertEquals($data['name'], $created->name);
     }
 }

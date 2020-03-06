@@ -39,7 +39,7 @@ class InvitationViewedListener implements ShouldQueue
 
             $notification->is_system = true;
 
-            Notification::route('slack', $payment->account->slack_webhook_url)->notify($notification);
+            Notification::route('slack', $invitation->account->slack_webhook_url)->notify($notification);
 
         }
     }

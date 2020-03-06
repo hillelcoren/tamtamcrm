@@ -21,9 +21,7 @@ use App\Factory\CustomerFactory;
 class CustomerTest extends TestCase
 {
 
-    use DatabaseTransactions,
-        CustomerTransformable,
-        WithFaker;
+    use DatabaseTransactions, CustomerTransformable, WithFaker;
 
     private $account_id = 1;
 
@@ -52,14 +50,20 @@ class CustomerTest extends TestCase
     }
 
     /** @test */
-    public function it_can_delete_a_customer()
+    public function it_can_delete_the_customer()
     {
         $customer = factory(Customer::class)->create();
+        $invoiceRepo = new CustomerRepository($customer, new ClientContactRepository(new ClientContact));
+        $deleted = $invoiceRepo->newDelete($customer);
+        $this->assertTrue($deleted);
+    }
 
-        $customerRepo = new CustomerRepository($customer, new ClientContactRepository(new ClientContact));
-        $delete = $customerRepo->deleteCustomer();
-        $this->assertTrue($delete);
-        //$this->assertDatabaseHas('customers', $customer->toArray());
+    public function it_can_archive_the_customer()
+    {
+        $customer = factory(Customer::class)->create();
+        $taskRepo = new CustomerRepository($customer, new ClientContactRepository(new ClientContact));
+        $deleted = $taskRepo->archive($customer);
+        $this->assertTrue($deleted);
     }
 
     /** @test */
@@ -140,8 +144,8 @@ class CustomerTest extends TestCase
     public function it_can_list_all_customers()
     {
         factory(Customer::class, 5)->create();
-        $list = (new CustomerFilter(new CustomerRepository(new Customer, new ClientContactRepository(new ClientContact))))->filter(new SearchRequest(),
-            $this->account_id);
+        $list = (new CustomerFilter(new CustomerRepository(new Customer,
+            new ClientContactRepository(new ClientContact))))->filter(new SearchRequest(), $this->account_id);
         $this->assertNotEmpty($list);
         $this->assertInstanceOf(Customer::class, $list[0]);
     }

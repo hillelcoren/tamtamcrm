@@ -13,11 +13,10 @@ use Illuminate\Foundation\Testing\DatabaseTransactions;
 use App\Transformations\EventTransformable;
 use Illuminate\Foundation\Testing\WithFaker;
 
-class EventTest extends TestCase {
+class EventTest extends TestCase
+{
 
-    use DatabaseTransactions,
-        EventTransformable,
-        WithFaker;
+    use DatabaseTransactions, EventTransformable, WithFaker;
 
     /**
      * @var int
@@ -28,7 +27,8 @@ class EventTest extends TestCase {
 
     private $customer;
 
-    public function setUp() : void {
+    public function setUp(): void
+    {
         parent::setUp();
         $this->beginDatabaseTransaction();
         $this->user = factory(User::class)->create();
@@ -36,7 +36,8 @@ class EventTest extends TestCase {
     }
 
     /** @test */
-    public function it_can_transform_the_event() {
+    public function it_can_transform_the_event()
+    {
         $event = factory(Event::class)->create();
         $repo = new EventRepository($event);
         $eventFromDb = $repo->findEventById($event->id);
@@ -46,7 +47,8 @@ class EventTest extends TestCase {
     }
 
     /** @test */
-    public function it_can_delete_a_event() {
+    public function it_can_delete_a_event()
+    {
         $event = factory(Event::class)->create();
         $eventRepo = new EventRepository($event);
         $delete = $eventRepo->deleteEvent();
@@ -55,14 +57,16 @@ class EventTest extends TestCase {
     }
 
     /** @test */
-    public function it_fails_when_the_event_is_not_found() {
+    public function it_fails_when_the_event_is_not_found()
+    {
         $this->expectException(\Illuminate\Database\Eloquent\ModelNotFoundException::class);
         $event = new EventRepository(new Event);
         $event->findEventById(999);
     }
 
     /** @test */
-    public function it_can_find_a_event() {
+    public function it_can_find_a_event()
+    {
         $data = [
             'account_id' => $this->account_id,
             'customer_id' => $this->customer->id,
@@ -83,7 +87,8 @@ class EventTest extends TestCase {
     }
 
     /** @test */
-    public function it_can_update_the_event() {
+    public function it_can_update_the_event()
+    {
         $cust = factory(Event::class)->create();
         $event = new EventRepository($cust);
         $update = [
@@ -96,7 +101,8 @@ class EventTest extends TestCase {
     }
 
     /** @test */
-    public function it_can_create_a_event() {
+    public function it_can_create_a_event()
+    {
         $factory = (new EventFactory())->create($this->user->id, $this->account_id);
         $data = [
             'account_id' => $this->account_id,
@@ -118,14 +124,16 @@ class EventTest extends TestCase {
         $this->assertDatabaseHas('events', $collection->all());
     }
 
-    public function it_errors_creating_the_event_when_required_fields_are_not_passed() {
+    public function it_errors_creating_the_event_when_required_fields_are_not_passed()
+    {
         $this->expectException(\Illuminate\Database\QueryException::class);
         $task = new EventRepository(new Event);
         $task->createEvent([]);
     }
 
     /** @test */
-    public function it_can_attach_a_task() {
+    public function it_can_attach_a_task()
+    {
         $task = factory(Task::class)->create();
         $event = factory(Event::class)->create();
         $eventRepo = new EventRepository($event);
@@ -133,8 +141,9 @@ class EventTest extends TestCase {
         $this->assertArrayHasKey('attached', $result);
     }
 
-     /** @test */
-    public function it_can_attach_a_user() {
+    /** @test */
+    public function it_can_attach_a_user()
+    {
         $user = factory(User::class)->create();
         $event = factory(Event::class)->create();
         $eventRepo = new EventRepository($event);
@@ -142,7 +151,8 @@ class EventTest extends TestCase {
         $this->assertTrue($result);
     }
 
-    public function tearDown() : void {
+    public function tearDown(): void
+    {
         parent::tearDown();
     }
 

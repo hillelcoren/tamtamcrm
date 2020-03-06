@@ -40,6 +40,9 @@ trait PaymentTransformable
         $obj->company_id = (int)$payment->company_id;
         $obj->applied = (float)$payment->applied;
         $obj->private_notes = $payment->private_notes ?: '';
+        $obj->currency_id = (int) $payment->currency_id ?: null;
+        $obj->exchange_rate = (float) $payment->exchange_rate ?: 1;
+        $obj->exchange_currency_id = (float)$payment->exchange_currency_id ?: '';
 
         return $obj;
     }

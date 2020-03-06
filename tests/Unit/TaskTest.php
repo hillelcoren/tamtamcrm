@@ -19,17 +19,17 @@ use Illuminate\Support\Collection;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use App\Transformations\TaskTransformable;
 
-class TaskTest extends TestCase {
+class TaskTest extends TestCase
+{
 
-    use DatabaseTransactions,
-        WithFaker,
-        TaskTransformable;
+    use DatabaseTransactions, WithFaker, TaskTransformable;
 
     private $user;
     private $customer;
     private $account_id = 1;
 
-    public function setUp(): void {
+    public function setUp(): void
+    {
         parent::setUp();
         $this->beginDatabaseTransaction();
         $this->user = factory(User::class)->create();
@@ -37,9 +37,11 @@ class TaskTest extends TestCase {
     }
 
     /** @test */
-    public function it_can_show_all_the_tasks() {
+    public function it_can_show_all_the_tasks()
+    {
         $insertedtask = factory(Task::class)->create();
-        $list = (new TaskFilter(new TaskRepository(new Task, new ProjectRepository(new Project))))->filter(new SearchRequest(), 1);
+        $list = (new TaskFilter(new TaskRepository(new Task,
+            new ProjectRepository(new Project))))->filter(new SearchRequest(), 1);
         $this->assertNotEmpty($list);
         $this->assertInstanceOf(Task::class, $list[0]);
         // $this->assertInstanceOf(Collection::class, $list);
@@ -47,15 +49,25 @@ class TaskTest extends TestCase {
     }
 
     /** @test */
-    public function it_can_delete_the_task() {
+    public function it_can_delete_the_task()
+    {
         $task = factory(Task::class)->create();
         $taskRepo = new TaskRepository($task, new ProjectRepository(new Project));
-        $deleted = $taskRepo->deleteTask($task->id);
+        $deleted = $taskRepo->newDelete($task);
+        $this->assertTrue($deleted);
+    }
+
+    public function it_can_archive_the_task()
+    {
+        $task = factory(Task::class)->create();
+        $taskRepo = new TaskRepository($task, new ProjectRepository(new Project));
+        $deleted = $taskRepo->archive($task);
         $this->assertTrue($deleted);
     }
 
     /** @test */
-    public function it_can_update_the_task() {
+    public function it_can_update_the_task()
+    {
         $task = factory(Task::class)->create();
         $title = $this->faker->word;
         $data = ['title' => $title];
@@ -67,7 +79,8 @@ class TaskTest extends TestCase {
     }
 
     /** @test */
-    public function it_can_show_the_task() {
+    public function it_can_show_the_task()
+    {
         $task = factory(Task::class)->create();
         $taskRepo = new TaskRepository(new Task, new ProjectRepository(new Project));
         $found = $taskRepo->findTaskById($task->id);
@@ -76,7 +89,8 @@ class TaskTest extends TestCase {
     }
 
     /** @test */
-    public function it_can_attach_a_user() {
+    public function it_can_attach_a_user()
+    {
         $user = factory(User::class)->create();
         $task = factory(Task::class)->create();
         $taskRepo = new TaskRepository($task, new ProjectRepository(new Project));
@@ -85,7 +99,8 @@ class TaskTest extends TestCase {
     }
 
     /** @test */
-    public function it_can_create_a_task() {
+    public function it_can_create_a_task()
+    {
 
         $data = [
             'account_id' => $this->account_id,
@@ -106,7 +121,8 @@ class TaskTest extends TestCase {
     }
 
     /** @test */
-    public function it_can_create_a_project_task() {
+    public function it_can_create_a_project_task()
+    {
 
         $project = factory(Project::class)->create();
 
@@ -133,21 +149,24 @@ class TaskTest extends TestCase {
     /**
      * @codeCoverageIgnore
      */
-    public function it_errors_creating_the_task_when_required_fields_are_not_passed() {
+    public function it_errors_creating_the_task_when_required_fields_are_not_passed()
+    {
         $this->expectException(\Illuminate\Database\QueryException::class);
         $task = new TaskRepository(new Task, new ProjectRepository(new Project));
         $task->createTask([]);
     }
 
     /** @test */
-    public function it_errors_finding_a_task() {
+    public function it_errors_finding_a_task()
+    {
         $this->expectException(\Illuminate\Database\Eloquent\ModelNotFoundException::class);
         $task = new TaskRepository(new Task, new ProjectRepository(new Project));
         $task->findTaskById(999);
     }
 
     /** @test */
-    public function it_can_transform_task() {
+    public function it_can_transform_task()
+    {
         $customer = factory(Customer::class)->create();
 
         $title = $this->faker->title;
@@ -171,7 +190,8 @@ class TaskTest extends TestCase {
         $this->assertEquals($task_type, $transformed->task_type);
     }
 
-    public function tearDown(): void {
+    public function tearDown(): void
+    {
         parent::tearDown();
     }
 

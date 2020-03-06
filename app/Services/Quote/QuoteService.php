@@ -28,7 +28,7 @@ class QuoteService
         $this->quote = $mark_approved->run();
 
         if ($this->quote->customer->getSetting('auto_convert_quote') === true) {
-            $convert_quote = new ConvertQuote($this->quote->client, $invoice_repo, $this->quote);
+            $convert_quote = new ConvertQuote($this->quote->customer, $invoice_repo, $this->quote);
             $this->quote = $convert_quote->run();
         }
 

@@ -292,16 +292,31 @@ class EditInvoice extends Component {
         const data = this.getFormData()
         axios.post(`/api/invoice/${this.state.invoice_id}/${action}`, data)
             .then((response) => {
+                let message = `${action} completed successfully`
+
                 if (action === 'download') {
                     this.downloadPdf(response, this.state.invoice_id)
+                    message = 'The PDF file has been downloaded'
                 }
 
                 if (action === 'clone_to_invoice') {
-                    this.props.credits.push(response.data)
-                    this.props.action(this.props.credits)
+                    // this.props.invoices.push(response.data)
+                    // this.props.action(this.props.invoices)
+                    message = `Invoice was cloned successfully. Invoice ${response.data.number} has been created`
                 }
 
-                this.setState({ showSuccessMessage: true })
+                if (action === 'clone_to_quote') {
+                    message = `The invoice was successfully converted to a quote. Invoice ${response.data.number} has been created`
+                }
+
+                if (action === 'email') {
+                    message = 'The email has been sent successfully'
+                }
+
+                this.setState({
+                    showSuccessMessage: message,
+                    showErrorMessage: false
+                })
             })
             .catch((error) => {
                 this.setState({ showErrorMessage: true })
@@ -661,8 +676,8 @@ class EditInvoice extends Component {
                 </DropdownMenu>
             </Dropdown> : null
 
-        const successMessage = this.state.showSuccessMessage === true
-            ? <SuccessMessage message="Invoice was updated successfully"/> : null
+        const successMessage = this.state.showSuccessMessage !== false && this.state.showSuccessMessage !== ''
+            ? <SuccessMessage message={this.state.showSuccessMessage}/> : null
         const errorMessage = this.state.showErrorMessage === true
             ? <ErrorMessage message="Something went wrong"/> : null
 

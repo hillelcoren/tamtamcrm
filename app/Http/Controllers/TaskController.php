@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\ClientContact;
 use App\Customer;
+use App\Events\Deal\DealWasCreated;
 use App\Factory\OrderFactory;
 use App\Factory\TaskFactory;
 use App\Jobs\Task\SaveTaskTimes;
@@ -253,6 +254,9 @@ class TaskController extends Controller
             (new CustomerRepository(new Customer, new ClientContactRepository(new ClientContact))),
             new TaskRepository(new Task, new ProjectRepository(new Project)), true);
 
+        event(new DealWasCreated($task, $task->account));
+        $task->service()->sendEmail();
+
         return response()->json($task);
     }
 
@@ -263,10 +267,6 @@ class TaskController extends Controller
      */
     public function createLead(Request $request)
     {
-        echo '<pre>';
-        print_r($request->all());
-        die;
-
         $task = (new TaskFactory())->create(9874, 1);
         $task = $task->service()->createDeal($request,
             (new CustomerRepository(new Customer, new ClientContactRepository(new ClientContact))),

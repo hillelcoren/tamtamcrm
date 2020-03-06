@@ -34,6 +34,7 @@ class GetCreditPdf extends AbstractService
             $file_path = CreateCreditPdf::dispatchNow($this->credit, $this->credit->account, $this->contact);
         }
 
+        //return Storage::disk($disk)->path($file_path);
         return $file_path;
     }
 

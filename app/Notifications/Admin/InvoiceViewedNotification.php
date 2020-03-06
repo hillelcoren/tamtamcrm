@@ -31,7 +31,7 @@ class InvoiceViewedNotification extends Notification implements ShouldQueue
         $this->invoice = $invitation->invoice;
         $this->contact = $invitation->contact;
         $this->account = $account;
-        $this->settings = $invoice->customer->getMergedSettings();
+        $this->settings = $invitation->contact->customer->getMergedSettings();
         $this->is_system = $is_system;
     }
 
@@ -58,20 +58,20 @@ class InvoiceViewedNotification extends Notification implements ShouldQueue
 
         $amount = Number::formatMoney($this->invoice->amount, $this->invoice->customer);
         $subject = trans('texts.notification_invoice_viewed_subject', [
-                'client' => $this->contact->present()->name(),
-                'invoice' => $this->invoice->number,
-            ]);
+            'client' => $this->contact->present()->name(),
+            'invoice' => $this->invoice->number,
+        ]);
 
         $data = [
             'title' => $subject,
-            'message' => trans('texts.notification_invoice_viewed', [
-                    'amount' => $amount,
-                    'client' => $this->contact->present()->name(),
-                    'invoice' => $this->invoice->number,
-                ]),
+            'test' => trans('texts.notification_invoice_viewed', [
+                'amount' => $amount,
+                'client' => $this->contact->present()->name(),
+                'invoice' => $this->invoice->number,
+            ]),
             'url' => config('ninja.site_url') . '/invoices/' . $this->invoice->id,
             'button' => trans('texts.view_invoice'),
-            'signature' => $this->settings->email_signature,
+            'signature' => !empty($this->settings) ? $this->settings->email_signature : '',
             'logo' => $this->account->present()->logo(),
         ];
 
@@ -103,7 +103,7 @@ class InvoiceViewedNotification extends Notification implements ShouldQueue
                                      'amount' => $amount,
                                      'client' => $this->contact->present()->name(),
                                      'invoice' => $this->invoice->number,
-                                 ]);
+                                 ]));
     }
 
 }

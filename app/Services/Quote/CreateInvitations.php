@@ -17,9 +17,7 @@ class CreateInvitations extends AbstractService
 
     public function run()
     {
-        $contacts = $this->quote->customer->contacts;
-
-        $contacts->each(function ($contact) {
+        $this->quote->customer->contacts->each(function ($contact) {
             $invitation = QuoteInvitation::whereAccountId($this->quote->account_id)->whereClientContactId($contact->id)
                                          ->whereQuoteId($this->quote->id)->first();
 
@@ -33,6 +31,6 @@ class CreateInvitations extends AbstractService
             }
         });
 
-        return $this->quote;
+        return $this->quote->fresh();
     }
 }

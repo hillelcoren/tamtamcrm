@@ -23,9 +23,7 @@ use App\User;
 class ProductTest extends TestCase
 {
 
-    use DatabaseTransactions,
-        ProductTransformable,
-        WithFaker;
+    use DatabaseTransactions, ProductTransformable, WithFaker;
 
     private $user;
 
@@ -132,7 +130,7 @@ class ProductTest extends TestCase
     {
         $product = factory(Product::class)->create();
         $productRepo = new ProductRepository($product);
-        $deleted = $productRepo->deleteProduct();
+        $deleted = $productRepo->newDelete($product);
         $this->assertTrue($deleted);
         //$this->assertDatabaseMissing('products', ['name' => $product->name]);
     }
@@ -142,8 +140,8 @@ class ProductTest extends TestCase
     {
         $product = factory(Product::class)->create();
         $attributes = $product->getFillable();
-        $products = (new ProductFilter(new ProductRepository(new Product)))->filter(new SearchRequest(),
-            $this->account_id);
+        $products =
+            (new ProductFilter(new ProductRepository(new Product)))->filter(new SearchRequest(), $this->account_id);
         $this->assertNotEmpty($products);
         $this->assertInstanceOf(Product::class, $products[0]);
     }

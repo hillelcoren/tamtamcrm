@@ -13,19 +13,20 @@ use App\Role;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use App\Transformations\UserTransformable;
 
-class UserTest extends TestCase {
+class UserTest extends TestCase
+{
 
-    use DatabaseTransactions,
-        WithFaker,
-        UserTransformable;
+    use DatabaseTransactions, WithFaker, UserTransformable;
 
-    public function setUp(): void {
+    public function setUp(): void
+    {
         parent::setUp();
         $this->beginDatabaseTransaction();
     }
 
     /** @test */
-    public function it_can_show_all_the_users() {
+    public function it_can_show_all_the_users()
+    {
         $inserteduser = factory(User::class)->create();
         $userRepo = new UserRepository(new User);
         $list = $userRepo->getActiveUsers()->toArray();
@@ -39,7 +40,8 @@ class UserTest extends TestCase {
     }
 
     /** @test */
-    public function it_can_delete_the_user() {
+    public function it_can_delete_the_user()
+    {
         $user = factory(User::class)->create();
         $userRepo = new UserRepository($user);
         $deleted = $userRepo->deleteUser($user->id);
@@ -47,7 +49,8 @@ class UserTest extends TestCase {
     }
 
     /** @test */
-    public function it_can_update_the_user() {
+    public function it_can_update_the_user()
+    {
         $user = factory(User::class)->create();
         $data = ['first_name' => $this->faker->firstName];
         $userRepo = new UserRepository($user);
@@ -56,7 +59,8 @@ class UserTest extends TestCase {
     }
 
     /** @test */
-    public function it_can_show_the_user() {
+    public function it_can_show_the_user()
+    {
         $user = factory(User::class)->create();
         $userRepo = new UserRepository(new User);
         $found = $userRepo->findUserById($user->id);
@@ -65,7 +69,8 @@ class UserTest extends TestCase {
     }
 
     /** @test */
-    public function it_can_create_a_user() {
+    public function it_can_create_a_user()
+    {
         $factory = (new UserFactory())->create();
         $data = [
             'first_name' => $this->faker->firstName,
@@ -86,21 +91,24 @@ class UserTest extends TestCase {
     /**
      * @codeCoverageIgnore
      */
-    public function it_errors_creating_the_user_when_required_fields_are_not_passed() {
+    public function it_errors_creating_the_user_when_required_fields_are_not_passed()
+    {
         $this->expectException(\Illuminate\Database\QueryException::class);
         $product = new UserRepository(new User);
         $product->createUser([]);
     }
 
     /** @test */
-    public function it_errors_finding_a_user() {
+    public function it_errors_finding_a_user()
+    {
         $this->expectException(\Illuminate\Database\Eloquent\ModelNotFoundException::class);
         $user = new UserRepository(new User);
         $user->findUserById(999);
     }
 
     /** @test */
-    public function it_can_list_all_users() {
+    public function it_can_list_all_users()
+    {
         factory(User::class, 5)->create();
         $userRepo = new UserRepository(new User);
         $list = $userRepo->listUsers();
@@ -108,7 +116,8 @@ class UserTest extends TestCase {
     }
 
     /** @test */
-    public function it_can_attach_a_department() {
+    public function it_can_attach_a_department()
+    {
         $user = factory(User::class)->create();
         $department = factory(Department::class)->create();
         $userRepo = new UserRepository($user);
@@ -117,7 +126,8 @@ class UserTest extends TestCase {
     }
 
     /** @test */
-    public function it_can_attach_roles() {
+    public function it_can_attach_roles()
+    {
         $user = factory(User::class)->create();
         $role = factory(Role::class)->create();
         $userRepo = new UserRepository($user);
@@ -126,7 +136,8 @@ class UserTest extends TestCase {
     }
 
     /** @test */
-    public function it_can_transform_user() {
+    public function it_can_transform_user()
+    {
         $user = factory(User::class)->create();
 
         $arrUser = [
@@ -147,7 +158,8 @@ class UserTest extends TestCase {
         $this->assertEquals($arrUser['email'], $transformed->email);
     }
 
-    public function tearDown(): void {
+    public function tearDown(): void
+    {
         parent::tearDown();
     }
 

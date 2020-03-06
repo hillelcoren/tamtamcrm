@@ -45,13 +45,14 @@ class CreateInvoicePdf implements ShouldQueue
 
     public function handle()
     {
+
         if (!$this->contact) {
             $this->contact = $this->invoice->customer->primary_contact()->first();
         }
 
         App::setLocale($this->contact->preferredLocale());
 
-        $path = $this->invoice->customer->id . '/invoices/';
+        $path = $this->invoice->customer->invoice_filepath();
 
         $file_path = $path . $this->invoice->number . '.pdf';
 
@@ -64,22 +65,22 @@ class CreateInvoicePdf implements ShouldQueue
             $invoice_design = new $class();
         }
 
-        $designer = new Designer($invoice_design, $this->invoice->customer->getSetting('pdf_variables'), 'invoice');
+        $designer = new Designer($this->invoice, $invoice_design, $this->invoice->customer->getSetting('pdf_variables'),
+            'invoice');
 
         //get invoice design
-        $html = $this->generateInvoiceHtml($designer->build($this->invoice)->getHtml(), $this->invoice, $this->contact);
+        $html = $this->generateInvoiceHtml($designer->build()->getHtml(), $this->invoice, $this->contact);
 
         //todo - move this to the client creation stage so we don't keep hitting this unnecessarily
         Storage::makeDirectory($path, 0755);
 
         //\Log::error($html);
-        //create pdf
         $pdf = $this->makePdf(null, null, $html);
 
         $instance = Storage::disk($this->disk)->put($file_path, $pdf);
 
         //$instance= Storage::disk($this->disk)->path($file_path);
-
+        //
         return $file_path;
     }
 

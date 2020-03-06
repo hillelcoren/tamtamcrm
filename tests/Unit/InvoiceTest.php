@@ -86,7 +86,7 @@ class InvoiceTest extends TestCase
     {
         $user = factory(User::class)->create();
         $customer = factory(Customer::class)->create();
-        $factory = (new InvoiceFactory())->create($user->id, 1, $customer);
+        $factory = (new InvoiceFactory())->create(1, $user->id, $customer);
 
         $data = [
             'account_id' => 1,
@@ -126,8 +126,7 @@ class InvoiceTest extends TestCase
 
         $total = $this->faker->randomFloat();
         $user = factory(User::class)->create();
-        $factory =
-            (new InvoiceFactory())->create($user->id, 1, $this->customer);
+        $factory = (new InvoiceFactory())->create(1, $user->id, $this->customer);
 
         $total = $this->faker->randomFloat();
 
@@ -164,6 +163,23 @@ class InvoiceTest extends TestCase
         $this->expectException(\Illuminate\Database\Eloquent\ModelNotFoundException::class);
         $invoice = new InvoiceRepository(new Invoice);
         $invoice->findInvoiceById(999);
+    }
+
+    /** @test */
+    public function it_can_delete_the_invoice()
+    {
+        $invoice = factory(Invoice::class)->create();
+        $invoiceRepo = new InvoiceRepository($invoice);
+        $deleted = $invoiceRepo->newDelete($invoice);
+        $this->assertTrue($deleted);
+    }
+
+    public function it_can_archive_the_invoice()
+    {
+        $invoice = factory(Invoice::class)->create();
+        $taskRepo = new InvoiceRepository($invoice);
+        $deleted = $taskRepo->archive($invoice);
+        $this->assertTrue($deleted);
     }
 
     /** @test */

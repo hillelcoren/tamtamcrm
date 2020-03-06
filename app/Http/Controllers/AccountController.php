@@ -64,7 +64,7 @@ class AccountController extends Controller
         $account = CreateCompany::dispatchNow($request->all(),
             auth()->user()->accounts->first()->domains->default_company->id);
         $account = $this->account_repo->save($request->all(), $account);
-        $account->saveSettings($request->input('settings'), $account);
+        //$account->saveSettings($request->input('settings'), $account);
         $this->uploadLogo($request->file('company_logo'), $account, $account);
         auth()->user()->accounts()->attach($account->id, [
             'is_owner' => 1,

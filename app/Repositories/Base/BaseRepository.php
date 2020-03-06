@@ -133,6 +133,8 @@ class BaseRepository implements BaseRepositoryInterface
         if (class_exists($className)) {
             event(new $className($entity));
         }
+
+        return true;
     }
 
     /**
@@ -175,6 +177,8 @@ class BaseRepository implements BaseRepositoryInterface
         if (class_exists($className)) {
             event(new $className($entity));
         }
+
+        return true;
     }
 
     /**

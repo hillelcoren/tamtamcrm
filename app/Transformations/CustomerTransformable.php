@@ -12,9 +12,7 @@ trait CustomerTransformable
     {
 
         $company = !empty($customer->company_id) ? $customer->company->toArray() : '';
-        $customer_type = $customer->customerType()->count() > 0 ? $customer->customerType->name : '';
         $credit = $customer->credits()->count() > 0 ? $customer->credits->first()->amount : 0;
-
 
         $addresses = $this->transformAddress($customer->addresses);
 
@@ -41,7 +39,6 @@ trait CustomerTransformable
         $prop->company = $company;
         $prop->credit = $credit;
         $prop->contacts = $this->transformContacts($customer->contacts);
-        $prop->customerType = $customer_type;
         $prop->default_payment_method = $customer->default_payment_method;
         $prop->group_settings_id = $customer->group_settings_id;
         $prop->shipping = $shipping;

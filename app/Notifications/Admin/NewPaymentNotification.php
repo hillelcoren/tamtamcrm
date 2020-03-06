@@ -20,11 +20,8 @@ class NewPaymentNotification extends Notification implements ShouldQueue
      */
 
     protected $payment;
-
     protected $account;
-
     protected $settings;
-
     protected $is_system;
 
     public function __construct($payment, $account, $is_system = false, $settings = null)
@@ -73,15 +70,14 @@ class NewPaymentNotification extends Notification implements ShouldQueue
                 'client' => $this->payment->customer->present()->name(),
                 'invoice' => $invoice_texts,
             ]),
-            'signature' => '<img style="display:block; width:100px;height:100px;" id="base64image" src="' .
-                (!empty($this->settings) ? $this->settings->email_signature : '') . '" />',
+            'signature' => !empty($this->settings) ? $this->settings->email_signature : '',
             'url' => config('ninja.site_url') . '/payments/' . $this->payment->id,
             'button' => trans('texts.view_payment'),
             'logo' => $this->account->present()->logo(),
         ];
 
         return (new MailMessage)->subject(trans('texts.notification_payment_paid_subject',
-            ['client' => $this->payment->customer->present()->name(),]))->view('email.admin.generic', $data);
+            ['client' => $this->payment->customer->present()->name(),]))->markdown('email.admin.generic', $data);
 
 
     }

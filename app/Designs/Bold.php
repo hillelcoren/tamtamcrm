@@ -29,6 +29,9 @@ class Bold extends AbstractDesign
                     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
                     <meta http-equiv="x-ua-compatible" content="ie=edge">
                          <style>
+                         .text-left .table_header_thead_class {}
+                 .px-12 .text-2xl .px-4 .py-2 .table_header_td_class {}
+                 .bg-gray-200 .py-5 .pl-12 .table_body_td_class {}
 			        
 .bg-black{
     background-color:#000
@@ -597,7 +600,7 @@ float: left;
         ];
     }
 
-    public function table()
+    public function product_table()
     {
 
         return '
@@ -641,6 +644,11 @@ float: left;
                 </div>
             </div>
         ';
+    }
+
+    public function task_table()
+    {
+
     }
 
     public function footer()

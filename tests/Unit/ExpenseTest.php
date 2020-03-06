@@ -22,9 +22,7 @@ use App\Traits\GeneratesCounter;
 
 class ExpenseTest extends TestCase
 {
-    use DatabaseTransactions,
-        WithFaker,
-        GeneratesCounter;
+    use DatabaseTransactions, WithFaker, GeneratesCounter;
 
     private $customer;
 

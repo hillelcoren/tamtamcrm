@@ -13,7 +13,7 @@ use App\Invoice;
 
 class OrderEmail extends EmailBuilder
 {
-    public function build($order, $client)
+    public function build($task, $client)
     {
         //$body_template = $client->getSetting('email_template_order');
         $body_template = '';
@@ -21,9 +21,8 @@ class OrderEmail extends EmailBuilder
         /* Use default translations if a custom message has not been set*/
         if (iconv_strlen($body_template) == 0) {
             $body_template = trans('texts.order_message', [
-                'amount' => $order->product->price,
-                'account' => $order->account->present()->name()
-            ], null, $order->task->customer->locale());
+                'account' => $task->account->present()->name()
+            ], null, $task->customer->locale());
         }
 
         //$subject_template = $client->getSetting('email_subject_' . $reminder_template);
@@ -31,17 +30,14 @@ class OrderEmail extends EmailBuilder
 
         if (iconv_strlen($subject_template) == 0) {
             $subject_template = trans('texts.order_subject', [
-                'number' => $order->id,
-                'account' => $order->account->present()->name()
-            ], null, $order->task->customer->locale());
+                'number' => $task->id,
+                'account' => $task->account->present()->name()
+            ], null, $task->customer->locale());
         }
 
-        $this->setTemplate($order->task->customer->getSetting('email_style'))->setSubject($subject_template)
+        $this->setTemplate($task->customer->getSetting('email_style'))->setSubject($subject_template)
              ->setBody($body_template);
 
-//        if ($client->getSetting('pdf_email_attachment') !== false) {
-//            $this->setAttachments($invoice->pdf_file_path());
-//        }
         return $this;
     }
 }

@@ -53,6 +53,22 @@ class CreditTest extends TestCase
         $this->assertNotEmpty($list);
         $this->assertInstanceOf(Credit::class, $list[0]);
     }
+    /** @test */
+    public function it_can_delete_the_credit()
+    {
+        $credit = factory(Credit::class)->create();
+        $invoiceRepo = new CreditRepository($credit);
+        $deleted = $invoiceRepo->newDelete($credit);
+        $this->assertTrue($deleted);
+    }
+
+    public function it_can_archive_the_credit()
+    {
+        $credit = factory(Credit::class)->create();
+        $taskRepo = new CreditRepository($credit);
+        $deleted = $taskRepo->archive($credit);
+        $this->assertTrue($deleted);
+    }
 
     /** @test */
     public function it_can_update_the_credit()
@@ -84,8 +100,7 @@ class CreditTest extends TestCase
         $customerId = $this->customer->id;
         $total = $this->faker->randomFloat();
         $user = factory(User::class)->create();
-        $factory =
-            (new CreditFactory)->create(1, $user->id, $this->customer);
+        $factory = (new CreditFactory)->create(1, $user->id, $this->customer);
 
 
         $data = [

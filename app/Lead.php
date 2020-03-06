@@ -23,6 +23,8 @@ class Lead extends Model
     const STATUS_COMPLETED = 100;
 
     protected $fillable = [
+        'account_id',
+        'user_id',
         'first_name',
         'last_name',
         'email',
@@ -44,4 +46,8 @@ class Lead extends Model
         return new LeadService($this);
     }
 
+    public function account()
+    {
+        return $this->belongsTo(Account::class);
+    }
 }

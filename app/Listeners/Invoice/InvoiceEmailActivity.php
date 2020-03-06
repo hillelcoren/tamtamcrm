@@ -39,7 +39,8 @@ class InvoiceEmailActivity implements ShouldQueue
         $fields['type'] = get_class($this);
         $fields['data'] = json_encode($fields['data']);
 
-        $notification = NotificationFactory::create($event->invitation->invoice->account_id, $event->invitation->invoice->user_id);
+        $notification =
+            NotificationFactory::create($event->invitation->invoice->account_id, $event->invitation->invoice->user_id);
 
         $this->notification_repo->save($notification, $fields);
     }

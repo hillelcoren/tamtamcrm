@@ -166,4 +166,21 @@ class QuoteTest extends TestCase
         //$this->assertEquals($this->customer->account->settings->quote_number_counter, 1000);
 
     }
+
+    /** @test */
+    public function it_can_delete_the_quote()
+    {
+        $invoice = factory(Quote::class)->create();
+        $invoiceRepo = new QuoteRepository($invoice);
+        $deleted = $invoiceRepo->newDelete($invoice);
+        $this->assertTrue($deleted);
+    }
+
+    public function it_can_archive_the_quote()
+    {
+        $quote = factory(Quote::class)->create();
+        $taskRepo = new QuoteRepository($quote);
+        $deleted = $taskRepo->archive($quote);
+        $this->assertTrue($deleted);
+    }
 }

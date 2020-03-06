@@ -85,8 +85,7 @@ class DesignTest extends TestCase
     {
 
         $user = factory(User::class)->create();
-        $design =
-            (new DesignFactory)->create(1, $user->id);
+        $design = (new DesignFactory)->create(1, $user->id);
 
         $name = $this->faker->firstName;
 

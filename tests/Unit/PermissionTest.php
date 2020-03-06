@@ -13,18 +13,20 @@ use App\Repositories\RoleRepository;
 use Illuminate\Support\Collection;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 
-class PermissionTest extends TestCase {
+class PermissionTest extends TestCase
+{
 
-    use DatabaseTransactions,
-        WithFaker;
+    use DatabaseTransactions, WithFaker;
 
-    public function setUp() : void {
+    public function setUp(): void
+    {
         parent::setUp();
         $this->beginDatabaseTransaction();
     }
 
     /** @test */
-    public function it_can_attach_permission_to_role() {
+    public function it_can_attach_permission_to_role()
+    {
         $role = factory(Role::class)->create();
         $permission = factory(Permission::class)->create();
         $roleRepo = new RoleRepository($role);
@@ -36,7 +38,8 @@ class PermissionTest extends TestCase {
     }
 
     /** @test */
-    public function it_can_list_all_permissions() {
+    public function it_can_list_all_permissions()
+    {
         factory(Permission::class, 5)->create();
         $permissionRepo = new PermissionRepository(new Permission);
         $list = $permissionRepo->listPermissions();
@@ -44,7 +47,8 @@ class PermissionTest extends TestCase {
     }
 
     /** @test */
-    public function it_can_delete_permission() {
+    public function it_can_delete_permission()
+    {
         $permission = factory(Permission::class)->create();
         $permissionRepo = new PermissionRepository($permission);
         $deleted = $permissionRepo->deletePermissionById($permission->id);
@@ -52,7 +56,8 @@ class PermissionTest extends TestCase {
     }
 
     /** @test */
-    public function it_can_update_the_permission() {
+    public function it_can_update_the_permission()
+    {
         $permission = factory(Permission::class)->create();
         $data = [
             'name' => 'can-view',
@@ -65,7 +70,8 @@ class PermissionTest extends TestCase {
     }
 
     /** @test */
-    public function it_can_show_the_permission() {
+    public function it_can_show_the_permission()
+    {
         $permission = factory(Permission::class)->create();
         $permissionRepo = new PermissionRepository(new Permission);
         $found = $permissionRepo->findPermissionById($permission->id);
@@ -74,7 +80,8 @@ class PermissionTest extends TestCase {
     }
 
     /** @test */
-    public function it_can_create_permission() {
+    public function it_can_create_permission()
+    {
         $data = [
             'name' => 'can-view-employee-list',
             'description' => 'can view permission'
@@ -86,7 +93,8 @@ class PermissionTest extends TestCase {
         $this->assertEquals($data['description'], $permission->description);
     }
 
-    public function tearDown() : void {
+    public function tearDown(): void
+    {
         parent::tearDown();
     }
 

@@ -20,11 +20,8 @@ class NewPartialPaymentNotification extends Notification implements ShouldQueue
      */
 
     protected $payment;
-
     protected $account;
-
     protected $settings;
-
     protected $is_system;
 
     public function __construct($payment, $account, $is_system = false, $settings = null)
@@ -68,14 +65,14 @@ class NewPartialPaymentNotification extends Notification implements ShouldQueue
         $data = [
             'title' => trans('texts.notification_partial_payment_paid_subject',
                 ['client' => $this->payment->customer->present()->name()]),
-            'message' => trans('texts.notification_partial_payment_paid', [
+            'test' => trans('texts.notification_partial_payment_paid', [
                 'amount' => $amount,
                 'client' => $this->payment->customer->present()->name(),
                 'invoice' => $invoice_texts,
             ]),
             'url' => config('ninja.site_url') . '/payments/' . $this->payment->id,
             'button' => trans('texts.view_payment'),
-            'signature' => $this->settings->email_signature,
+            'signature' => !empty($this->settings) ? $this->settings->email_signature : '',
             'logo' => $this->account->present()->logo(),
         ];
 
@@ -112,7 +109,7 @@ class NewPartialPaymentNotification extends Notification implements ShouldQueue
 
         return (new SlackMessage)->success()
             //->to("#devv2")
-                                 ->from("System")->image($logo)->content(ctrans('texts.notification_payment_paid', [
+                                 ->from("System")->image($logo)->content(trans('texts.notification_payment_paid', [
                 'amount' => $amount,
                 'client' => $this->payment->customer->present()->name(),
                 'invoice' => $invoice_texts
