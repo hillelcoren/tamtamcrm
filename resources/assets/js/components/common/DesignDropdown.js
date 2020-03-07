@@ -36,6 +36,12 @@ export default class DesignDropdown extends Component {
     }
 
     handleChange (e) {
+
+        if(e.target.value === 'new') {
+            this.props.resetCounters()
+            return
+        }
+
         const design_id = parseInt(e.target.value)
         const design = this.state.designs.filter((e) => e.id === design_id)
         this.props.handleInputChanges(design)
@@ -69,7 +75,7 @@ export default class DesignDropdown extends Component {
             <FormGroup className="mr-2">
                 <Input value={this.props.design} onChange={this.handleChange} type="select"
                     name={name} id={name}>
-                    <option value="">Choose Design</option>
+                    <option value="new">New Design</option>
                     {designList}
                 </Input>
             </FormGroup>

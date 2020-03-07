@@ -189,7 +189,8 @@ class InvoiceController extends Controller
             case 'download':
                 $disk = config('filesystems.default');
                 $content = Storage::disk($disk)->get($invoice->service()->getInvoicePdf(null));
-                return response()->json(['data' => base64_encode($content)]);
+                echo json_encode(['data' => base64_encode($content)]);
+                exit;
                 break;
             case 'archive':
                 $this->invoice_repo->archive($invoice);
@@ -257,7 +258,6 @@ class InvoiceController extends Controller
 
     public function bulk(Request $request)
     {
-
         /*
          * WIP!
          */

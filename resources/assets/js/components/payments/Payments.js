@@ -106,7 +106,7 @@ export default class Payments extends Component {
         const action = e.target.id
         const self = this
         axios.post('/api/payment/bulk', {
-            bulk: this.state.bulk,
+            ids: this.state.bulk,
             action: action
         }).then(function (response) {
             // const arrQuotes = [...self.state.invoices]

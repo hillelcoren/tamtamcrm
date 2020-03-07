@@ -19,7 +19,7 @@ class Playful extends AbstractDesign
     }
 
 
-    public function include()
+    public function includes()
     {
         return '
         <!DOCTYPE html>
@@ -543,11 +543,9 @@ float: left;
         ';
     }
 
+    	public function header() {
 
-    public function header()
-    {
-
-        return '
+		return '
                 <div class="my-12 mx-16">
                     <div class="flex items-center justify-between">
                         <div class="w-1/2">
@@ -565,10 +563,9 @@ float: left;
                         </div>
                     </div>';
 
-    }
+	}
 
-    public function body()
-    {
+	public function body() {
 
         return '
         <div class="flex mt-16">
@@ -594,34 +591,21 @@ float: left;
         </div>
     </div>';
 
+	}
+
+    public function task() {
     }
 
-    public function table_styles()
-    {
-        return [
-            'table_header_thead_class' => "text-left bg-teal-600 rounded-lg",
-            'table_header_td_class' => "font-semibold text-white px-4 py-3",
-            'table_body_td_class' => "border-b-4 border-teal-600 text-red-800 px-4 py-4",
-        ];
-    }
-
-    public function task_table()
-    {
-
-    }
-
-    public function product_table()
-    {
-
+    public function product() {
         return '
             <table class="w-full table-auto mt-20 mb-8">
                 <thead class="text-left bg-teal-600 rounded-lg">
                     <tr>
-                        $table_header
+                        $product_table_header
                     </tr>
                 </thead>
                 <tbody>
-                    $table_body
+                    $product_table_body
                 </tbody>
             </table>
             <div class="flex items-center justify-between mt-2 px-4 pb-4">
@@ -658,16 +642,14 @@ float: left;
                 </div>
             </div>
         </div>';
-    }
+	}
 
-    public function footer()
-    {
+	public function footer() {
 
         return '
                 </div>
             </body>
         </html>';
 
-    }
-
+	}
 }

@@ -122,7 +122,7 @@ export default class Designs extends Component {
         const action = e.target.id
         const self = this
         axios.post('/api/design/bulk', {
-            bulk: this.state.bulk,
+            ids: this.state.bulk,
             action: action
         }).then(function (response) {
             // const arrQuotes = [...self.state.invoices]
@@ -216,7 +216,7 @@ export default class Designs extends Component {
                 return <tr key={design.id}>
                     <td>
                         <Input value={design.id} type="checkbox" onChange={this.onChangeBulk}/>
-                        <ActionsMenu edit={editButton} delete={deleteButton} archive={archiveButton}
+                        <ActionsMenu edit={null} delete={deleteButton} archive={archiveButton}
                             restore={restoreButton}/>
                     </td>
                     {columnList}

@@ -110,7 +110,7 @@ Route::group(['middleware' => ['jwt.auth', 'api-header']], function () {
     Route::post('invoice', 'InvoiceController@store')->middleware('role:null,invoicecontroller.store');
     Route::delete('invoice/archive/{invoice_id}', 'InvoiceController@archive');
     Route::delete('invoice/{invoice_id}', 'InvoiceController@destroy');
-    Route::post('invoice/bulk', 'InvoiceController@bulk')->middleware('role:null,invoicecontroller.bulk');
+
     Route::get('invoice', 'InvoiceController@index')->middleware('role:null,invoicecontroller.index');
     Route::get('invoice/task/{task_id}',
         'InvoiceController@getInvoiceLinesForTask')->middleware('role:null,invoicelinecontroller.getinvoicelinesfortask');
@@ -124,7 +124,6 @@ Route::group(['middleware' => ['jwt.auth', 'api-header']], function () {
     Route::get('invoice/getInvoicesByStatus/{status}',
         'InvoiceController@getInvoicesByStatus')->middleware('role:null,invoicecontroller.index');
     Route::post('invoice/{invoice}/{action}', 'InvoiceController@action')->name('invoices.action');
-     Route::post('invoice/bulk', 'InvoiceController@bulk');
     Route::post('invoice/restore/{id}', 'InvoiceController@restore');
 
     //recurring invoice
@@ -177,6 +176,7 @@ Route::group(['middleware' => ['jwt.auth', 'api-header']], function () {
     Route::post('expenses/restore/{id}', 'ExpenseController@restore');
 
     // quotes
+    Route::post('quote/bulk', 'QuoteController@bulk');
     Route::get('quotes/convert/{invoice_id}',
         'QuoteController@convert')->middleware('role:null,invoicecontroller.show');
     Route::delete('quote/archive/{quote_id}', 'QuoteController@archive');
@@ -184,7 +184,7 @@ Route::group(['middleware' => ['jwt.auth', 'api-header']], function () {
     Route::get('quotes/approve/{invoice_id}',
         'QuoteController@approve')->middleware('role:null,invoicecontroller.show');
     Route::post('quote', 'QuoteController@store')->middleware('role:null,invoicecontroller.store');
-    Route::post('quote/bulk', 'QuoteController@bulk')->middleware('role:null,quotecontroller.bulk');
+
     Route::put('quote/{quote_id}', 'QuoteController@update')->middleware('role:null,invoicecontroller.update');
     Route::get('quote', 'QuoteController@index')->middleware('role:null,invoicecontroller.index');
     Route::get('quote/{quote_id}', 'QuoteController@show')->middleware('role:null,invoicecontroller.show');
@@ -367,6 +367,7 @@ Route::group(['middleware' => 'api-header'], function () {
     Route::post('tasks/deal', 'TaskController@createDeal');
     Route::post('tasks/lead', 'LeadController@store');
     Route::get('lead/convert/{id}', 'LeadController@convert');
+    Route::post('invoice/bulk', 'InvoiceController@bulk');
 
     Route::post('preview', 'PreviewController@show');
 });

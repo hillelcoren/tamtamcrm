@@ -19,7 +19,7 @@ class Elegant extends AbstractDesign
     }
 
 
-    public function include()
+    public function includes()
     {
         return '
         <!DOCTYPE html>
@@ -544,10 +544,9 @@ float: left;
     }
 
 
-    public function header()
-    {
+   public function header() {
 
-        return '
+		return '
 			
                 <div class="py-16 px-8">
                 <div class="flex flex justify-between border-b-4 border-black">
@@ -566,10 +565,9 @@ float: left;
                 <div class="p-px border-b border-black mt-1"></div>
 			';
 
-    }
+	}
 
-    public function body()
-    {
+	public function body() {
 
         return '
         <div class="flex mt-8">
@@ -584,34 +582,21 @@ float: left;
             </div>
         </div>';
 
+	}
+
+    public function task() {
     }
 
-    public function table_styles()
-    {
-        return [
-            'table_header_thead_class' => "text-left border-dashed border-b border-black",
-            'table_header_td_class' => "font-normal text-green-700 px-4 py-2",
-            'table_body_td_class' => "px-4 py-4",
-        ];
-    }
-
-    public function task_table()
-    {
-
-    }
-
-    public function product_table()
-    {
-
+    public function product() {
         return '
         <table class="w-full table-auto mb-6 mt-16">
         <thead class="text-left border-dashed border-b border-black">
             <tr>
-                $table_header
+                $product_table_header
             </tr>
         </thead>
         <tbody>
-            $table_body
+            $product_table_body
         </tbody>
     </table>
     
@@ -648,10 +633,9 @@ float: left;
             </section>
         </div>
     </div>';
-    }
+	}
 
-    public function footer()
-    {
+	public function footer() {
 
         return '<div class="flex justify-center border-b-4 border-black mt-6">
                     <h4 class="text-2xl font-semibold mb-4">Thanks</h4>
@@ -661,6 +645,6 @@ float: left;
                 </body>
             </html>';
 
-    }
+	}
 
 }

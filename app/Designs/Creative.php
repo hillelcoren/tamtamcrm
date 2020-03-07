@@ -21,7 +21,7 @@ class Creative extends AbstractDesign
     {
     }
 
-    public function include()
+    public function includes()
     {
         return '
         <!DOCTYPE html>
@@ -530,6 +530,11 @@ class Creative extends AbstractDesign
 .pull-left {
 float: left;
 }
+
+ .table_header_thead_class text-left rounded-lg
+            .table_header_td_class font-medium uppercase text-pink-700 text-xl px-4 py-5
+            .table_body_td_class px-4 py-4
+
  
 			        </style>
                 </head>
@@ -546,10 +551,9 @@ float: left;
     }
 
 
-    public function header()
-    {
+   public function header() {
 
-        return '
+		return '
 			
                 <div class="py-16 mx-16">
                     <div class="flex justify-between">
@@ -568,10 +572,9 @@ float: left;
                     </div>
 			';
 
-    }
+	}
 
-    public function body()
-    {
+	public function body() {
 
         return '
             <div class="flex justify-between mt-8">
@@ -590,34 +593,23 @@ float: left;
             </div>
         ';
 
+	}
+
+
+    public function task() {
     }
 
-    public function table_styles()
-    {
-        return [
-            'table_header_thead_class' => "text-left rounded-lg",
-            'table_header_td_class' => "font-medium uppercase text-pink-700 text-xl px-4 py-5",
-            'table_body_td_class' => "px-4 py-4",
-        ];
-    }
-
-    public function task_table()
-    {
-
-    }
-
-    public function product_table()
-    {
-
+    public function product() {
+        
         return '
         <table class="w-full table-auto mt-12 border-t-4 border-pink-700 bg-white">
             <thead class="text-left rounded-lg">
                 <tr>
-                    $table_header
+                    $product_table_header
                 </tr>
             </thead>
             <tbody>
-                $table_body
+                $product_table_body
             </tbody>
         </table>
         
@@ -652,10 +644,9 @@ float: left;
                 </div>
             </div>
         </div>';
-    }
+	}
 
-    public function footer()
-    {
+	public function footer() {
 
         return '
         <div class="w-full flex justify-end mt-4">
@@ -663,10 +654,8 @@ float: left;
             <p class="ml-8 text-pink-700 font-semibold">$5,280.00</p>
             </div>
         </div>
-
             </body>
         </html>';
 
-    }
-
+	}
 }

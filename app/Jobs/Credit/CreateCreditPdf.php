@@ -59,18 +59,11 @@ class CreateCreditPdf implements ShouldQueue
 
         $design = Design::find($this->credit->customer->getSetting('credit_design_id'));
 
-        if ($design->is_custom) {
-            $credit_design = new Custom($design->design);
-        } else {
-            $class = 'App\Designs\\' . $design->name;
-            $credit_design = new $class();
-        }
-
         $designer =
-            new Designer($this->credit, $credit_design, $this->credit->customer->getSetting('pdf_variables'), 'credit');
+            new Designer($this->credit, $design, $this->credit->customer->getSetting('pdf_variables'), 'credit');
 
         //get invoice design
-        $html = $this->generateInvoiceHtml($designer->build()->getHtml(), $this->credit, $this->contact);
+        $html = $this->generateEntityHtml($designer, $this->credit, $this->contact);
 
         //todo - move this to the client creation stage so we don't keep hitting this unnecessarily
         Storage::makeDirectory($path, 0755);

@@ -19,7 +19,7 @@ class Photo extends AbstractDesign
     }
 
 
-    public function include()
+    public function includes()
     {
         return '
         <!DOCTYPE html>
@@ -538,10 +538,9 @@ float: left;
     }
 
 
-    public function header()
-    {
+   public function header() {
 
-        return '
+		return '
 			
                 <style>
                 @page  
@@ -555,6 +554,9 @@ float: left;
                         background-image: url(/assets/images/006-photographer-2.jpg);
                         background-size: cover;
                     }
+            .table_header_thead_class text-left border-b-4 border-black
+            .table_header_td_class font-normal px-4 py-2 uppercase
+            .table_body_td_class text-orange-700 px-4 py-4
                 </style>
                 <div class="px-16 py-10">
                     <div class="flex items-center justify-between mt-2s">
@@ -573,10 +575,9 @@ float: left;
             </div>
 			';
 
-    }
+	}
 
-    public function body()
-    {
+	public function body() {
 
         return '
             <div class="flex content-center flex-wrap bg-gray-200 h-auto p-16" id="imageContainer">
@@ -596,35 +597,22 @@ float: left;
                 </div>
             </div>';
 
+	}
+
+    public function task() {
     }
 
-    public function table_styles()
-    {
-        return [
-            'table_header_thead_class' => "text-left border-b-4 border-black",
-            'table_header_td_class' => "font-normal px-4 py-2 uppercase",
-            'table_body_td_class' => "text-orange-700 px-4 py-4",
-        ];
-    }
-
-    public function task_table()
-    {
-
-    }
-
-    public function product_table()
-    {
-
+    public function product() {
         return '
         <div class="px-16 py-16">
             <table class="w-full table-auto">
                 <thead class="text-left border-b-4 border-black">
                     <tr>
-                        $table_header
+                        $product_table_header
                     </tr>
                 </thead>
                 <tbody>
-                    $table_body
+                    $product_table_body
                 </tbody>
             </table>
             <div class="flex items-center justify-between mt-2 px-4 pb-4">
@@ -661,16 +649,15 @@ float: left;
                 </div>
             </div>
         </div>';
-    }
+	}
 
-    public function footer()
-    {
+	public function footer() {
 
         return '
                 </div>
             </body>
         </html>';
 
-    }
+	}
 
 }

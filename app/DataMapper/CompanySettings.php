@@ -15,6 +15,7 @@ class CompanySettings extends BaseSettings
     /*Group settings based on functionality*/
     /*Invoice*/
     public $auto_archive_invoice = false;
+    public $auto_archive_lead = false;
     public $email_subject_payment_partial = '';
     public $email_template_payment_partial = '';
     public $lock_sent_invoices = false;
@@ -342,6 +343,7 @@ class CompanySettings extends BaseSettings
         'enable_client_portal_tasks' => 'bool',
         'lock_sent_invoices' => 'bool',
         'auto_archive_invoice' => 'bool',
+        'auto_archive_lead' => 'bool',
         'auto_archive_quote' => 'bool',
         'auto_convert_quote' => 'bool',
         'shared_invoice_quote_counter' => 'bool',

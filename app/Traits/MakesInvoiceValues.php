@@ -495,7 +495,7 @@ trait MakesInvoiceValues
         return $data;
     }
 
-    public function table_header($columns, $css): ?string
+    public function table_header($columns): ?string
     {
         $table_header = '';
 
@@ -509,7 +509,7 @@ trait MakesInvoiceValues
 
     }
 
-    public function table_body($columns, $css): ?string
+    public function table_body($columns): ?string
     {
         $table_body = '';
 

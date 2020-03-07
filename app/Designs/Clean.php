@@ -18,7 +18,7 @@ class Clean extends AbstractDesign
     {
     }
 
-    public function include()
+    public function includes()
     {
         return '
         <!DOCTYPE html>
@@ -29,6 +29,11 @@ class Clean extends AbstractDesign
                     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
                     <meta http-equiv="x-ua-compatible" content="ie=edge">
                         <style>
+
+  .table_header_thead_class text-left
+            .table_header_td_class px-4 py-2
+            .table_body_td_class text-blue-600 border-t border-b border-gray-400 px-4 py-4
+
 			        
 .bg-black{
     background-color:#000
@@ -543,10 +548,9 @@ float: left;
     }
 
 
-    public function header()
-    {
+   public function header() {
 
-        return '
+		return '
 			
                 <div class="px-12 my-10">
                 <div class="flex items-center">
@@ -565,18 +569,15 @@ float: left;
             
 			';
 
-    }
+	}
 
-    public function body()
-    {
+	public function body() {
 
         return '
             <h1 class="mt-12 uppercase text-2xl text-blue-500 ml-4">
                 $entity_label
             </h1>
-
             <div class="border-b border-gray-400"></div>
-
             <div class="ml-4 py-4">
                 <div class="flex">
                     <div class="w-40 flex flex-col">
@@ -590,41 +591,26 @@ float: left;
                     </div>
                 </div>
             </div>
-
             <div class="border-b border-gray-400"></div>
         ';
 
+	}
+
+    public function task() {
     }
 
-    public function table_styles()
-    {
-        return [
-            'table_header_thead_class' => "text-left",
-            'table_header_td_class' => "px-4 py-2",
-            'table_body_td_class' => "text-blue-600 border-t border-b border-gray-400 px-4 py-4",
-        ];
-    }
-
-    public function task_table()
-    {
-
-    }
-
-    public function product_table()
-    {
-
+    public function product() {
         return '
             <table class="w-full table-auto mt-8">
             <thead class="text-left">
                 <tr>
-                    $table_header
+                    $product_table_header
                 </tr>
             </thead>
             <tbody>
-                $table_body
+                $product_table_body
             </tbody>
         </table>
-
         <div class="flex px-4 mt-6 w-full">
             <div class="w-1/2">
                 $entity.public_notes
@@ -640,7 +626,6 @@ float: left;
                 </div>
             </div>
         </div>
-
         <div class="flex px-4 mt-4 w-full items-end">
             <div class="w-1/2">
                 <p class="font-semibold">$terms_label</p>
@@ -655,16 +640,14 @@ float: left;
                 </div>
             </div>
         </div>';
-    }
+	}
 
-    public function footer()
-    {
+	public function footer() {
 
         return '
                 </div>
             </body>
         </html>';
 
-    }
-
+	}
 }

@@ -327,7 +327,7 @@ class EditInvoice extends Component {
                     message = `The quote was successfully converted to an invoice. Invoice ${response.data.number} has been created`
                 }
 
-                if (action === 'mark_approved') {
+                if (action === 'approve') {
                     message = 'The quote has been marked as approved'
                 }
 
@@ -623,7 +623,7 @@ class EditInvoice extends Component {
 
         const approveButton = this.state.status !== 4
             ? <DropdownItem className="primary"
-                onClick={() => this.changeStatus('mark_approved')}>Approve</DropdownItem> : null
+                onClick={() => this.changeStatus('approve')}>Approve</DropdownItem> : null
 
         const sendEmailButton = this.state.status === 1
             ? <DropdownItem className="primary" onClick={() => this.changeStatus('email')}>Send

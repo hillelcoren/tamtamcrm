@@ -449,9 +449,14 @@ class Customer extends Model implements HasLocalePreference
 
     public function setCompanyDefaults($data, $entity_name)
     {
-        $data['terms'] = $this->getSetting($entity_name.'_terms');
-        $data['footer'] =$this->getSetting($entity_name.'_footer');
-        $data['public_notes'] = isset($this->public_notes) ? $this->public_notes : '';
+          if(isset($data['terms']) && strlen($data['terms']) == 0)
+            $data['terms'] = $this->getSetting($entity_name.'_terms');
+
+        if(isset($data['footer']) && strlen($data['footer']) == 0)
+            $data['footer'] = $this->getSetting($entity_name.'_footer');
+
+        if(strlen($this->public_notes) >=1)
+            $data['public_notes'] = $this->public_notes;
 
         return $data;
     }

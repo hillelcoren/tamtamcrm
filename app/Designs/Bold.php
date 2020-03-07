@@ -18,7 +18,7 @@ class Bold extends AbstractDesign
     {
     }
 
-    public function include()
+    public function includes()
     {
         return '
             <!DOCTYPE html>
@@ -530,6 +530,11 @@ class Bold extends AbstractDesign
 .pull-left {
 float: left;
 }
+
+  .table_header_thead_class {text-align:left;}
+                      .table_header_td_class {padding-left:3rem; padding-right:3rem; font-size:1.5rem; padding-left:1rem;padding-right:1rem; padding-top:.5rem;padding-bottom:.5rem}
+                      .table_body_td_class {background-color:#edf2f7; adding-top:1.25rem;padding-bottom:1.25rem; padding-left:3rem;}
+
  
 			        </style>
                 </head>
@@ -545,10 +550,9 @@ float: left;
         ';
     }
 
-    public function header()
-    {
+   public function header() {
 
-        return '
+		return '
                 <div class="flex static bg-gray-800 p-12">
                     <div class="w-1/2">
                         <div class="absolute bg-white pt-10 px-10 pb-4 inline-block align-middle">
@@ -566,10 +570,9 @@ float: left;
                 </div>
 			';
 
-    }
+	}
 
-    public function body()
-    {
+	public function body() {
 
         return '
             <div class="flex mt-32 pl-12">
@@ -589,32 +592,42 @@ float: left;
             </div>
         ';
 
+	}
+
+    public function task() {
+        return '
+            <table class="w-full table-auto mt-8">
+                <thead class="text-left">
+                    <tr>
+                        $task_table_header
+                    </tr>
+                </thead>
+                <tbody>
+                    $task_table_body
+                </tbody>
+            </table>
+        ';
     }
 
-    public function table_styles()
-    {
-        return [
-            'table_header_thead_class' => "text-left",
-            'table_header_td_class' => "px-12 text-2xl px-4 py-2",
-            'table_body_td_class' => "bg-gray-200 py-5 pl-12",
-        ];
-    }
-
-    public function product_table()
-    {
+	public function product() {
 
         return '
             <table class="w-full table-auto mt-8">
                 <thead class="text-left">
                     <tr>
-                        $table_header
+                        $product_table_header
                     </tr>
                 </thead>
                 <tbody>
-                    $table_body
+                    $product_table_body
                 </tbody>
             </table>
-            
+        ';
+	}
+
+	public function footer() {
+
+        return '
             <div class="flex px-4 mt-6 w-full px-12">
                 <div class="w-1/2">
                     $entity.public_notes
@@ -643,22 +656,8 @@ float: left;
                     </div>
                 </div>
             </div>
-        ';
-    }
+            ';
 
-    public function task_table()
-    {
-
-    }
-
-    public function footer()
-    {
-
-        return '
-                </div>
-            </body>
-        </html>';
-
-    }
+	}
 
 }

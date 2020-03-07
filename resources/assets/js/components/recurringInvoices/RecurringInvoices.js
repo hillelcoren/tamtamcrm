@@ -116,7 +116,7 @@ export default class RecurringInvoices extends Component {
     saveBulk (e) {
         const action = e.target.id
         const self = this
-        axios.post('/api/recurringInvoice/bulk', { bulk: this.state.bulk, action: action }).then(function (response) {
+        axios.post('/api/recurringInvoice/bulk', { ids: this.state.bulk, action: action }).then(function (response) {
             // const arrQuotes = [...self.state.invoices]
             // const index = arrQuotes.findIndex(payment => payment.id === id)
             // arrQuotes.splice(index, 1)

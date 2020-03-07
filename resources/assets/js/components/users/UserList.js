@@ -122,7 +122,7 @@ export default class UserList extends Component {
     saveBulk (e) {
         const action = e.target.id
         const self = this
-        axios.post(`/api/user/bulk/${action}`, { bulk: this.state.bulk }).then(function (response) {
+        axios.post(`/api/user/bulk/${action}`, { ids: this.state.bulk }).then(function (response) {
             // const arrQuotes = [...self.state.invoices]
             // const index = arrQuotes.findIndex(payment => payment.id === id)
             // arrQuotes.splice(index, 1)

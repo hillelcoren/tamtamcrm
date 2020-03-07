@@ -180,6 +180,14 @@ class QuoteController extends Controller
 
                 break;
             case 'approve':
+                $approved = $quote->service()->approve();
+
+                if(!$approved) {
+                    return response()->json(['message' => 'Unable to approve this quote as it has expired.'], 400);
+                }
+
+                $quote = $approved->save();
+                return response()->json($quote);
                 break;
             case 'convert':
                 //convert  quote to an invoice make sure we link the two entities!!!
@@ -269,10 +277,10 @@ class QuoteController extends Controller
 
     public function bulk(Request $request)
     {
-        die('here');
         $action = request()->input('action');
 
         $ids = request()->input('ids');
+
         $quotes = Quote::withTrashed()->whereIn('id', $ids)->get();
 
         if (!$quotes) {

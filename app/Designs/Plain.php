@@ -19,7 +19,7 @@ class Plain extends AbstractDesign
     }
 
 
-    public function include()
+    public function includes()
     {
         return '
         <!DOCTYPE html>
@@ -546,10 +546,9 @@ float: left;
     }
 
 
-    public function header()
-    {
+   public function header() {
 
-        return '
+		return '
 			
                     <div class="px-12 py-8">
                         <div class="flex justify-between">
@@ -574,10 +573,9 @@ float: left;
                         </div>
 			';
 
-    }
+	}
 
-    public function body()
-    {
+	public function body() {
 
         return '
             <div class="flex flex-col mt-8">
@@ -585,34 +583,21 @@ float: left;
             </div>
         ';
 
+	}
+
+    public function task() {
     }
 
-    public function table_styles()
-    {
-        return [
-            'table_header_thead_class' => "text-left bg-gray-300",
-            'table_header_td_class' => "px-4 py-2",
-            'table_body_td_class' => "border-t-2 border-b border-gray-300 px-4 py-4",
-        ];
-    }
-
-    public function task_table()
-    {
-
-    }
-
-    public function product_table()
-    {
-
+    public function product() {
         return '
         <table class="w-full table-auto mt-8">
             <thead class="text-left bg-gray-300">
                 <tr>
-                    $table_header
+                    $product_table_header
                 </tr>
             </thead>
             <tbody>
-                $table_body
+                $product_table_body
             </tbody>
         </table>
         <div class="flex justify-between mt-8">
@@ -641,16 +626,15 @@ float: left;
                     <p class="text-right w-1/2">$balance_due</p>
                 </section>
             </div>';
-    }
+	}
 
-    public function footer()
-    {
+	public function footer() {
 
         return '
                 </div>
             </body>
         </html>';
 
-    }
+	}
 
 }

@@ -12,10 +12,11 @@ class AddDesign extends React.Component {
         this.state = {
             modal: false,
             name: '',
+            id: null,
             design: {
-                header: null,
-                body: null,
-                footer: null
+                header: '',
+                body: '',
+                footer: ''
             },
             obj_url: null,
             loading: false,
@@ -27,6 +28,9 @@ class AddDesign extends React.Component {
         this.renderErrorFor = this.renderErrorFor.bind ( this )
         this.getPreview = this.getPreview.bind ( this )
         this.switchDesign = this.switchDesign.bind ( this )
+        this.resetCounters = this.resetCounters.bind ( this )
+        this.update = this.update.bind ( this )
+        this.save = this.save.bind ( this )
     }
 
     componentDidMount () {
@@ -66,11 +70,15 @@ class AddDesign extends React.Component {
         }
     }
 
-    handleClick () {
-        axios.post ( '/api/designs', {
-                name: this.state.name,
-                design: this.state.design
-            } )
+    getFormData () {
+        return  {
+            name: this.state.name,
+            design: this.state.design
+        }
+    }
+
+    save () {
+        axios.post ( '/api/designs',this.getFormData() )
             .then ( ( response ) => {
                 const newUser = response.data
                 this.props.designs.push ( newUser )
@@ -79,13 +87,36 @@ class AddDesign extends React.Component {
                 this.setState ( {
                     name: null
                 } )
-                this.toggle ()
+                //this.toggle ()
             } )
             .catch ( ( error ) => {
                 this.setState ( {
                     errors: error.response.data.errors
                 } )
             } )
+    }
+
+    update () {
+        axios.put ( `/api/designs/${this.state.id}`,this.getFormData() )
+            .then ( ( response ) => {
+                const index = this.props.designs.findIndex(design => design.id === parseInt(this.state.id))
+                this.props.designs[index] = response.data
+                this.props.action(this.props.designs)
+            } )
+            .catch ( ( error ) => {
+                this.setState ( {
+                    errors: error.response.data.errors
+                } )
+            } )
+    }
+
+    handleClick () {
+        if(this.state.id !== null) {
+            this.update()
+            return
+        }
+
+        this.save()
     }
 
     toggle () {
@@ -115,17 +146,17 @@ class AddDesign extends React.Component {
                 var base64str = response.data.data;
 
 // decode base64 string, remove space for IE compatibility
-                var binary = atob(base64str.replace(/\s/g, ''));
+                var binary = atob ( base64str.replace ( /\s/g, '' ) );
                 var len = binary.length;
-                var buffer = new ArrayBuffer(len);
-                var view = new Uint8Array(buffer);
-                for (var i = 0; i < len; i++) {
-                    view[i] = binary.charCodeAt(i);
+                var buffer = new ArrayBuffer ( len );
+                var view = new Uint8Array ( buffer );
+                for ( var i = 0; i < len; i++ ) {
+                    view[ i ] = binary.charCodeAt ( i );
                 }
 
 // create the blob object with content-type "application/pdf"
-                var blob = new Blob( [view], { type: "application/pdf" });
-                var url = URL.createObjectURL(blob);
+                var blob = new Blob ( [ view ], { type: "application/pdf" } );
+                var url = URL.createObjectURL ( blob );
 
                 /*const file = new Blob (
                  [ response.data.data ],
@@ -141,10 +172,16 @@ class AddDesign extends React.Component {
             } )
     }
 
+    resetCounters () {
+        this.setState ( { name: '', id: null, design: { header: '', body: '', footer: '' }, obj_url: null } )
+    }
+
     switchDesign ( design ) {
+        console.log ( 'design', design )
         this.setState ( {
-            design: design.design,
-            name: design.name
+            design: design[ 0 ].design,
+            name: design[ 0 ].name,
+            id: design[ 0 ].id
         } )
     }
 
@@ -167,7 +204,7 @@ class AddDesign extends React.Component {
 
                         <FormGroup>
                             <Label for="name">Design <span className="text-danger">*</span></Label>
-                            <DesignDropdown handleInputChanges={this.switchDesign}/>
+                            <DesignDropdown resetCounters={this.resetCounters} handleInputChanges={this.switchDesign}/>
                         </FormGroup>
 
                         <FormGroup>

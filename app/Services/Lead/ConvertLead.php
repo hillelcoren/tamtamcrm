@@ -55,6 +55,11 @@ class ConvertLead extends AbstractService
         $this->lead->task_status = Lead::STATUS_COMPLETED;
         $this->lead->save();
 
+        if($this->lead->account->getSetting('auto_archive_lead')) {
+            $lead_repo = new LeadRepository();
+            $lead_repo->archive($this->lead);
+        }
+
         return $this->lead;
     }
 }
