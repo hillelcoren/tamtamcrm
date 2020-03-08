@@ -49,68 +49,68 @@ class CreateQuotePdf implements ShouldQueue
 
     }
 
-   public function handle() {
+    public function handle()
+    {
 
 
-		$settings = $this->quote->customer->getMergedSettings();
+        $settings = $this->quote->customer->getMergedSettings();
 
-		$this->quote->load('customer');
+        $this->quote->load('customer');
 
-		if(!$this->contact)
-			$this->contact = $this->quote->customer->primary_contact()->first();
+        if (!$this->contact) {
+            $this->contact = $this->quote->customer->primary_contact()->first();
+        }
 
-		App::setLocale($this->contact->preferredLocale());
+        App::setLocale($this->contact->preferredLocale());
 
-		$path      = $this->quote->customer->quote_filepath();
+        $path = $this->quote->customer->quote_filepath();
 
-		$design = Design::find($this->quote->customer->getSetting('quote_design_id'));
+        $design = Design::find($this->quote->customer->getSetting('quote_design_id'));
 
-		$designer = new Designer($this->quote, $design, $this->quote->customer->getSetting('pdf_variables'), 'quote');
+        $designer = new Designer($this->quote, $design, $this->quote->customer->getSetting('pdf_variables'), 'quote');
 
-		//todo - move this to the client creation stage so we don't keep hitting this unnecessarily
-		Storage::makeDirectory($path, 0755);
+        //todo - move this to the client creation stage so we don't keep hitting this unnecessarily
+        Storage::makeDirectory($path, 0755);
 
-		//\Log::error($html);
+        //\Log::error($html);
 
-		$all_pages_header = $settings->all_pages_header;
-		$all_pages_footer = $settings->all_pages_footer;
+        $all_pages_header = $settings->all_pages_header;
+        $all_pages_footer = $settings->all_pages_footer;
 
-		$quote_number = $this->quote->number;
+        $quote_number = $this->quote->number;
 
 
-		// if($all_pages_header && $all_pages_footer){
-		// 	$all_pages_header = $designer->init()->getHeader()->getHtml();
-		// 	$all_pages_footer = $designer->init()->getFooter()->getHtml();
-		// 	$design_body = $designer->init()->getBody()->getHtml();
-		// 	$quote_number = "header_and_footer";
-		// }
-		// elseif($all_pages_header){
-		// 	$all_pages_header = $designer->init()->getHeader()->getHtml();
-		// 	$design_body = $designer->init()->getBody()->getFooter()->getHtml();
-		// 	$quote_number = "header_only";
-		// }
-		// elseif($all_pages_footer){
-		// 	$all_pages_footer = $designer->init()->getFooter()->getHtml();
-		// 	$design_body = $designer->init()->getHeader()->getBody()->getHtml();
-		// 	$quote_number = "footer_only";
-		// }
-		// else{
-			$design_body = $designer->build()->getHtml();
-		
+        // if($all_pages_header && $all_pages_footer){
+        // 	$all_pages_header = $designer->init()->getHeader()->getHtml();
+        // 	$all_pages_footer = $designer->init()->getFooter()->getHtml();
+        // 	$design_body = $designer->init()->getBody()->getHtml();
+        // 	$quote_number = "header_and_footer";
+        // }
+        // elseif($all_pages_header){
+        // 	$all_pages_header = $designer->init()->getHeader()->getHtml();
+        // 	$design_body = $designer->init()->getBody()->getFooter()->getHtml();
+        // 	$quote_number = "header_only";
+        // }
+        // elseif($all_pages_footer){
+        // 	$all_pages_footer = $designer->init()->getFooter()->getHtml();
+        // 	$design_body = $designer->init()->getHeader()->getBody()->getHtml();
+        // 	$quote_number = "footer_only";
+        // }
+        // else{
+        $design_body = $designer->build()->getHtml();
 
-		
 
-		//get invoice design
+        //get invoice design
 //		$html = $this->generateInvoiceHtml($design_body, $this->quote, $this->contact);
-		$html = $this->generateEntityHtml($designer, $this->quote, $this->contact);
+        $html = $this->generateEntityHtml($designer, $this->quote, $this->contact);
 
-		$pdf = $this->makePdf($all_pages_header, $all_pages_footer, $html);
-		$file_path = $path . $quote_number . '.pdf';
+        $pdf = $this->makePdf($all_pages_header, $all_pages_footer, $html);
+        $file_path = $path . $quote_number . '.pdf';
 
-		$instance = Storage::disk($this->disk)->put($file_path, $pdf);
+        $instance = Storage::disk($this->disk)->put($file_path, $pdf);
 
-		//$instance= Storage::disk($this->disk)->path($file_path);
-		//
-		return $file_path;	
-	}
+        //$instance= Storage::disk($this->disk)->path($file_path);
+        //
+        return $file_path;
+    }
 }

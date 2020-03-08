@@ -4,6 +4,14 @@ import LineItemEditor from '../common/LineItemEditor'
 import axios from 'axios'
 import {
     Button,
+    Card,
+    CardBody,
+    CardHeader,
+    Col,
+    Dropdown,
+    DropdownItem,
+    DropdownMenu,
+    DropdownToggle,
     FormGroup,
     Input,
     Label,
@@ -11,18 +19,12 @@ import {
     ModalBody,
     ModalFooter,
     ModalHeader,
-    Card,
-    CardBody,
-    CardHeader,
     Nav,
     NavItem,
     NavLink,
+    Row,
     TabContent,
-    TabPane,
-    Dropdown,
-    DropdownToggle,
-    DropdownMenu,
-    DropdownItem, Row, Col
+    TabPane
 } from 'reactstrap'
 import CustomerDropdown from '../common/CustomerDropdown'
 import TaxRateDropdown from '../common/TaxRateDropdown'
@@ -35,6 +37,7 @@ import SuccessMessage from '../common/SucessMessage'
 import ErrorMessage from '../common/ErrorMessage'
 import AddButtons from '../common/AddButtons'
 import FileUploads from '../attachments/FileUploads'
+import DesignDropdown from '../common/DesignDropdown'
 
 class EditInvoice extends Component {
     constructor (props, context) {
@@ -45,7 +48,6 @@ class EditInvoice extends Component {
             due_date: this.props.invoice && this.props.invoice.due_date && this.props.invoice.due_date.length ? moment(this.props.invoice.due_date).format('YYYY-MM-DD') : moment(new Date()).format('YYYY-MM-DD'),
             quantity: '',
             tax_rate_name: '',
-            finance_type: this.props.finance_type ? this.props.finance_type : 1,
             lines: [],
             invitations: this.props.invoice && this.props.invoice.invitations && this.props.invoice.invitations.length ? this.props.invoice.invitations : [],
             contacts: [],
@@ -53,6 +55,7 @@ class EditInvoice extends Component {
             customerName: '',
             customer_id: this.props.invoice && this.props.invoice.customer_id ? this.props.invoice.customer_id : null,
             company_id: this.props.invoice && this.props.invoice.company_id ? this.props.invoice.company_id : null,
+            design_id: this.props.invoice && this.props.invoice.design_id ? this.props.invoice.design_id : null,
             status: this.props.invoice && this.props.invoice.status_id ? this.props.invoice.status_id : 1,
             customers: this.props.customers,
             tasks: [],
@@ -110,6 +113,9 @@ class EditInvoice extends Component {
         this.handleWindowSizeChange = this.handleWindowSizeChange.bind(this)
 
         this.total = 0
+        const account_id = JSON.parse(localStorage.getItem('appState')).user.account_id
+        const user_account = JSON.parse(localStorage.getItem('appState')).accounts.filter(account => account.account_id === parseInt(account_id))
+        this.settings = user_account[0].account.settings
     }
 
     componentWillMount () {
@@ -442,7 +448,7 @@ class EditInvoice extends Component {
         let total = price
         const unit_discount = currentRow.unit_discount
         const unit_tax = currentRow.unit_tax
-        const uses_inclusive_taxes = false
+        const uses_inclusive_taxes = this.settings.inclusive_taxes
 
         const quantity = currentRow.quantity
 
@@ -525,7 +531,8 @@ class EditInvoice extends Component {
     }
 
     getFormData () {
-        const data = {
+        return {
+            design_id: this.state.design_id,
             tax_rate: this.state.tax,
             tax_rate_name: this.state.tax_rate_name,
             is_recurring: this.state.is_recurring,
@@ -554,8 +561,6 @@ class EditInvoice extends Component {
             custom_value4: this.state.custom_value4,
             invitations: this.state.invitations
         }
-
-        return data
     }
 
     saveData () {
@@ -822,6 +827,11 @@ class EditInvoice extends Component {
                             id='discount'
                             onChange={this.handleInput}
                         />
+                    </FormGroup>
+
+                    <FormGroup>
+                        <Label>Design</Label>
+                        <DesignDropdown name="design_id" design={this.state.design_id} handleChange={this.handleInput}/>
                     </FormGroup>
                 </CardBody>
             </Card>

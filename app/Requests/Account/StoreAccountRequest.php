@@ -41,7 +41,7 @@ class StoreAccountRequest extends BaseFormRequest
         $input = $this->all();
 
         $company_settings = CompanySettings::defaults();
-      
+
         if (array_key_exists('settings', $input) && !empty($input['settings'])) {
             $settings = json_decode($input['settings'], true);
 
@@ -51,7 +51,7 @@ class StoreAccountRequest extends BaseFormRequest
                 }
             }
         }
-        
+
         $input['settings'] = $company_settings;
 // \Log::error($input);
 

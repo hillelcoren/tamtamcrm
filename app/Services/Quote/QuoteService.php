@@ -38,12 +38,8 @@ class QuoteService
         return $this;
     }
 
-    public function approve() :?QuoteService
+    public function approve() :QuoteService
      {
-
-         if($this->quote->status_id != Quote::STATUS_SENT)
-             return null;
-
          $this->setStatus(Quote::STATUS_APPROVED)->save();
 
          $invoice = null;
@@ -84,7 +80,7 @@ function convertToInvoice() :Invoice
     $invoice->due_date = null;
     $invoice->number = null;
     $invoice->save();
-    
+
     $invoice->service()->markSent()->createInvitations()->save();
 
     return $invoice;

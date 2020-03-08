@@ -20,6 +20,7 @@ import CustomerDropdown from '../common/CustomerDropdown'
 import FormBuilder from '../accounts/FormBuilder'
 import SuccessMessage from '../common/SucessMessage'
 import ErrorMessage from '../common/ErrorMessage'
+import DesignDropdown from '../common/DesignDropdown'
 
 class EditCredit extends React.Component {
     constructor (props) {
@@ -31,6 +32,7 @@ class EditCredit extends React.Component {
             showErrorMessage: false,
             total: this.props.credit.total,
             customer_id: this.props.credit.customer_id,
+            design_id: this.props.credit.design_id,
             custom_value1: this.props.credit.custom_value1,
             public_notes: this.props.credit.public_notes,
             private_notes: this.props.credit.private_notes,
@@ -142,6 +144,7 @@ class EditCredit extends React.Component {
         const data = {
             total: this.state.total,
             customer_id: this.state.customer_id,
+            design_id: this.state.design_id,
             custom_value1: this.state.custom_value1,
             custom_value2: this.state.custom_value2,
             custom_value3: this.state.custom_value3,
@@ -258,6 +261,12 @@ class EditCredit extends React.Component {
                                 type="text" name="total"
                                 onChange={this.handleInput.bind(this)}/>
                             {this.renderErrorFor('total')}
+                        </InputGroup>
+
+                        <Label>Design</Label>
+                        <InputGroup className="mb-3">
+                            <DesignDropdown name="design_id" design={this.state.design}
+                                handleChange={this.handleInput.bind(this)}/>
                         </InputGroup>
 
                         <Label>Customer</Label>

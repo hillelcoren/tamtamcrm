@@ -82,7 +82,8 @@ trait CustomerSettingsSaver
             }
             /* Handles unset settings or blank strings */
             if (!property_exists($settings, $key) || is_null($settings->{$key}) || !isset($settings->{$key}) ||
-                $settings->{$key} == '') {
+                $settings->{$key} == ''
+            ) {
                 continue;
             }
             /*Catch all filter */

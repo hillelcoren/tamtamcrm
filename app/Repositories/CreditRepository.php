@@ -47,78 +47,80 @@ class CreditRepository extends BaseRepository implements CreditRepositoryInterfa
                     $client_contact->send_email = true;
                     $client_contact->save();
                 }
+}
+}
+
+if (isset($data['invitations'])) {
+    $invitations = collect($data['invitations']);
+
+    /* Get array of Keys which have been removed from the invitations array and soft delete each invitation */
+    $credit->invitations->pluck('key')->diff($invitations->pluck('key'))->each(function ($invitation) {
+
+        $invite = $this->getInvitationByKey($invitation);
+
+        if ($invite) {
+            $invite->forceDelete();
+        }
+
+    });
+
+    foreach ($data['invitations'] as $invitation) {
+        $inv = false;
+
+        if (array_key_exists('key', $invitation)) {
+            $inv = $this->getInvitationByKey($invitation['key']);
+        }
+
+        if (!$inv) {
+
+            if (isset($invitation['id'])) {
+                unset($invitation['id']);
+            }
+
+            //make sure we are creating an invite for a contact who belongs to the client only!
+            $contact = ClientContact::find($invitation['client_contact_id']);
+
+            if ($credit->customer_id == $contact->customer_id) {
+                $new_invitation = CreditInvitationFactory::create($credit->account_id, $credit->user_id);
+                $new_invitation->fill($invitation);
+                $new_invitation->credit_id = $credit->id;
+                $new_invitation->client_contact_id = $invitation['client_contact_id'];
+                $new_invitation->save();
             }
         }
-
-        if (isset($data['invitations'])) {
-            $invitations = collect($data['invitations']);
-
-            /* Get array of Keys which have been removed from the invitations array and soft delete each invitation */
-            $credit->invitations->pluck('key')->diff($invitations->pluck('key'))->each(function ($invitation) {
-
-                $invite = $this->getInvitationByKey($invitation);
-
-                if ($invite) {
-                    $invite->forceDelete();
-                }
-
-            });
-
-            foreach ($data['invitations'] as $invitation) {
-                $inv = false;
-
-                if (array_key_exists('key', $invitation)) {
-                    $inv = $this->getInvitationByKey($invitation['key']);
-                }
-
-                if (!$inv) {
-
-                    if (isset($invitation['id'])) {
-                        unset($invitation['id']);
-                    }
-
-                    //make sure we are creating an invite for a contact who belongs to the client only!
-                    $contact = ClientContact::find($invitation['client_contact_id']);
-
-                    if ($credit->customer_id == $contact->customer_id) {
-                        $new_invitation = CreditInvitationFactory::create($credit->account_id, $credit->user_id);
-                        $new_invitation->fill($invitation);
-                        $new_invitation->credit_id = $credit->id;
-                        $new_invitation->client_contact_id = $invitation['client_contact_id'];
-                        $new_invitation->save();
-                    }
-                }
-            }
-        }
-
-        $credit->load('invitations');
-
-        /* If no invitations have been created, this is our fail safe to maintain state*/
-        if ($credit->invitations->count() == 0) {
-            $credit->service()->createInvitations();
-        }
-
-        /**
-         * Perform calculations on the
-         * credit note
-         */
-
-        $credit = $credit->calc()->getCredit();
-        $credit->save();
-
-        if (!$credit->number) {
-            $credit = $credit->service()->applyNumber()->save();
-        }
-
-        return $credit->fresh();
     }
+}
 
-    public function getCreditForCustomer(Customer $objCustomer)
-    {
-        return $this->model->where('customer_id', $objCustomer->id)->get();
-    }
+$credit->load('invitations');
 
-    public function getInvitationByKey($key): ?CreditInvitation
+/* If no invitations have been created, this is our fail safe to maintain state*/
+if ($credit->invitations->count() == 0) {
+    $credit->service()->createInvitations();
+}
+
+/**
+ * Perform calculations on the
+ * credit note
+ */
+
+$credit = $credit->calc()->getCredit();
+$credit->save();
+
+if (!$credit->number) {
+    $credit = $credit->service()->applyNumber()->save();
+}
+
+return $credit->fresh();
+}
+
+public
+function getCreditForCustomer(Customer $objCustomer)
+{
+    return $this->model->where('customer_id', $objCustomer->id)->get();
+}
+
+public
+function getInvitationByKey($key): ?CreditInvitation
     {
         return CreditInvitation::whereRaw("BINARY `key`= ?", [$key])->first();
     }
@@ -128,9 +130,9 @@ class CreditRepository extends BaseRepository implements CreditRepositoryInterfa
      * @return Credit
      */
     public function findCreditById(int $id): Credit
-    {
-        return $this->findOneOrFail($id);
-    }
+{
+    return $this->findOneOrFail($id);
+}
 
     /**
      * List all the categories
@@ -141,7 +143,7 @@ class CreditRepository extends BaseRepository implements CreditRepositoryInterfa
      * @return Collection
      */
     public function listCredits(string $order = 'id', string $sort = 'desc', $except = []): Collection
-    {
-        return $this->model->orderBy($order, $sort)->get()->except($except);
-    }
+{
+    return $this->model->orderBy($order, $sort)->get()->except($except);
+}
 }

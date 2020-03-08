@@ -65,13 +65,14 @@ class LedgerService
 
     }
 
-    public function save()
-    {
+public
+function save()
+{
 
-        $this->entity->save();
+    $this->entity->save();
 
-        return $this->entity;
+    return $this->entity;
 
-    }
+}
 
 }

@@ -13,73 +13,74 @@ namespace App\Designs;
 
 class Custom extends AbstractDesign
 {
-    private $includes;
+    public $includes;
 
-    private $header;
+    public $header;
 
-    private $body;
+    public $body;
 
-    private $product;
+    public $product;
 
     private $task;
 
-    private $footer;
+    public $footer;
 
-    private $table_styles;
+    public $design;
 
     public function __construct($design)
     {
-        $this->includes = isset($design->includes) ? $design->includes : '';
+        $this->includes = $design->includes;
 
-        $this->header = isset($design->header) ? $design->header : '';
+        $this->header = $design->header;
 
-        $this->body = isset($design->body) ? $design->body : '';
+        $this->body = $design->body;
 
-        $this->product = isset($design->product) ? $design->product : '';
+        $this->product = $design->product;
 
-        $this->task = isset($design->task) ? $design->task : '';
+        $this->task = $design->task;
 
-        $this->footer = isset($design->footer) ? $design->footer : '';
+        $this->footer = $design->footer;
 
-        $this->table_styles = isset($design->table_styles) ? $design->table_styles : '';
+        $this->design = $design;
 
     }
 
-   public function includes()
-	{
-		return $this->includes;
-	}
+    public function includes()
+    {
+        return $this->includes;
+    }
 
-	public function header() 
-	{
+    public function header()
+    {
 
-		return $this->header;
-			
-	}
+        return $this->header;
 
-	public function body() 
-	{
+    }
 
-		return $this->body;	
+    public function body()
+    {
 
-	}
+        return $this->body;
 
-	public function product() 
-	{
+    }
 
-		return $this->product;
+    public function product()
+    {
 
-	}
+        return $this->product;
 
-	public function task()
-	{
-		return $this->task;
-	}
+    }
 
-	public function footer() 
-	{
+    public function task()
+    {
+        return $this->task;
+    }
 
-		return $this->footer;
-		
-	}
+    public function footer()
+    {
+
+        return $this->footer;
+
+    }
+
 }

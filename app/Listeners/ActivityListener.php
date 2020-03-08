@@ -117,7 +117,7 @@ class ActivityListener
             return;
         }
         $backupInvoice = Invoice::with('invoice_items', 'client.account', 'client.contacts')->withTrashed()
-                                ->find($event->invoice->id);
+            ->find($event->invoice->id);
         $activity = $this->activityRepo->create($event->invoice, ACTIVITY_TYPE_UPDATE_INVOICE,
             $event->invoice->getAdjustment());
         $activity->json_backup = $backupInvoice->hidePrivateFields()->toJSON();

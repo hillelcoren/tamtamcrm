@@ -63,21 +63,22 @@ class CreateDomain
         if ($user) {
             auth()->login($user, false);
         }
-        $user->setAccount($account);
-        /*
-         * Create token
-         */ //$user_agent = isset($this->request['token_name']) ? $this->request['token_name'] : request()->server('HTTP_USER_AGENT');
-        //$company_token = CreateCompanyToken::dispatchNow($company, $user, $user_agent);
-        /*
-         * Fire related events
-         */
-        if ($user) {
-            event(new DomainCreated($user));
-        }
 
-        $user->fresh();
+$user->setAccount($account);
+/*
+ * Create token
+ */ //$user_agent = isset($this->request['token_name']) ? $this->request['token_name'] : request()->server('HTTP_USER_AGENT');
+//$company_token = CreateCompanyToken::dispatchNow($company, $user, $user_agent);
+/*
+ * Fire related events
+ */
+if ($user) {
+    event(new DomainCreated($user));
+}
 
-        $account->notification(new NewAccountCreated($user, $account))->ninja();
-        return $domain;
-    }
+$user->fresh();
+
+$account->notification(new NewAccountCreated($user, $account))->ninja();
+return $domain;
+}
 }

@@ -69,65 +69,66 @@ class QuoteRepository extends BaseRepository implements QuoteRepositoryInterface
                     $client_contact->send_email = true;
                     $client_contact->save();
                 }
+}
+}
+
+if (isset($data['invitations'])) {
+    $invitations = collect($data['invitations']);
+
+    /* Get array of Keys which have been removed from the invitations array and soft delete each invitation */
+    $quote->invitations->pluck('key')->diff($invitations->pluck('key'))->each(function ($invitation) {
+        $this->getInvitationByKey($invitation)->delete();
+    });
+
+    foreach ($data['invitations'] as $invitation) {
+        $inv = false;
+
+        if (array_key_exists('key', $invitation)) {
+            $inv = $this->getInvitationByKey([$invitation['key']]);
+
+            if ($inv) {
+                $inv->forceDelete();
+            }
+
+        }
+
+        if (!$inv) {
+
+            if (isset($invitation['id'])) {
+                unset($invitation['id']);
+            }
+
+            //make sure we are creating an invite for a contact who belongs to the client only!
+            $contact = ClientContact::find($invitation['client_contact_id']);
+
+            if ($quote->customer_id == $contact->customer_id) {
+                $new_invitation = QuoteInvitationFactory::create($quote->account_id, $quote->user_id);
+                $new_invitation->quote_id = $quote->id;
+                $new_invitation->client_contact_id = $invitation['client_contact_id'];
+                $new_invitation->save();
             }
         }
-
-        if (isset($data['invitations'])) {
-            $invitations = collect($data['invitations']);
-
-            /* Get array of Keys which have been removed from the invitations array and soft delete each invitation */
-            $quote->invitations->pluck('key')->diff($invitations->pluck('key'))->each(function ($invitation) {
-                $this->getInvitationByKey($invitation)->delete();
-            });
-
-            foreach ($data['invitations'] as $invitation) {
-                $inv = false;
-
-                if (array_key_exists('key', $invitation)) {
-                    $inv = $this->getInvitationByKey([$invitation['key']]);
-
-                    if ($inv) {
-                        $inv->forceDelete();
-                    }
-
-                }
-
-                if (!$inv) {
-
-                    if (isset($invitation['id'])) {
-                        unset($invitation['id']);
-                    }
-
-                    //make sure we are creating an invite for a contact who belongs to the client only!
-                    $contact = ClientContact::find($invitation['client_contact_id']);
-
-                    if ($quote->customer_id == $contact->customer_id) {
-                        $new_invitation = QuoteInvitationFactory::create($quote->account_id, $quote->user_id);
-                        $new_invitation->quote_id = $quote->id;
-                        $new_invitation->client_contact_id = $invitation['client_contact_id'];
-                        $new_invitation->save();
-                    }
-                }
-            }
-        }
-
-        $quote->load('invitations');
-
-        /* If no invitations have been created, this is our fail safe to maintain state*/
-        if ($quote->invitations->count() == 0) {
-            $quote->service()->createInvitations();
-        }
-
-        $quote = $quote->calc()->getQuote();
-        $quote->save();
-        $finished_amount = $quote->total;
-        //todo need answers on this
-
-        $quote = $quote->service()->applyNumber()->save();
-        return $quote->fresh();
     }
+}
 
-    public function getInvitationByKey($key): ?QuoteInvitation
+$quote->load('invitations');
+
+/* If no invitations have been created, this is our fail safe to maintain state*/
+if ($quote->invitations->count() == 0) {
+    $quote->service()->createInvitations();
+}
+
+$quote = $quote->calc()->getQuote();
+$quote->save();
+$finished_amount = $quote->total;
+//todo need answers on this
+
+$quote = $quote->service()->applyNumber()->save();
+return $quote->fresh();
+}
+
+public
+function getInvitationByKey($key): ?QuoteInvitation
     {
         return QuoteInvitation::whereRaw("BINARY `key`= ?", [$key])->first();
     }
@@ -141,9 +142,9 @@ class QuoteRepository extends BaseRepository implements QuoteRepositoryInterface
      * @return Collection
      */
     public function listQuotes(string $order = 'id', string $sort = 'desc', array $columns = ['*']): Collection
-    {
-        return $this->all($columns, $order, $sort);
-    }
+{
+    return $this->all($columns, $order, $sort);
+}
 
     /**
      *
@@ -151,8 +152,8 @@ class QuoteRepository extends BaseRepository implements QuoteRepositoryInterface
      * @return type
      */
     public function getQuoteForTask(Task $objTask): Quote
-    {
-        return $this->model->where('task_id', $objTask->id)->first();
-    }
+{
+    return $this->model->where('task_id', $objTask->id)->first();
+}
 
 }

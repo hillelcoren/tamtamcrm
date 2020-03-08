@@ -92,7 +92,8 @@ class CustomerSettings extends BaseSettings
             */
             if (((property_exists($client_settings, $key) && is_string($client_settings->{$key}) &&
                     (iconv_strlen($client_settings->{$key}) < 1))) ||
-                !isset($client_settings->{$key}) && property_exists($company_settings, $key)) {
+                !isset($client_settings->{$key}) && property_exists($company_settings, $key)
+            ) {
                 $client_settings->{$key} = $company_settings->{$key};
             }
         }

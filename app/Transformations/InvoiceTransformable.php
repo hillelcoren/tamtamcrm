@@ -32,6 +32,7 @@ trait InvoiceTransformable
         $prop->date = $invoice->date ?: '';
         $prop->due_date = $invoice->due_date ?: '';
         $prop->next_send_date = $invoice->date ?: '';
+        $prop->design_id = (int)$invoice->design_id;
         $prop->invitations = $this->transformInvoiceInvitations($invoice->invitations);
 
 

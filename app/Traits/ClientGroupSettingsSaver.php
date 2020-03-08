@@ -37,7 +37,8 @@ trait ClientGroupSettingsSaver
          */
         foreach ($settings as $key => $value) {
             if (!isset($settings->{$key}) || empty($settings->{$key}) ||
-                (!is_object($settings->{$key}) && strlen($settings->{$key}) == 0)) {
+                (!is_object($settings->{$key}) && strlen($settings->{$key}) == 0)
+            ) {
                 unset($settings->{$key});
             }
         }
@@ -74,14 +75,15 @@ trait ClientGroupSettingsSaver
 
         foreach ($settings as $key => $value) {
             if (!isset($settings->{$key}) || empty($settings->{$key}) ||
-                (!is_object($settings->{$key}) && strlen($settings->{$key}) == 0)) {
+                (!is_object($settings->{$key}) && strlen($settings->{$key}) == 0)
+            ) {
                 unset($settings->{$key});
             }
         }
 
         foreach ($casts as $key => $value) {
 
-            if(in_array($key, SettingsSaver::$string_casts)) {
+            if (in_array($key, SettingsSaver::$string_casts)) {
                 $value = "string";
 
                 if (!property_exists($settings, $key)) {
@@ -91,8 +93,7 @@ trait ClientGroupSettingsSaver
                 }
 
                 continue;
-            }
-            /*Separate loop if it is a _id field which is an integer cast as a string*/
+            } /*Separate loop if it is a _id field which is an integer cast as a string*/
             elseif (substr($key, -3) == '_id' || substr($key, -14) == 'number_counter') {
                 $value = "integer";
 
@@ -107,7 +108,8 @@ trait ClientGroupSettingsSaver
 
             /* Handles unset settings or blank strings */
             if (!property_exists($settings, $key) || is_null($settings->{$key}) || !isset($settings->{$key}) ||
-                $settings->{$key} == '') {
+                $settings->{$key} == ''
+            ) {
                 continue;
             }
 
@@ -160,7 +162,8 @@ trait ClientGroupSettingsSaver
 
             /* Handles unset settings or blank strings */
             if (!property_exists($settings, $key) || is_null($settings->{$key}) || !isset($settings->{$key}) ||
-                $settings->{$key} == '') {
+                $settings->{$key} == ''
+            ) {
                 continue;
             }
 

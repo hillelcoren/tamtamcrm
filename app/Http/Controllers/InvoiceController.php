@@ -172,7 +172,8 @@ class InvoiceController extends Controller
                 break;
             case 'mark_paid':
                 if ($invoice->balance < 0 || $invoice->status_id == Invoice::STATUS_PAID ||
-                    $invoice->is_deleted === true) {
+                    $invoice->is_deleted === true
+                ) {
                     return response()->json('Invoice cannot be marked as paid', 400);
                 }
                 $invoice = $invoice->service()->markPaid();

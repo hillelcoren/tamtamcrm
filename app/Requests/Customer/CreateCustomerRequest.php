@@ -56,7 +56,8 @@ class CreateCustomerRequest extends BaseFormRequest
             $group_settings = GroupSetting::find($input['group_settings_id']);
 
             if ($group_settings && property_exists($group_settings->settings, 'currency_id') &&
-                isset($group_settings->settings->currency_id)) {
+                isset($group_settings->settings->currency_id)
+            ) {
                 $input['currency_id'] = (string)$group_settings->settings->currency_id;
             } else {
                 $input['currency_id'] = auth()->user()->account_user()->account->settings->currency_id;

@@ -17,18 +17,20 @@ trait CompanySettingsSaver
      *
      * Works for groups|clients|companies
      * @param  array $settings The request input settings array
-     * @param  object $entity   The entity which the settings belongs to
+     * @param  object $entity The entity which the settings belongs to
      * @return void
      */
     public function saveSettings($settings, $entity)
     {
         /* No Settings, No Save!*/
-        if (!$settings)
+        if (!$settings) {
             return;
+        }
 
         //Unset Protected Properties.
-        foreach (CompanySettings::$protected_fields as $field)
+        foreach (CompanySettings::$protected_fields as $field) {
             unset($settings[$field]);
+        }
 
         $settings = $this->checkSettingType($settings);
 
@@ -64,14 +66,15 @@ trait CompanySettingsSaver
 
         $casts = CompanySettings::$casts;
 
-        if(property_exists($settings, 'pdf_variables'))
+        if (property_exists($settings, 'pdf_variables')) {
             unset($settings->pdf_variables);
+        }
 
         ksort($casts);
 
         foreach ($casts as $key => $value) {
 
-            if(in_array($key, SettingsSaver::$string_casts)) {
+            if (in_array($key, SettingsSaver::$string_casts)) {
                 $value = "string";
 
                 if (!property_exists($settings, $key)) {
@@ -81,8 +84,7 @@ trait CompanySettingsSaver
                 }
 
                 continue;
-            }
-            /*Separate loop if it is a _id field which is an integer cast as a string*/
+            } /*Separate loop if it is a _id field which is an integer cast as a string*/
             elseif (substr($key, -3) == '_id' || substr($key, -14) == 'number_counter') {
                 $value = "integer";
 
@@ -96,14 +98,17 @@ trait CompanySettingsSaver
             }
 
             /* Handles unset settings or blank strings */
-            if (!property_exists($settings, $key) || is_null($settings->{$key}) || !isset($settings->{$key}) || $settings->{$key} == '')
+            if (!property_exists($settings,
+                    $key) || is_null($settings->{$key}) || !isset($settings->{$key}) || $settings->{$key} == ''
+            ) {
                 continue;
-
+            }
 
 
             /*Catch all filter */
-            if (!$this->checkAttribute($value, $settings->{$key}))
+            if (!$this->checkAttribute($value, $settings->{$key})) {
                 return [$key, $value, $settings->{$key}];
+            }
 
         }
 
@@ -129,8 +134,7 @@ trait CompanySettingsSaver
 
         foreach ($casts as $key => $value) {
 
-            if(in_array($key, SettingsSaver::$string_casts))
-            {
+            if (in_array($key, SettingsSaver::$string_casts)) {
                 $value = "string";
 
                 if (!property_exists($settings, $key)) {
@@ -167,8 +171,11 @@ trait CompanySettingsSaver
             }
 
             /* Handles unset settings or blank strings */
-            if (!property_exists($settings, $key) || is_null($settings->{$key}) || !isset($settings->{$key}) || $settings->{$key} == '')
+            if (!property_exists($settings,
+                    $key) || is_null($settings->{$key}) || !isset($settings->{$key}) || $settings->{$key} == ''
+            ) {
                 continue;
+            }
 
 
             /*Catch all filter */
@@ -189,7 +196,7 @@ trait CompanySettingsSaver
 
     /**
      * Type checks a object property.
-     * @param  string $key   The type
+     * @param  string $key The type
      * @param  string $value The object property
      * @return bool        TRUE if the property is the expected type
      */
@@ -208,7 +215,7 @@ trait CompanySettingsSaver
                 return method_exists($value, '__toString') || is_null($value) || is_string($value);
             case 'bool':
             case 'boolean':
-                return is_bool($value) || (int) filter_var($value, FILTER_VALIDATE_BOOLEAN);
+                return is_bool($value) || (int)filter_var($value, FILTER_VALIDATE_BOOLEAN);
             case 'object':
                 return is_object($value);
             case 'array':

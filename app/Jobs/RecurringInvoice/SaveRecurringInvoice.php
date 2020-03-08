@@ -49,6 +49,6 @@ class SaveRecurringInvoice
             return $recurringInvoice;
         }
 
-        return null;
-    }
+return null;
+}
 }

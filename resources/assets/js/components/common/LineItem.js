@@ -9,6 +9,9 @@ class LineItem extends Component {
         super(props)
         // this.state = Object.assign({}, props.lineItemData)
         this.handleDeleteClick = this.handleDeleteClick.bind(this)
+        const account_id = JSON.parse(localStorage.getItem('appState')).user.account_id
+        const user_account = JSON.parse(localStorage.getItem('appState')).accounts.filter(account => account.account_id === parseInt(account_id))
+        this.settings = user_account[0].account.settings
     }
 
     handleDeleteClick () {
@@ -20,7 +23,7 @@ class LineItem extends Component {
     }
 
     render () {
-        const uses_inclusive_taxes = false
+        const uses_inclusive_taxes = this.settings.inclusive_taxes
 
         return this.props.rows.map((lineItem, index) => {
             let total = 0

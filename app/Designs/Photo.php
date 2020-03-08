@@ -538,9 +538,10 @@ float: left;
     }
 
 
-   public function header() {
+    public function header()
+    {
 
-		return '
+        return '
 			
                 <style>
                 @page  
@@ -575,9 +576,10 @@ float: left;
             </div>
 			';
 
-	}
+    }
 
-	public function body() {
+    public function body()
+    {
 
         return '
             <div class="flex content-center flex-wrap bg-gray-200 h-auto p-16" id="imageContainer">
@@ -597,12 +599,14 @@ float: left;
                 </div>
             </div>';
 
-	}
-
-    public function task() {
     }
 
-    public function product() {
+    public function task()
+    {
+    }
+
+    public function product()
+    {
         return '
         <div class="px-16 py-16">
             <table class="w-full table-auto">
@@ -649,15 +653,16 @@ float: left;
                 </div>
             </div>
         </div>';
-	}
+    }
 
-	public function footer() {
+    public function footer()
+    {
 
         return '
                 </div>
             </body>
         </html>';
 
-	}
+    }
 
 }

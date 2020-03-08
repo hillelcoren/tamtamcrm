@@ -50,8 +50,8 @@ class SupportMessageSent extends Mailable
             $log_lines = iterator_to_array($lines);
         }
 
-        return $this->from(config('mail.from.address')) //todo this needs to be fixed to handle the hosted version
-                    ->subject('NEW SUPPORT MESSAGES')->markdown('email.support.message', [
+        return $this->from(config('mail.from.address'))//todo this needs to be fixed to handle the hosted version
+        ->subject('NEW SUPPORT MESSAGES')->markdown('email.support.message', [
             'message' => $this->message,
             'system_info' => $system_info,
             'laravel_log' => $log_lines

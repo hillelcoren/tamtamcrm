@@ -109,7 +109,7 @@ class NewPartialPaymentNotification extends Notification implements ShouldQueue
 
         return (new SlackMessage)->success()
             //->to("#devv2")
-                                 ->from("System")->image($logo)->content(trans('texts.notification_payment_paid', [
+            ->from("System")->image($logo)->content(trans('texts.notification_payment_paid', [
                 'amount' => $amount,
                 'client' => $this->payment->customer->present()->name(),
                 'invoice' => $invoice_texts

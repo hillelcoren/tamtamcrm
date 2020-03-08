@@ -34,32 +34,35 @@ class PaymentService
         return $payment;
     }
 
-    public function sendEmail($contact = null)
-    {
-        return (new SendEmail($this->payment, $contact))->run();
-    }
+public
+function sendEmail($contact = null)
+{
+    return (new SendEmail($this->payment, $contact))->run();
+}
 
-    public function reversePayment()
-    {
-        $invoices = $this->payment->invoices()->get();
-        $customer = $this->payment->customer;
+public
+function reversePayment()
+{
+    $invoices = $this->payment->invoices()->get();
+    $customer = $this->payment->customer;
 
-        $invoices->each(function ($invoice) {
-            if ($invoice->pivot->amount > 0) {
-                $invoice->status_id = Invoice::STATUS_SENT;
-                $invoice->balance = $invoice->pivot->amount;
-                $invoice->save();
-            }
-        });
+    $invoices->each(function ($invoice) {
+        if ($invoice->pivot->amount > 0) {
+            $invoice->status_id = Invoice::STATUS_SENT;
+            $invoice->balance = $invoice->pivot->amount;
+            $invoice->save();
+        }
+    });
 
-        $this->payment->ledger()->updatePaymentBalance($this->payment->amount);
+    $this->payment->ledger()->updatePaymentBalance($this->payment->amount);
 
-        $customer->service()->updateBalance($this->payment->amount)->updatePaidToDate($this->payment->amount * -1)
-                 ->save();
-    }
+    $customer->service()->updateBalance($this->payment->amount)->updatePaidToDate($this->payment->amount * -1)
+        ->save();
+}
 
-    public function updateInvoicePayment()
-    {
-        return ((new UpdateInvoicePayment($this->payment)))->run();
+public
+function updateInvoicePayment()
+{
+    return ((new UpdateInvoicePayment($this->payment)))->run();
     }
 }

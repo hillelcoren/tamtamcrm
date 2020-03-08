@@ -557,9 +557,10 @@ float: left;
     }
 
 
-   public function header() {
+    public function header()
+    {
 
-		return '
+        return '
 				<div class="div_header bg-orange-600 flex justify-between py-12 px-12" style="page-break-inside: avoid;">
 					<div class="w-1/2">
 						<h1 class="text-white font-bold text-5xl">$company.name</h1>
@@ -575,11 +576,12 @@ float: left;
 				</div>
 			';
 
-	}
+    }
 
-	public function body() {
+    public function body()
+    {
 
-		return '
+        return '
 			<section>
 			<div class="flex justify-between px-12 pt-12">
 			    <div class="w-1/2">
@@ -596,13 +598,15 @@ float: left;
 			</div>
 			';
 
-	}
-
-    public function task() {
     }
 
-	public function product() {
-		return '
+    public function task()
+    {
+    }
+
+    public function product()
+    {
+        return '
 			<div class="px-12 pt-5 pb-20">
 			    <table class="w-full table-auto mt-8">
 			        <thead class="text-left text-white bg-gray-900 display: table-header-group;">
@@ -646,11 +650,12 @@ float: left;
 			    </div>
 			</div>
 		';
-	}
+    }
 
-	public function footer() {
+    public function footer()
+    {
 
-		return '
+        return '
 			</section>
 			<footer>
 			<div class="div_footer bg-orange-600 flex justify-between py-8 px-12" style="page-break-inside: avoid;">
@@ -670,6 +675,6 @@ float: left;
 			</html>
 		';
 
-	}
+    }
 
 }

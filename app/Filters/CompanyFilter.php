@@ -38,7 +38,7 @@ class CompanyFilter extends QueryFilter
         $orderDir = !$request->order ? 'asc' : $request->order;
 
         $this->query = $this->model->select('companies.*')
-                                   ->leftJoin('company_contacts', 'company_contacts.company_id', '=', 'companies.id');
+            ->leftJoin('company_contacts', 'company_contacts.company_id', '=', 'companies.id');
 
         if ($request->has('status')) {
             $this->status($request->status);
@@ -82,13 +82,13 @@ class CompanyFilter extends QueryFilter
         return $this->query->where(function ($query) use ($filter) {
             $query->where('companies.name', 'like', '%' . $filter . '%')
                 //->orWhere('companies.id_number', 'like', '%'.$filter.'%')
-                  ->orWhere('company_contacts.first_name', 'like', '%' . $filter . '%')
-                  ->orWhere('company_contacts.last_name', 'like', '%' . $filter . '%')
-                  ->orWhere('company_contacts.email', 'like', '%' . $filter . '%')
-                  ->orWhere('companies.custom_value1', 'like', '%' . $filter . '%')
-                  ->orWhere('companies.custom_value2', 'like', '%' . $filter . '%')
-                  ->orWhere('companies.custom_value3', 'like', '%' . $filter . '%')
-                  ->orWhere('companies.custom_value4', 'like', '%' . $filter . '%');
+                ->orWhere('company_contacts.first_name', 'like', '%' . $filter . '%')
+                ->orWhere('company_contacts.last_name', 'like', '%' . $filter . '%')
+                ->orWhere('company_contacts.email', 'like', '%' . $filter . '%')
+                ->orWhere('companies.custom_value1', 'like', '%' . $filter . '%')
+                ->orWhere('companies.custom_value2', 'like', '%' . $filter . '%')
+                ->orWhere('companies.custom_value3', 'like', '%' . $filter . '%')
+                ->orWhere('companies.custom_value4', 'like', '%' . $filter . '%');
         });
     }
 

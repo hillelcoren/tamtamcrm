@@ -35,9 +35,9 @@ class PreviewController extends Controller
     public function show()
     {
 
-        if (request()->has('entity') && request()->has('entity_id') && request()->has('body')) {
-
-            $invoice_design = new Custom((object)request()->all());
+        if (request()->has('entity') && request()->has('entity_id') && request()->has('design')) {
+            
+            $invoice_design = new Custom((object)request()->input('design'));
 
             $entity = ucfirst(request()->input('entity'));
 
@@ -89,11 +89,7 @@ class PreviewController extends Controller
             'customer_id' => 3,
         ]);
 
-//        $invoice->setRelation('customer', $client);
-//        $invoice->setRelation('account', auth()->user()->account_user()->account);
-//        $invoice->load('customer');
-
-        $invoice_design = new Custom((object)request()->all());
+        $invoice_design = new Custom((object)request()->input('design'));
 
         $designer = new Designer($invoice, $invoice_design, $invoice->customer->getSetting('pdf_variables'),
             lcfirst(request()->has('entity')));
@@ -105,7 +101,6 @@ class PreviewController extends Controller
         $invoice->forceDelete();
         $contact->forceDelete();
         $client->forceDelete();
-
         return response()->json(['data' => base64_encode(file_get_contents($file_path))]);
 
 

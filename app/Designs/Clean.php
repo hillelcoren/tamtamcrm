@@ -30,10 +30,6 @@ class Clean extends AbstractDesign
                     <meta http-equiv="x-ua-compatible" content="ie=edge">
                         <style>
 
-  .table_header_thead_class text-left
-            .table_header_td_class px-4 py-2
-            .table_body_td_class text-blue-600 border-t border-b border-gray-400 px-4 py-4
-
 			        
 .bg-black{
     background-color:#000
@@ -548,9 +544,10 @@ float: left;
     }
 
 
-   public function header() {
+    public function header()
+    {
 
-		return '
+        return '
 			
                 <div class="px-12 my-10">
                 <div class="flex items-center">
@@ -569,9 +566,10 @@ float: left;
             
 			';
 
-	}
+    }
 
-	public function body() {
+    public function body()
+    {
 
         return '
             <h1 class="mt-12 uppercase text-2xl text-blue-500 ml-4">
@@ -594,12 +592,14 @@ float: left;
             <div class="border-b border-gray-400"></div>
         ';
 
-	}
-
-    public function task() {
     }
 
-    public function product() {
+    public function task()
+    {
+    }
+
+    public function product()
+    {
         return '
             <table class="w-full table-auto mt-8">
             <thead class="text-left">
@@ -640,14 +640,15 @@ float: left;
                 </div>
             </div>
         </div>';
-	}
+    }
 
-	public function footer() {
+    public function footer()
+    {
 
         return '
                 </div>
             </body>
         </html>';
 
-	}
+    }
 }

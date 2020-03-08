@@ -40,7 +40,7 @@ class OrderFilter
     private function baseQuery()
     {
         $this->query = $this->model->join('products', 'products.id', '=', 'product_task.product_id')
-                                   ->select('product_task.*', 'products.price', 'product_task.id as order_id');
+            ->select('product_task.*', 'products.price', 'product_task.id as order_id');
     }
 
     /**

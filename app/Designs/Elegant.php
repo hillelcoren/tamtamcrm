@@ -544,9 +544,10 @@ float: left;
     }
 
 
-   public function header() {
+    public function header()
+    {
 
-		return '
+        return '
 			
                 <div class="py-16 px-8">
                 <div class="flex flex justify-between border-b-4 border-black">
@@ -565,9 +566,10 @@ float: left;
                 <div class="p-px border-b border-black mt-1"></div>
 			';
 
-	}
+    }
 
-	public function body() {
+    public function body()
+    {
 
         return '
         <div class="flex mt-8">
@@ -582,12 +584,14 @@ float: left;
             </div>
         </div>';
 
-	}
-
-    public function task() {
     }
 
-    public function product() {
+    public function task()
+    {
+    }
+
+    public function product()
+    {
         return '
         <table class="w-full table-auto mb-6 mt-16">
         <thead class="text-left border-dashed border-b border-black">
@@ -633,9 +637,10 @@ float: left;
             </section>
         </div>
     </div>';
-	}
+    }
 
-	public function footer() {
+    public function footer()
+    {
 
         return '<div class="flex justify-center border-b-4 border-black mt-6">
                     <h4 class="text-2xl font-semibold mb-4">Thanks</h4>
@@ -645,6 +650,6 @@ float: left;
                 </body>
             </html>';
 
-	}
+    }
 
 }

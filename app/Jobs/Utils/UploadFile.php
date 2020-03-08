@@ -73,100 +73,101 @@ class UploadFile implements ShouldQueue
             $height = $image_size[1];
         }
 
-        $document = new File();
-        $document->user_id = $this->user->id;
-        $document->account_id = $this->account->id;
-        $document->file_path = $instance;
-        $document->name = $this->file->getClientOriginalName();
-        $document->type = $this->file->extension();
-        $document->disk = $this->disk;
-        $document->hash = $this->file->hashName();
-        $document->size = $this->file->getSize();
-        $document->width = isset($width) ?? null;
-        $document->height = isset($height) ?? null;
+$document = new File();
+$document->user_id = $this->user->id;
+$document->account_id = $this->account->id;
+$document->file_path = $instance;
+$document->name = $this->file->getClientOriginalName();
+$document->type = $this->file->extension();
+$document->disk = $this->disk;
+$document->hash = $this->file->hashName();
+$document->size = $this->file->getSize();
+$document->width = isset($width) ?? null;
+$document->height = isset($height) ?? null;
 
-        // $preview_path = $this->encodePrimaryKey($this->company->id);
-        // $document->preview = $this->generatePreview($preview_path);
+// $preview_path = $this->encodePrimaryKey($this->company->id);
+// $document->preview = $this->generatePreview($preview_path);
 
-        $this->entity->documents()->save($document);
+$this->entity->documents()->save($document);
 
-        $notification = NotificationFactory::create($this->account->id, $this->user->id);
-        $notification->type = 'App\Notifications\AttachmentCreated';
-        $notification->data = json_encode([
-            'id' => $document->id,
-            'message' => 'A new file has been uploaded',
-            'filename' => $document->name
-        ]);
-        $notification->save();
+$notification = NotificationFactory::create($this->account->id, $this->user->id);
+$notification->type = 'App\Notifications\AttachmentCreated';
+$notification->data = json_encode([
+    'id' => $document->id,
+    'message' => 'A new file has been uploaded',
+    'filename' => $document->name
+]);
+$notification->save();
 
-        return $document;
+return $document;
+}
+
+private
+function generatePreview($preview_path): string
+{
+    $extension = $this->file->getClientOriginalExtension();
+
+    if (empty(File::$types[$extension]) && !empty(File::$extraExtensions[$extension])) {
+        $documentType = File::$extraExtensions[$extension];
+    } else {
+        $documentType = $extension;
     }
 
-    private function generatePreview($preview_path): string
-    {
-        $extension = $this->file->getClientOriginalExtension();
-
-        if (empty(File::$types[$extension]) && !empty(File::$extraExtensions[$extension])) {
-            $documentType = File::$extraExtensions[$extension];
-        } else {
-            $documentType = $extension;
-        }
-
-        if (empty(File::$types[$documentType])) {
-            return 'Unsupported file type';
-        }
-
-        $preview = '';
-
-        if (in_array($this->file->getClientOriginalExtension(), ['jpg', 'jpeg', 'png', 'gif', 'bmp', 'tiff', 'psd'])) {
-            $makePreview = false;
-            $imageSize = getimagesize($this->file);
-            $width = $imageSize[0];
-            $height = $imageSize[1];
-            $imgManagerConfig = [];
-            if (in_array($this->file->getClientOriginalExtension(), ['gif', 'bmp', 'tiff', 'psd'])) {
-                // Needs to be converted
-                $makePreview = true;
-            } elseif ($width > File::DOCUMENT_PREVIEW_SIZE || $height > File::DOCUMENT_PREVIEW_SIZE) {
-                $makePreview = true;
-            }
-
-            if (in_array($documentType, ['bmp', 'tiff', 'psd'])) {
-                if (!class_exists('Imagick')) {
-                    // Cant't read this
-                    $makePreview = false;
-                } else {
-                    $imgManagerConfig['driver'] = 'imagick';
-                }
-            }
-
-            if ($makePreview) {
-                // We haven't created a preview yet
-                $imgManager = new ImageManager($imgManagerConfig);
-
-                $img = $imgManager->make($preview_path);
-
-                if ($width <= File::DOCUMENT_PREVIEW_SIZE && $height <= File::DOCUMENT_PREVIEW_SIZE) {
-                    $previewWidth = $width;
-                    $previewHeight = $height;
-                } elseif ($width > $height) {
-                    $previewWidth = File::DOCUMENT_PREVIEW_SIZE;
-                    $previewHeight = $height * File::DOCUMENT_PREVIEW_SIZE / $width;
-                } else {
-                    $previewHeight = File::DOCUMENT_PREVIEW_SIZE;
-                    $previewWidth = $width * DOCUMENT_PREVIEW_SIZE / $height;
-                }
-
-                $img->resize($previewWidth, $previewHeight);
-
-                $previewContent = (string)$img->encode($this->file->getClientOriginalExtension());
-
-                Storage::put($preview_path, $previewContent);
-
-                $preview = $preview_path;
-            }
-        }
-
-        return $preview;
+    if (empty(File::$types[$documentType])) {
+        return 'Unsupported file type';
     }
+
+    $preview = '';
+
+    if (in_array($this->file->getClientOriginalExtension(), ['jpg', 'jpeg', 'png', 'gif', 'bmp', 'tiff', 'psd'])) {
+        $makePreview = false;
+        $imageSize = getimagesize($this->file);
+        $width = $imageSize[0];
+        $height = $imageSize[1];
+        $imgManagerConfig = [];
+        if (in_array($this->file->getClientOriginalExtension(), ['gif', 'bmp', 'tiff', 'psd'])) {
+            // Needs to be converted
+            $makePreview = true;
+        } elseif ($width > File::DOCUMENT_PREVIEW_SIZE || $height > File::DOCUMENT_PREVIEW_SIZE) {
+            $makePreview = true;
+        }
+
+        if (in_array($documentType, ['bmp', 'tiff', 'psd'])) {
+            if (!class_exists('Imagick')) {
+                // Cant't read this
+                $makePreview = false;
+            } else {
+                $imgManagerConfig['driver'] = 'imagick';
+            }
+        }
+
+        if ($makePreview) {
+            // We haven't created a preview yet
+            $imgManager = new ImageManager($imgManagerConfig);
+
+            $img = $imgManager->make($preview_path);
+
+            if ($width <= File::DOCUMENT_PREVIEW_SIZE && $height <= File::DOCUMENT_PREVIEW_SIZE) {
+                $previewWidth = $width;
+                $previewHeight = $height;
+            } elseif ($width > $height) {
+                $previewWidth = File::DOCUMENT_PREVIEW_SIZE;
+                $previewHeight = $height * File::DOCUMENT_PREVIEW_SIZE / $width;
+            } else {
+                $previewHeight = File::DOCUMENT_PREVIEW_SIZE;
+                $previewWidth = $width * DOCUMENT_PREVIEW_SIZE / $height;
+            }
+
+            $img->resize($previewWidth, $previewHeight);
+
+            $previewContent = (string)$img->encode($this->file->getClientOriginalExtension());
+
+            Storage::put($preview_path, $previewContent);
+
+            $preview = $preview_path;
+        }
+    }
+
+    return $preview;
+}
 }

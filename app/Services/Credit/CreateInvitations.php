@@ -24,7 +24,7 @@ class CreateInvitations extends AbstractService
         $contacts->each(function ($contact) {
             $invitation =
                 CreditInvitation::whereAccountId($this->credit->account_id)->whereClientContactId($contact->id)
-                                ->whereCreditId($this->credit->id)->first();
+                    ->whereCreditId($this->credit->id)->first();
 
             if (!$invitation && $contact->send_email) {
                 $ii = CreditInvitationFactory::create($this->credit->account_id, $this->credit->user_id);

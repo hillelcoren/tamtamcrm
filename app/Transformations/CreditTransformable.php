@@ -33,6 +33,7 @@ trait CreditTransformable
         $prop->total = (float)$credit->total;
         $prop->balance = (float)$credit->balance;
         $prop->status_id = (int)($credit->status_id ?: 1);
+        $prop->design_id = (int)$credit->design_id;
         $prop->terms = $credit->terms ?: '';
         $prop->footer = $credit->footer ?: '';
         $prop->public_notes = $credit->public_notes ?: '';

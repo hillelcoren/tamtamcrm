@@ -116,34 +116,35 @@ class CompanyRepository extends BaseRepository implements CompanyRepositoryInter
             $data['custom_fields'] = $this->parseCustomFields($data['custom_fields']);
         }
 
-        $company->fill($data);
-        $company->save();
+$company->fill($data);
+$company->save();
 
-        if (isset($data['contacts'])) {
-            $contacts = $this->contact_repo->save($data['contacts'], $company);
-        }
-        return $company;
+if (isset($data['contacts'])) {
+    $contacts = $this->contact_repo->save($data['contacts'], $company);
+}
+return $company;
 
-    }
+}
 
 
-    /**
-     * Store vendors in bulk.
-     *
-     * @param array $vendor
-     * @return vendor|null
-     */
-    public function create($company): ?Company
+/**
+ * Store vendors in bulk.
+ *
+ * @param array $vendor
+ * @return vendor|null
+ */
+public
+function create($company): ?Company
     {
         return $this->save($company, CompanyFactory::create(auth()->user()->company()->id, auth()->user()->id));
     }
 
     private function parseCustomFields($fields): array
-    {
-        foreach ($fields as &$value) {
-            $value = (string)$value;
-        }
-        return $fields;
+{
+    foreach ($fields as &$value) {
+        $value = (string)$value;
     }
+    return $fields;
+}
 
 }

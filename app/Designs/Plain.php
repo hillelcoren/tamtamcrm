@@ -546,9 +546,10 @@ float: left;
     }
 
 
-   public function header() {
+    public function header()
+    {
 
-		return '
+        return '
 			
                     <div class="px-12 py-8">
                         <div class="flex justify-between">
@@ -573,9 +574,10 @@ float: left;
                         </div>
 			';
 
-	}
+    }
 
-	public function body() {
+    public function body()
+    {
 
         return '
             <div class="flex flex-col mt-8">
@@ -583,12 +585,14 @@ float: left;
             </div>
         ';
 
-	}
-
-    public function task() {
     }
 
-    public function product() {
+    public function task()
+    {
+    }
+
+    public function product()
+    {
         return '
         <table class="w-full table-auto mt-8">
             <thead class="text-left bg-gray-300">
@@ -626,15 +630,16 @@ float: left;
                     <p class="text-right w-1/2">$balance_due</p>
                 </section>
             </div>';
-	}
+    }
 
-	public function footer() {
+    public function footer()
+    {
 
         return '
                 </div>
             </body>
         </html>';
 
-	}
+    }
 
 }

@@ -218,7 +218,7 @@ Route::group(['middleware' => ['jwt.auth', 'api-header']], function () {
     Route::post('groups/restore/{id}', 'GroupSettingController@restore');
 
     //template
-    Route::get('template/{id}', 'TemplateController@show');
+    Route::post('template', 'TemplateController@show');
 
     // company gateways
     Route::get('company_gateways', 'CompanyGatewayController@index');

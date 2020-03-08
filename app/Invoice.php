@@ -81,6 +81,7 @@ class Invoice extends Model
         'custom_value2',
         'custom_value3',
         'custom_value4',
+        'design_id'
     ];
 
     const STATUS_DRAFT = 1;
@@ -245,7 +246,7 @@ class Invoice extends Model
     public function credits()
     {
         return $this->belongsToMany(Credit::class)->using(Paymentable::class)->withPivot('amount', 'refunded')
-                    ->withTimestamps();
+            ->withTimestamps();
     }
 
     public function payments()

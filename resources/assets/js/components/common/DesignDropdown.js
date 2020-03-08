@@ -36,8 +36,12 @@ export default class DesignDropdown extends Component {
     }
 
     handleChange (e) {
+        if (this.props.handleChange) {
+            this.props.handleChange(e)
+            return
+        }
 
-        if(e.target.value === 'new') {
+        if (e.target.value === 'new') {
             this.props.resetCounters()
             return
         }
@@ -70,12 +74,13 @@ export default class DesignDropdown extends Component {
         }
 
         const name = this.props.name && this.props.name ? this.props.name : 'design'
+        const emptyLabel = !this.props.handleChange ? <option value="new">New Design</option> : null
 
         return (
             <FormGroup className="mr-2">
                 <Input value={this.props.design} onChange={this.handleChange} type="select"
                     name={name} id={name}>
-                    <option value="new">New Design</option>
+                    {emptyLabel}
                     {designList}
                 </Input>
             </FormGroup>

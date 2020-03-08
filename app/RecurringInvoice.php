@@ -116,7 +116,8 @@ class RecurringInvoice extends Model
     public function getStatusAttribute()
     {
         if ($this->status_id == RecurringInvoice::STATUS_ACTIVE &&
-            $this->start_date > Carbon::now()) //marked as active, but yet to fire first cycle
+            $this->start_date > Carbon::now()
+        ) //marked as active, but yet to fire first cycle
         {
             return RecurringInvoice::STATUS_PENDING;
         } else {
@@ -156,23 +157,25 @@ class RecurringInvoice extends Model
             default:
                 return null;
         }
-    }
+}
 
-    public function remainingCycles(): int
-    {
-        if ($this->remaining_cycles == 0) {
-            return 0;
-        } else {
-            return $this->remaining_cycles - 1;
-        }
+public
+function remainingCycles(): int
+{
+    if ($this->remaining_cycles == 0) {
+        return 0;
+    } else {
+        return $this->remaining_cycles - 1;
     }
+}
 
-    public function setCompleted(): void
-    {
-        $this->status_id = self::STATUS_COMPLETED;
-        $this->next_send_date = null;
-        $this->remaining_cycles = 0;
-        $this->save();
-    }
+public
+function setCompleted(): void
+{
+    $this->status_id = self::STATUS_COMPLETED;
+    $this->next_send_date = null;
+    $this->remaining_cycles = 0;
+    $this->save();
+}
 
 }

@@ -40,10 +40,11 @@ class ActivityController extends Controller
      * @param CommentRepositoryInterface $commentRepository
      * NotificationRepositoryInterface $notificationRepository
      */
-    public function __construct(CommentRepositoryInterface $comment_repo,
+    public function __construct(
+        CommentRepositoryInterface $comment_repo,
         NotificationRepositoryInterface $notification_repo,
-        EventRepositoryInterface $event_repo)
-    {
+        EventRepositoryInterface $event_repo
+    ) {
         $this->comment_repo = $comment_repo;
         $this->notification_repo = $notification_repo;
         $this->event_repo = $event_repo;

@@ -56,9 +56,9 @@ class InvoiceSumInclusive
     {
         $this->calculateLineItems()->calculateDiscount()
             //->calculateCustomValues()
-             ->calculateInvoiceTaxes()->setTaxMap()
+            ->calculateInvoiceTaxes()->setTaxMap()
             //->calculateTotals()
-             ->calculateBalance()->calculatePartial();
+            ->calculateBalance()->calculatePartial();
 
         return $this;
     }

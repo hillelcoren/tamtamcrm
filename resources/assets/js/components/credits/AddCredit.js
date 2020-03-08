@@ -13,6 +13,7 @@ import axios from 'axios'
 import CustomerDropdown from '../common/CustomerDropdown'
 import FormBuilder from '../accounts/FormBuilder'
 import AddButtons from '../common/AddButtons'
+import DesignDropdown from '../common/DesignDropdown'
 
 class AddCredit extends React.Component {
     constructor (props) {
@@ -29,6 +30,7 @@ class AddCredit extends React.Component {
             private_notes: '',
             public_notes: '',
             custom_value4: '',
+            design_id: null,
             loading: false,
             errors: [],
             message: ''
@@ -59,6 +61,8 @@ class AddCredit extends React.Component {
 
             return
         }
+
+        alert(e.target.name + ' ' + e.target.value)
 
         this.setState({
             [e.target.name]: e.target.value
@@ -101,6 +105,7 @@ class AddCredit extends React.Component {
     handleClick () {
         axios.post('/api/credit', {
             total: this.state.total,
+            design_id: this.state.design_id,
             balance: this.state.total,
             public_notes: this.state.public_notes,
             private_notes: this.state.private_notes,
@@ -126,6 +131,7 @@ class AddCredit extends React.Component {
                     private_notes: '',
                     custom_value3: '',
                     custom_value4: '',
+                    design_id: null,
                     loading: false,
                     errors: []
                 })
@@ -154,6 +160,7 @@ class AddCredit extends React.Component {
                     customer_id: null,
                     custom_value1: '',
                     custom_value2: '',
+                    design_id: null,
                     public_notes: '',
                     private_notes: '',
                     custom_value3: '',
@@ -195,6 +202,12 @@ class AddCredit extends React.Component {
                                         type="text" name="total"
                                         onChange={this.handleInput.bind(this)}/>
                                     {this.renderErrorFor('total')}
+                                </FormGroup>
+
+                                <FormGroup className="mb-3">
+                                    <Label>Design</Label>
+                                    <DesignDropdown name="design_id" handleChange={this.handleInput.bind(this)}
+                                        design={this.state.design_id}/>
                                 </FormGroup>
 
                                 {customForm}

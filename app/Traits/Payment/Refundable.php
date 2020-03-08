@@ -217,28 +217,29 @@ trait Refundable
         return $credit_note;
     }
 
-    private function adjustInvoices(array $data): void
-    {
-        foreach ($data['invoices'] as $refunded_invoice) {
-            $invoice = Invoice::find($refunded_invoice['invoice_id']);
+private
+function adjustInvoices(array $data): void
+{
+    foreach ($data['invoices'] as $refunded_invoice) {
+        $invoice = Invoice::find($refunded_invoice['invoice_id']);
 
-            $invoice->service()->updateBalance($refunded_invoice['amount'])->save();
+        $invoice->service()->updateBalance($refunded_invoice['amount'])->save();
 
-            if ($invoice->amount == $invoice->balance) {
-                $invoice->service()->setStatus(Invoice::STATUS_SENT);
-            } else {
-                $invoice->service()->setStatus(Invoice::STATUS_PARTIAL);
-            }
-
-            $customer = $invoice->customer;
-
-            $customer->balance += $refunded_invoice['amount'];
-            ///$client->paid_to_date -= $refunded_invoice['amount'];
-
-            $customer->save();
-
-            //todo adjust ledger balance here? or after and reference the credit and its total
-
+        if ($invoice->amount == $invoice->balance) {
+            $invoice->service()->setStatus(Invoice::STATUS_SENT);
+        } else {
+            $invoice->service()->setStatus(Invoice::STATUS_PARTIAL);
         }
+
+        $customer = $invoice->customer;
+
+        $customer->balance += $refunded_invoice['amount'];
+        ///$client->paid_to_date -= $refunded_invoice['amount'];
+
+        $customer->save();
+
+        //todo adjust ledger balance here? or after and reference the credit and its total
+
     }
+}
 }

@@ -89,11 +89,11 @@ class PaymentFilter extends QueryFilter
         }
         return $this->query->where(function ($query) use ($filter) {
             $query->where('payments.amount', 'like', '%' . $filter . '%')
-                  ->orWhere('payments.date', 'like', '%' . $filter . '%')
-                  ->orWhere('payments.custom_value1', 'like', '%' . $filter . '%')
-                  ->orWhere('payments.custom_value2', 'like', '%' . $filter . '%')
-                  ->orWhere('payments.custom_value3', 'like', '%' . $filter . '%')
-                  ->orWhere('payments.custom_value4', 'like', '%' . $filter . '%');
+                ->orWhere('payments.date', 'like', '%' . $filter . '%')
+                ->orWhere('payments.custom_value1', 'like', '%' . $filter . '%')
+                ->orWhere('payments.custom_value2', 'like', '%' . $filter . '%')
+                ->orWhere('payments.custom_value3', 'like', '%' . $filter . '%')
+                ->orWhere('payments.custom_value4', 'like', '%' . $filter . '%');
         });
     }
 

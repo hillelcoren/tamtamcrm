@@ -40,7 +40,9 @@ class Credit extends Model
         'terms',
         'footer',
         'public_notes',
-        'private_notes'
+        'private_notes',    
+        'invoice_id',
+        'design_id'
 
     ];
 

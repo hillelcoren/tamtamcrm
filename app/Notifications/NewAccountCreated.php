@@ -92,7 +92,7 @@ class NewAccountCreated extends Notification implements ShouldQueue
         $ip = $this->user->ip;
 
         return (new SlackMessage)->success()->from(trans('texts.notification_bot'))
-                                 ->image('https://app.invoiceninja.com/favicon.png')
-                                 ->content("A new account has been created by {$user_name} - {$email} - from IP: {$ip}");
+            ->image('https://app.invoiceninja.com/favicon.png')
+            ->content("A new account has been created by {$user_name} - {$email} - from IP: {$ip}");
     }
 }

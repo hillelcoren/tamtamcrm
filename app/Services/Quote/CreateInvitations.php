@@ -19,7 +19,7 @@ class CreateInvitations extends AbstractService
     {
         $this->quote->customer->contacts->each(function ($contact) {
             $invitation = QuoteInvitation::whereAccountId($this->quote->account_id)->whereClientContactId($contact->id)
-                                         ->whereQuoteId($this->quote->id)->first();
+                ->whereQuoteId($this->quote->id)->first();
 
             if (!$invitation && $contact->send_email) {
                 $ii = QuoteInvitationFactory::create($this->quote->account_id, $this->quote->user_id);

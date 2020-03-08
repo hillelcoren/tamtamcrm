@@ -54,7 +54,7 @@ const ContactInputs = (props) => {
                         <Col md={4}>
                             <FormGroup>
                                 <Label for="examplePassword">Password</Label>
-                                <Input type="text"
+                                <Input type="password"
                                     data-id={idx}
                                     value={props.contacts[idx].password}
                                     data-field="password"

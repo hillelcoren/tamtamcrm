@@ -27,12 +27,13 @@ class UpdateLead extends AbstractService
      * @param TaskRepository $task_repo
      * @param $is_lead
      */
-    public function __construct($task,
+    public function __construct(
+        $task,
         Request $request,
         CustomerRepository $customer_repo,
         TaskRepository $task_repo,
-        $is_lead)
-    {
+        $is_lead
+    ) {
         $this->task = $task;
         $this->request = $request;
         $this->customer_repo = $customer_repo;

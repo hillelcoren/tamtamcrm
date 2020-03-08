@@ -43,37 +43,39 @@ class CreateInvoicePdf implements ShouldQueue
         $this->disk = $disk ?? config('filesystems.default');
     }
 
-    public function handle() {
+    public function handle()
+    {
 
-		$this->invoice->load('customer');
+        $this->invoice->load('customer');
 
-		if(!$this->contact)
-			$this->contact = $this->invoice->customer->primary_contact()->first();
+        if (!$this->contact) {
+            $this->contact = $this->invoice->customer->primary_contact()->first();
+        }
 
-		App::setLocale($this->contact->preferredLocale());
+        App::setLocale($this->contact->preferredLocale());
 
-		$path      = $this->invoice->customer->invoice_filepath();
+        $path = $this->invoice->customer->invoice_filepath();
 
-		$file_path = $path . $this->invoice->number . '.pdf';
-		
-		$design = Design::find($this->invoice->customer->getSetting('invoice_design_id'));
+        $file_path = $path . $this->invoice->number . '.pdf';
 
-		$designer = new Designer($this->invoice, $design, $this->invoice->customer->getSetting('pdf_variables'), 'invoice');
+        $design = Design::find($this->invoice->customer->getSetting('invoice_design_id'));
 
-		//get invoice design
-		//$html = $this->generateInvoiceHtml($designer->build()->getHtml(), $this->invoice, $this->contact);
-		$html = $this->generateEntityHtml($designer, $this->invoice, $this->contact);
+        $designer = new Designer($this->invoice, $design, $this->invoice->customer->getSetting('pdf_variables'),
+            'invoice');
 
+        //get invoice design
+        //$html = $this->generateInvoiceHtml($designer->build()->getHtml(), $this->invoice, $this->contact);
+        $html = $this->generateEntityHtml($designer, $this->invoice, $this->contact);
 
-		//todo - move this to the client creation stage so we don't keep hitting this unnecessarily
-		Storage::makeDirectory($path, 0755);
+        //todo - move this to the client creation stage so we don't keep hitting this unnecessarily
+        Storage::makeDirectory($path, 0755);
 
-		//\Log::error($html);
-		$pdf = $this->makePdf(null, null, $html);
+        //\Log::error($html);
+        $pdf = $this->makePdf(null, null, $html);
 
-		$instance = Storage::disk($this->disk)->put($file_path, $pdf);
+        $instance = Storage::disk($this->disk)->put($file_path, $pdf);
 
-		return $file_path;	
-	
-	}
+        return $file_path;
+
+    }
 }

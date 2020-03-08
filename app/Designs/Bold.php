@@ -550,9 +550,10 @@ float: left;
         ';
     }
 
-   public function header() {
+    public function header()
+    {
 
-		return '
+        return '
                 <div class="flex static bg-gray-800 p-12">
                     <div class="w-1/2">
                         <div class="absolute bg-white pt-10 px-10 pb-4 inline-block align-middle">
@@ -570,9 +571,10 @@ float: left;
                 </div>
 			';
 
-	}
+    }
 
-	public function body() {
+    public function body()
+    {
 
         return '
             <div class="flex mt-32 pl-12">
@@ -592,9 +594,10 @@ float: left;
             </div>
         ';
 
-	}
+    }
 
-    public function task() {
+    public function task()
+    {
         return '
             <table class="w-full table-auto mt-8">
                 <thead class="text-left">
@@ -609,7 +612,8 @@ float: left;
         ';
     }
 
-	public function product() {
+    public function product()
+    {
 
         return '
             <table class="w-full table-auto mt-8">
@@ -623,9 +627,10 @@ float: left;
                 </tbody>
             </table>
         ';
-	}
+    }
 
-	public function footer() {
+    public function footer()
+    {
 
         return '
             <div class="flex px-4 mt-6 w-full px-12">
@@ -658,6 +663,6 @@ float: left;
             </div>
             ';
 
-	}
+    }
 
 }

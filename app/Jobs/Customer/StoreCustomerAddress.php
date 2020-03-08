@@ -44,13 +44,14 @@ class StoreCustomerAddress
                 $this->customer->addresses()->create($addresses['billing']);
             }
 
-            if (isset($addresses['shipping']) && !empty($addresses['shipping']) &&
-                !empty($addresses['shipping']['address_1'])) {
-                $addresses['shipping']['address_type'] = 2;
-                $this->customer->addresses()->create($addresses['shipping']);
-            }
-        }
+if (isset($addresses['shipping']) && !empty($addresses['shipping']) &&
+    !empty($addresses['shipping']['address_1'])
+) {
+    $addresses['shipping']['address_type'] = 2;
+    $this->customer->addresses()->create($addresses['shipping']);
+}
+}
 
-        return $this->customer;
-    }
+return $this->customer;
+}
 }

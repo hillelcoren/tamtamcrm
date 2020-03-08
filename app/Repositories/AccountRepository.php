@@ -56,17 +56,18 @@ class AccountRepository extends BaseRepository
             $data['custom_fields'] = $this->parseCustomFields($data['custom_fields']);
         }
 
-        $account->fill($data);
-        $account->save();
-        return $account;
+$account->fill($data);
+$account->save();
+return $account;
 
-    }
+}
 
-    private function parseCustomFields($fields): array
-    {
-        foreach ($fields as &$value) {
-            $value = (string)$value;
-        }
-        return $fields;
+private
+function parseCustomFields($fields): array
+{
+    foreach ($fields as &$value) {
+        $value = (string)$value;
     }
+    return $fields;
+}
 }

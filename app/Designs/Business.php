@@ -553,7 +553,8 @@ float: left;
         ';
     }
 
-   public function header() {
+    public function header()
+    {
 
         return '
 			
@@ -573,9 +574,10 @@ float: left;
                 </div>
 			';
 
-	}
+    }
 
-	public function body() {
+    public function body()
+    {
 
         return '
             <div class="flex items-center justify-between mt-20">
@@ -598,9 +600,10 @@ float: left;
             </div>
         ';
 
-	}
+    }
 
-    public function task() {
+    public function task()
+    {
         return '
             <table class="w-full table-auto mt-20">
                 <thead class="text-left">
@@ -615,7 +618,8 @@ float: left;
             ';
     }
 
-    public function product() {
+    public function product()
+    {
 
         return '
             <table class="w-full table-auto mt-20">
@@ -630,9 +634,10 @@ float: left;
             </table>
             
         ';
-	}
+    }
 
-	public function footer() {
+    public function footer()
+    {
 
         return '
                 <div class="flex items-center justify-between px-4 pb-4 bg-gray-200 rounded py-2">
@@ -673,5 +678,5 @@ float: left;
         </html>
         ';
 
-	}
+    }
 }

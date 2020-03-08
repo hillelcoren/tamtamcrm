@@ -50,7 +50,7 @@ class InvoiceSum
     public function build()
     {
         $this->calculateLineItems()->calculateDiscount()->calculateInvoiceTaxes()->setTaxMap()->calculateTotals()
-             ->calculateBalance()->calculatePartial();
+            ->calculateBalance()->calculatePartial();
         return $this;
     }
 

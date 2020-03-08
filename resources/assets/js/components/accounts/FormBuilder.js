@@ -69,6 +69,8 @@ class FormBuilder extends React.Component {
             return
         }
 
+        const id = field.id ? field.id : ''
+
         switch (field.type) {
             case 'currency':
                 returnedField = <React.Fragment>
@@ -113,6 +115,7 @@ class FormBuilder extends React.Component {
                     <FormGroup>
                         <Label>{field.label}</Label>
                         <Input type={field.type}
+                            id={id}
                             value={field.value}
                             name={field.name}
                             placeholder={field.placeholder}

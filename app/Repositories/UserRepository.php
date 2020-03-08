@@ -107,7 +107,7 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
     public function getUsersForDepartment(Department $objDepartment): Support
     {
         return $this->model->join('department_user', 'department_user.user_id', '=', 'users.id')->select('users.*')
-                           ->where('department_user.department_id', $objDepartment->id)->groupBy('users.id')->get();
+            ->where('department_user.department_id', $objDepartment->id)->groupBy('users.id')->get();
     }
 
     public function getModel()
@@ -149,72 +149,73 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
             $data['password'] = Hash::make($data['password']);
         }
 
-        $user->fill($data);
-        $user->save();
+$user->fill($data);
+$user->save();
 
-        if (isset($data['company_user'])) {
-            $company_users = collect($data['company_user']);
-        } else {
-            $company_users = collect();
-        }
+if (isset($data['company_user'])) {
+    $company_users = collect($data['company_user']);
+} else {
+    $company_users = collect();
+}
 
-        $user->account_users->pluck('account_id')->diff($company_users->pluck('account_id'))
-                            ->each(function ($co_user) use (
-                                $user
-                            ) {
-                                AccountUser::whereAccountId($co_user)->whereUserId($user->id)->first()->forceDelete();
-                            });
+$user->account_users->pluck('account_id')->diff($company_users->pluck('account_id'))
+    ->each(function ($co_user) use (
+        $user
+    ) {
+        AccountUser::whereAccountId($co_user)->whereUserId($user->id)->first()->forceDelete();
+    });
 
-        if (isset($data['company_user'])) {
-            foreach ($data['company_user'] as $company_user) {
-                if (auth()->user()->account_user()->count() > 0) {
-                    $account = Account::find($company_user['account_id']);
+if (isset($data['company_user'])) {
+    foreach ($data['company_user'] as $company_user) {
+        if (auth()->user()->account_user()->count() > 0) {
+            $account = Account::find($company_user['account_id']);
 
-                    $cu = AccountUser::whereUserId($user->id)->whereAccountId($account->id)->first();
+            $cu = AccountUser::whereUserId($user->id)->whereAccountId($account->id)->first();
 
-                    /*No company user exists - attach the user*/
-                    if (!$cu) {
-                        $user->accounts()->attach($account->id, $company_user);
-                    } else {
-                        $cu->fill($company_user);
-                        $cu->save();
-                    }
-                }
+            /*No company user exists - attach the user*/
+            if (!$cu) {
+                $user->accounts()->attach($account->id, $company_user);
+            } else {
+                $cu->fill($company_user);
+                $cu->save();
             }
-
-
         }
-
-
-        if (isset($data['role']) && !empty($data['role'])) {
-            $this->syncRoles($user, [$data['role']]);
-        }
-
-        if (isset($data['department']) && !empty($data['department'])) {
-            $this->syncDepartment($user, $data['department']);
-        }
-        return $user->fresh();
-
     }
 
-    /**
-     * @param array $data
-     * @param User $user
-     * @return User|null
-     * @throws Exception
-     */
-    public function destroy(User $user, array $data = [])
-    {
-        if (!empty($data) && array_key_exists('account_user', $data)) {
-            $company = auth()->user()->account_user();
 
-            $cu = AccountUser::whereUserId($user->id)->whereAccountId($company->id)->first();
-            $cu->delete();
-        } else {
-            $user->delete();
-        }
+}
 
-        return $user->fresh();
+
+if (isset($data['role']) && !empty($data['role'])) {
+    $this->syncRoles($user, [$data['role']]);
+}
+
+if (isset($data['department']) && !empty($data['department'])) {
+    $this->syncDepartment($user, $data['department']);
+}
+return $user->fresh();
+
+}
+
+/**
+ * @param array $data
+ * @param User $user
+ * @return User|null
+ * @throws Exception
+ */
+public
+function destroy(User $user, array $data = [])
+{
+    if (!empty($data) && array_key_exists('account_user', $data)) {
+        $company = auth()->user()->account_user();
+
+        $cu = AccountUser::whereUserId($user->id)->whereAccountId($company->id)->first();
+        $cu->delete();
+    } else {
+        $user->delete();
     }
+
+    return $user->fresh();
+}
 
 }

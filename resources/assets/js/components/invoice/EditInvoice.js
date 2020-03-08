@@ -4,6 +4,14 @@ import LineItemEditor from '../common/LineItemEditor'
 import axios from 'axios'
 import {
     Button,
+    Card,
+    CardBody,
+    CardHeader,
+    Col,
+    Dropdown,
+    DropdownItem,
+    DropdownMenu,
+    DropdownToggle,
     FormGroup,
     Input,
     Label,
@@ -11,20 +19,12 @@ import {
     ModalBody,
     ModalFooter,
     ModalHeader,
-    Card,
-    CardBody,
-    CardHeader,
     Nav,
     NavItem,
     NavLink,
-    TabContent,
-    Dropdown,
-    DropdownToggle,
-    DropdownMenu,
-    DropdownItem,
-    TabPane,
     Row,
-    Col
+    TabContent,
+    TabPane
 } from 'reactstrap'
 import CustomerDropdown from '../common/CustomerDropdown'
 import TaxRateDropdown from '../common/TaxRateDropdown'
@@ -37,6 +37,7 @@ import SuccessMessage from '../common/SucessMessage'
 import ErrorMessage from '../common/ErrorMessage'
 import AddButtons from '../common/AddButtons'
 import FileUploads from '../attachments/FileUploads'
+import DesignDropdown from '../common/DesignDropdown'
 
 class EditInvoice extends Component {
     constructor (props, context) {
@@ -79,6 +80,7 @@ class EditInvoice extends Component {
             recurring: '',
             activeTab: '1',
             po_number: this.props.invoice && this.props.invoice.po_number ? this.props.invoice.po_number : '',
+            design_id: this.props.invoice && this.props.invoice.design_id ? this.props.invoice.design_id : null,
             dropdownOpen: false,
             success: false,
             showSuccessMessage: false,
@@ -111,6 +113,9 @@ class EditInvoice extends Component {
         this.handleWindowSizeChange = this.handleWindowSizeChange.bind(this)
 
         this.total = 0
+        const account_id = JSON.parse(localStorage.getItem('appState')).user.account_id
+        const user_account = JSON.parse(localStorage.getItem('appState')).accounts.filter(account => account.account_id === parseInt(account_id))
+        this.settings = user_account[0].account.settings
     }
 
     componentWillMount () {
@@ -413,7 +418,7 @@ class EditInvoice extends Component {
         let total = price
         const unit_discount = currentRow.unit_discount
         const unit_tax = currentRow.unit_tax
-        const uses_inclusive_taxes = false
+        const uses_inclusive_taxes = this.settings.inclusive_taxes
 
         const quantity = currentRow.quantity
 
@@ -496,7 +501,8 @@ class EditInvoice extends Component {
     }
 
     getFormData () {
-        const data = {
+        return {
+            design_id: this.state.design_id,
             tax_rate: this.state.tax,
             tax_rate_name: this.state.tax_rate_name,
             invoice_id: this.state.invoice_id,
@@ -524,8 +530,6 @@ class EditInvoice extends Component {
             custom_value4: this.state.custom_value4,
             invitations: this.state.invitations
         }
-
-        return data
     }
 
     saveData () {
@@ -822,6 +826,11 @@ class EditInvoice extends Component {
                             id='discount'
                             onChange={this.handleInput}
                         />
+                    </FormGroup>
+
+                    <FormGroup>
+                        <Label>Design</Label>
+                        <DesignDropdown name="design_id" design={this.state.design_id} handleChange={this.handleInput}/>
                     </FormGroup>
                 </CardBody>
             </Card>

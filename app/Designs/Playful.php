@@ -543,9 +543,10 @@ float: left;
         ';
     }
 
-    	public function header() {
+    public function header()
+    {
 
-		return '
+        return '
                 <div class="my-12 mx-16">
                     <div class="flex items-center justify-between">
                         <div class="w-1/2">
@@ -563,9 +564,10 @@ float: left;
                         </div>
                     </div>';
 
-	}
+    }
 
-	public function body() {
+    public function body()
+    {
 
         return '
         <div class="flex mt-16">
@@ -591,12 +593,14 @@ float: left;
         </div>
     </div>';
 
-	}
-
-    public function task() {
     }
 
-    public function product() {
+    public function task()
+    {
+    }
+
+    public function product()
+    {
         return '
             <table class="w-full table-auto mt-20 mb-8">
                 <thead class="text-left bg-teal-600 rounded-lg">
@@ -642,14 +646,15 @@ float: left;
                 </div>
             </div>
         </div>';
-	}
+    }
 
-	public function footer() {
+    public function footer()
+    {
 
         return '
                 </div>
             </body>
         </html>';
 
-	}
+    }
 }

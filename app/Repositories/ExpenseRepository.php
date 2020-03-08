@@ -62,13 +62,14 @@ class ExpenseRepository extends BaseRepository
         return $expense;
     }
 
-    /**
-     * Store expenses in bulk.
-     *
-     * @param array $expense
-     * @return expense|null
-     */
-    public function create($expense): ?Expense
+/**
+ * Store expenses in bulk.
+ *
+ * @param array $expense
+ * @return expense|null
+ */
+public
+function create($expense): ?Expense
     {
         return $this->save($expense, ExpenseFactory::create(auth()->user()->company()->id, auth()->user()->id));
     }

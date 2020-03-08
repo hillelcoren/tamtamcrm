@@ -39,13 +39,14 @@ trait SearchableTrait
         return $this->scopeSearchRestricted($q, $search, null, $threshold, $entireText, $entireTextOnly);
     }
 
-    public function scopeSearchRestricted(Builder $q,
+    public function scopeSearchRestricted(
+        Builder $q,
         $search,
         $restriction,
         $threshold = null,
         $entireText = false,
-        $entireTextOnly = false)
-    {
+        $entireTextOnly = false
+    ) {
         $query = clone $q;
         $query->select($this->getTable() . '.*');
         $this->makeJoins($query);
@@ -269,14 +270,15 @@ trait SearchableTrait
      * @param string $post_word
      * @return string
      */
-    protected function getSearchQuery(Builder $query,
+    protected function getSearchQuery(
+        Builder $query,
         $column,
         $relevance,
         array $words,
         $relevance_multiplier,
         $pre_word = '',
-        $post_word = '')
-    {
+        $post_word = ''
+    ) {
         $like_comparator = $this->getDatabaseDriver() == 'pgsql' ? 'ILIKE' : 'LIKE';
         $cases = [];
         foreach ($words as $word) {

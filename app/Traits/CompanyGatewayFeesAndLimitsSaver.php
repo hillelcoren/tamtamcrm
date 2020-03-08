@@ -26,7 +26,8 @@ trait CompanyGatewayFeesAndLimitsSaver
             foreach ($casts as $key => $value) {
                 /* Handles unset settings or blank strings */
                 if (!property_exists($fee_and_limit, $key) || is_null($fee_and_limit->{$key}) ||
-                    !isset($fee_and_limit->{$key}) || $fee_and_limit->{$key} == '') {
+                    !isset($fee_and_limit->{$key}) || $fee_and_limit->{$key} == ''
+                ) {
                     continue;
                 }
 

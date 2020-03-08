@@ -90,7 +90,7 @@ class Mailer
             $response = Mail::send($views, $data,
                 function ($message) use ($toEmail, $fromEmail, $fromName, $replyEmail, $subject, $data) {
                     $message->to($toEmail)->from($fromEmail, $fromName)->replyTo($replyEmail, $fromName)
-                            ->subject($subject);
+                        ->subject($subject);
                     // Optionally BCC the email
                     if (!empty($data['bccEmail'])) {
                         $message->bcc($data['bccEmail']);

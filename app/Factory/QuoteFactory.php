@@ -15,9 +15,11 @@ class QuoteFactory
      * @param $total
      * @return Quote
      */
-    public static function create(int $account_id,
+    public static function create(
+        int $account_id,
         int $user_id,
-        Customer $customer): Quote
+        Customer $customer
+    ): Quote
     {
         $quote = new Quote();
         $quote->account_id = $account_id;

@@ -92,14 +92,14 @@ class InvoiceFilter extends QueryFilter
         }
         return $this->query->where(function ($query) use ($filter) {
             $query->where('invoices.number', 'like', '%' . $filter . '%')
-                  ->orWhere('invoices.po_number', 'like', '%' . $filter . '%')
-                  ->orWhere('invoices.date', 'like', '%' . $filter . '%')
-                  ->orWhere('invoices.total', 'like', '%' . $filter . '%')
-                  ->orWhere('invoices.balance', 'like', '%' . $filter . '%')
-                  ->orWhere('invoices.custom_value1', 'like', '%' . $filter . '%')
-                  ->orWhere('invoices.custom_value2', 'like', '%' . $filter . '%')
-                  ->orWhere('invoices.custom_value3', 'like', '%' . $filter . '%')
-                  ->orWhere('invoices.custom_value4', 'like', '%' . $filter . '%');
+                ->orWhere('invoices.po_number', 'like', '%' . $filter . '%')
+                ->orWhere('invoices.date', 'like', '%' . $filter . '%')
+                ->orWhere('invoices.total', 'like', '%' . $filter . '%')
+                ->orWhere('invoices.balance', 'like', '%' . $filter . '%')
+                ->orWhere('invoices.custom_value1', 'like', '%' . $filter . '%')
+                ->orWhere('invoices.custom_value2', 'like', '%' . $filter . '%')
+                ->orWhere('invoices.custom_value3', 'like', '%' . $filter . '%')
+                ->orWhere('invoices.custom_value4', 'like', '%' . $filter . '%');
         });
     }
 

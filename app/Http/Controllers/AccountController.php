@@ -116,11 +116,47 @@ class AccountController extends Controller
      * @return mixed
      * @throws Exception
      */
-    public function destroy(int $id)
+     
+    public function destroy(DestroyCompanyRequest $request, Company $company)
     {
-        $account = $this->account_repo->findAccountById($id);
-        $account->delete();
-        return response()->json([], 200);
+        $company_count = $company->domain->accounts->count();
+
+        if($company_count == 1){
+
+            $company->account_users->each(function ($account_user) {
+
+                $account_user->user->forceDelete();
+
+            });
+
+            $company->domain->delete();
+
+        }
+        else {
+            
+            $domain = $company->domain;
+            $account_id = $company->id;
+            $company->delete();
+
+            //If we are deleting the default companies, we'll need to make a new company the default.
+            if($domain->default_company_id == $account_id){
+
+                $new_default_company = Account::whereDomainId($domain->id)->first();
+                $domain->default_company_id = $new_default_company->id;
+                $domain->save();
+            
+            }
+
+            
+        }
+
+        //@todo delete documents also!!
+
+        //@todo in the hosted version deleting the last
+        //account will trigger an account refund. 
+           
+        return response()->json(['message' => 'success'], 200);
+        
     }
 
     public function getCustomFields($entity)

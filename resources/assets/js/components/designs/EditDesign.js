@@ -7,8 +7,8 @@ import CKEditor from '@ckeditor/ckeditor5-react'
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic'
 
 class EditDesign extends React.Component {
-    constructor ( props ) {
-        super ( props )
+    constructor (props) {
+        super(props)
         this.state = {
             modal: false,
             name: '',
@@ -22,130 +22,130 @@ class EditDesign extends React.Component {
             errors: []
         }
 
-        this.toggle = this.toggle.bind ( this )
-        this.hasErrorFor = this.hasErrorFor.bind ( this )
-        this.renderErrorFor = this.renderErrorFor.bind ( this )
-        this.getPreview = this.getPreview.bind ( this )
-        this.switchDesign = this.switchDesign.bind ( this )
+        this.toggle = this.toggle.bind(this)
+        this.hasErrorFor = this.hasErrorFor.bind(this)
+        this.renderErrorFor = this.renderErrorFor.bind(this)
+        this.getPreview = this.getPreview.bind(this)
+        this.switchDesign = this.switchDesign.bind(this)
     }
 
     componentDidMount () {
-        if ( localStorage.hasOwnProperty ( 'designForm' ) ) {
-            const storedValues = JSON.parse ( localStorage.getItem ( 'designForm' ) )
-            this.setState ( { ...storedValues }, () => console.log ( 'new state', this.state ) )
+        if (localStorage.hasOwnProperty('designForm')) {
+            const storedValues = JSON.parse(localStorage.getItem('designForm'))
+            this.setState({ ...storedValues }, () => console.log('new state', this.state))
         }
     }
 
-    handleChange ( el ) {
+    handleChange (el) {
         const inputName = el.target.name
         const inputValue = el.target.value
 
-        const statusCopy = Object.assign ( {}, this.state )
-        statusCopy.design[ inputName ].value = inputValue
+        const statusCopy = Object.assign({}, this.state)
+        statusCopy.design[inputName].value = inputValue
 
-        this.setState ( statusCopy )
+        this.setState(statusCopy)
     }
 
-    handleInput ( e ) {
-        this.setState ( {
+    handleInput (e) {
+        this.setState({
             [e.target.name]: e.target.value
-        }, () => localStorage.setItem ( 'designForm', JSON.stringify ( this.state ) ) )
+        }, () => localStorage.setItem('designForm', JSON.stringify(this.state)))
     }
 
-    hasErrorFor ( field ) {
-        return !!this.state.errors[ field ]
+    hasErrorFor (field) {
+        return !!this.state.errors[field]
     }
 
-    renderErrorFor ( field ) {
-        if ( this.hasErrorFor ( field ) ) {
+    renderErrorFor (field) {
+        if (this.hasErrorFor(field)) {
             return (
                 <span className='invalid-feedback'>
-                    <strong>{this.state.errors[ field ][ 0 ]}</strong>
+                    <strong>{this.state.errors[field][0]}</strong>
                 </span>
             )
         }
     }
 
     handleClick () {
-        axios.post ( '/api/designs', {
-                name: this.state.name,
-                design: this.state.design
-            } )
-            .then ( ( response ) => {
+        axios.post('/api/designs', {
+            name: this.state.name,
+            design: this.state.design
+        })
+            .then((response) => {
                 const newUser = response.data
-                this.props.designs.push ( newUser )
-                this.props.action ( this.props.designs )
-                localStorage.removeItem ( 'designForm' )
-                this.setState ( {
+                this.props.designs.push(newUser)
+                this.props.action(this.props.designs)
+                localStorage.removeItem('designForm')
+                this.setState({
                     name: null
-                } )
-                this.toggle ()
-            } )
-            .catch ( ( error ) => {
-                this.setState ( {
+                })
+                this.toggle()
+            })
+            .catch((error) => {
+                this.setState({
                     errors: error.response.data.errors
-                } )
-            } )
+                })
+            })
     }
 
     toggle () {
-        this.setState ( {
+        this.setState({
             modal: !this.state.modal,
             errors: []
         }, () => {
-            if ( !this.state.modal ) {
-                this.setState ( {
+            if (!this.state.modal) {
+                this.setState({
                     name: null,
                     icon: null
-                }, () => localStorage.removeItem ( 'designForm' ) )
+                }, () => localStorage.removeItem('designForm'))
             }
-        } )
+        })
     }
 
     getPreview () {
-        axios.post ( '/api/preview', {
-                body: this.state.design.body,
-                header: this.state.design.header,
-                footer: this.state.design.footer,
-                //entity_id: 1371,
-                //entity: 'invoice'
-            } )
-            .then ( ( response ) => {
-                console.log ( 'respons', response.data.data )
-                var base64str = response.data.data;
+        axios.post('/api/preview', {
+            body: this.state.design.body,
+            header: this.state.design.header,
+            footer: this.state.design.footer
+            // entity_id: 1371,
+            // entity: 'invoice'
+        })
+            .then((response) => {
+                console.log('respons', response.data.data)
+                var base64str = response.data.data
 
-// decode base64 string, remove space for IE compatibility
-                var binary = atob ( base64str.replace ( /\s/g, '' ) );
-                var len = binary.length;
-                var buffer = new ArrayBuffer ( len );
-                var view = new Uint8Array ( buffer );
-                for ( var i = 0; i < len; i++ ) {
-                    view[ i ] = binary.charCodeAt ( i );
+                // decode base64 string, remove space for IE compatibility
+                var binary = atob(base64str.replace(/\s/g, ''))
+                var len = binary.length
+                var buffer = new ArrayBuffer(len)
+                var view = new Uint8Array(buffer)
+                for (var i = 0; i < len; i++) {
+                    view[i] = binary.charCodeAt(i)
                 }
 
-// create the blob object with content-type "application/pdf"
-                var blob = new Blob ( [ view ], { type: "application/pdf" } );
-                var url = URL.createObjectURL ( blob );
+                // create the blob object with content-type "application/pdf"
+                var blob = new Blob([view], { type: 'application/pdf' })
+                var url = URL.createObjectURL(blob)
 
-                /*const file = new Blob (
+                /* const file = new Blob (
                  [ response.data.data ],
                  { type: 'application/pdf' } ) */
-                //const fileURL = URL.createObjectURL ( file )
+                // const fileURL = URL.createObjectURL ( file )
 
-                this.setState ( { obj_url: url }, () => URL.revokeObjectURL ( url ) )
-            } )
-            .catch ( ( error ) => {
-                this.setState ( {
+                this.setState({ obj_url: url }, () => URL.revokeObjectURL(url))
+            })
+            .catch((error) => {
+                this.setState({
                     errors: error.response.data.errors
-                } )
-            } )
+                })
+            })
     }
 
-    switchDesign ( design ) {
-        this.setState ( {
+    switchDesign (design) {
+        this.setState({
             design: design.design,
             name: design.name
-        } )
+        })
     }
 
     render () {
@@ -155,75 +155,75 @@ class EditDesign extends React.Component {
                 data={this.state.design.header}
                 editor={ClassicEditor}
                 config={{
-                            toolbar: [ 'heading', '|', 'bold', 'italic', 'blockQuote', 'link', 'numberedList', 'bulletedList', 'imageUpload', 'insertTable',
-                                'tableColumn', 'tableRow', 'mergeTableCells', 'mediaEmbed', '|', 'undo', 'redo' ]
-                        }}
+                    toolbar: ['heading', '|', 'bold', 'italic', 'blockQuote', 'link', 'numberedList', 'bulletedList', 'imageUpload', 'insertTable',
+                        'tableColumn', 'tableRow', 'mergeTableCells', 'mediaEmbed', '|', 'undo', 'redo']
+                }}
                 onInit={editor => {
-                            // You can store the "editor" and use when it is needed.
-                            console.log ( 'Editor is ready to use!', editor )
-                        }}
-                onChange={( event, editor ) => {
-                            const data = editor.getData ()
-                            this.setState ( prevState => ({
-                                design: { // object that we want to update
-                                    ...prevState.design, // keep all other key-value pairs
-                                    header: data // update the value of specific key
-                                }
-                            }), () => console.log ( 'design', this.state.design ) )
-                        }}
+                    // You can store the "editor" and use when it is needed.
+                    console.log('Editor is ready to use!', editor)
+                }}
+                onChange={(event, editor) => {
+                    const data = editor.getData()
+                    this.setState(prevState => ({
+                        design: { // object that we want to update
+                            ...prevState.design, // keep all other key-value pairs
+                            header: data // update the value of specific key
+                        }
+                    }), () => console.log('design', this.state.design))
+                }}
             />
         </FormGroup>
 
-            <FormGroup>
-                <Label for="name">Body <span className="text-danger">*</span></Label>
-                <CKEditor
-                    data={this.state.design.body}
-                    editor={ClassicEditor}
-                    config={{
-            toolbar: ['heading', '|', 'bold', 'italic', 'blockQuote', 'link', 'numberedList', 'bulletedList', 'imageUpload', 'insertTable',
-                'tableColumn', 'tableRow', 'mergeTableCells', 'mediaEmbed', '|', 'undo', 'redo']
-        }}
-                    onInit={editor => {
-            // You can store the "editor" and use when it is needed.
-            console.log('Editor is ready to use!', editor)
-        }}
-                    onChange={(event, editor) => {
+        <FormGroup>
+            <Label for="name">Body <span className="text-danger">*</span></Label>
+            <CKEditor
+                data={this.state.design.body}
+                editor={ClassicEditor}
+                config={{
+                    toolbar: ['heading', '|', 'bold', 'italic', 'blockQuote', 'link', 'numberedList', 'bulletedList', 'imageUpload', 'insertTable',
+                        'tableColumn', 'tableRow', 'mergeTableCells', 'mediaEmbed', '|', 'undo', 'redo']
+                }}
+                onInit={editor => {
+                    // You can store the "editor" and use when it is needed.
+                    console.log('Editor is ready to use!', editor)
+                }}
+                onChange={(event, editor) => {
                     alert('mike')
-            const data = editor.getData()
-            this.setState(prevState => ({
-                design: { // object that we want to update
-                    ...prevState.design, // keep all other key-value pairs
-                    body: data // update the value of specific key
-                }
-            }), () => console.log('design', this.state.design))
-        }}
-                />
-            </FormGroup>
+                    const data = editor.getData()
+                    this.setState(prevState => ({
+                        design: { // object that we want to update
+                            ...prevState.design, // keep all other key-value pairs
+                            body: data // update the value of specific key
+                        }
+                    }), () => console.log('design', this.state.design))
+                }}
+            />
+        </FormGroup>
 
-            <FormGroup>
-                <Label for="name">Footer <span className="text-danger">*</span></Label>
-                <CKEditor
-                    data={this.state.design.footer}
-                    editor={ClassicEditor}
-                    config={{
-            toolbar: ['heading', '|', 'bold', 'italic', 'blockQuote', 'link', 'numberedList', 'bulletedList', 'imageUpload', 'insertTable',
-                'tableColumn', 'tableRow', 'mergeTableCells', 'mediaEmbed', '|', 'undo', 'redo']
-        }}
-                    onInit={editor => {
-            // You can store the "editor" and use when it is needed.
-            console.log('Editor is ready to use!', editor)
-        }}
-                    onChange={(event, editor) => {
-            const data = editor.getData()
-            this.setState(prevState => ({
-                design: { // object that we want to update
-                    ...prevState.design, // keep all other key-value pairs
-                    footer: data // update the value of specific key
-                }
-            }), () => console.log('design', this.state.design))
-        }}
-                />
-            </FormGroup> </React.Fragment> : null
+        <FormGroup>
+            <Label for="name">Footer <span className="text-danger">*</span></Label>
+            <CKEditor
+                data={this.state.design.footer}
+                editor={ClassicEditor}
+                config={{
+                    toolbar: ['heading', '|', 'bold', 'italic', 'blockQuote', 'link', 'numberedList', 'bulletedList', 'imageUpload', 'insertTable',
+                        'tableColumn', 'tableRow', 'mergeTableCells', 'mediaEmbed', '|', 'undo', 'redo']
+                }}
+                onInit={editor => {
+                    // You can store the "editor" and use when it is needed.
+                    console.log('Editor is ready to use!', editor)
+                }}
+                onChange={(event, editor) => {
+                    const data = editor.getData()
+                    this.setState(prevState => ({
+                        design: { // object that we want to update
+                            ...prevState.design, // keep all other key-value pairs
+                            footer: data // update the value of specific key
+                        }
+                    }), () => console.log('design', this.state.design))
+                }}
+            />
+        </FormGroup> </React.Fragment> : null
 
         return (
             <React.Fragment>
@@ -236,9 +236,9 @@ class EditDesign extends React.Component {
                         <FormGroup>
                             <Label for="name">Name <span className="text-danger">*</span></Label>
                             <Input className={this.hasErrorFor('name') ? 'is-invalid' : ''} type="text" name="name"
-                                   id="name" value={this.state.name} placeholder="Name"
-                                   onChange={this.handleInput.bind(this)}/>
-                            {this.renderErrorFor ( 'name' )}
+                                id="name" value={this.state.name} placeholder="Name"
+                                onChange={this.handleInput.bind(this)}/>
+                            {this.renderErrorFor('name')}
                         </FormGroup>
 
                         <FormGroup>

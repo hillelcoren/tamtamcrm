@@ -99,11 +99,11 @@ class InvoiceViewedNotification extends Notification implements ShouldQueue
         $amount = Number::formatMoney($this->invoice->amount, $this->invoice->customer);
 
         return (new SlackMessage)->success()->from(trans('texts.notification_bot'))->image($logo)
-                                 ->content(trans('texts.notification_invoice_viewed', [
-                                     'amount' => $amount,
-                                     'client' => $this->contact->present()->name(),
-                                     'invoice' => $this->invoice->number,
-                                 ]));
+            ->content(trans('texts.notification_invoice_viewed', [
+                'amount' => $amount,
+                'client' => $this->contact->present()->name(),
+                'invoice' => $this->invoice->number,
+            ]));
     }
 
 }

@@ -32,7 +32,7 @@ class InvoiceEmailedNotification implements ShouldQueue
         if (isset($invitation->account->slack_webhook_url)) {
 
             Notification::route('slack', $invitation->company->slack_webhook_url)
-                        ->notify(new InvoiceSentNotification($invitation, $invitation->account, true));
+                ->notify(new InvoiceSentNotification($invitation, $invitation->account, true));
 
         }
     }

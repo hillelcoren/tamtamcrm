@@ -78,16 +78,17 @@ class PaymentRepository extends BaseRepository implements PaymentRepositoryInter
             return $this->applyPayment($request, $payment);
         }
 
-        return $this->refundPayment($request, $payment);
-    }
+return $this->refundPayment($request, $payment);
+}
 
-    /**
-     * Handles a positive payment request
-     * @param Request $request The request object
-     * @param Payment $payment The $payment entity
-     * @return Payment          The updated/created payment object
-     */
-    private function applyPayment(array $data, Payment $payment): ?Payment
+/**
+ * Handles a positive payment request
+ * @param Request $request The request object
+ * @param Payment $payment The $payment entity
+ * @return Payment          The updated/created payment object
+ */
+private
+function applyPayment(array $data, Payment $payment): ?Payment
     {
         $payment->fill($data);
 

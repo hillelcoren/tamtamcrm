@@ -38,7 +38,7 @@ class PaymentEmail extends EmailBuilder
         }
 
         $this->setTemplate($payment->customer->getSetting('email_style'))->setSubject($subject_template)
-             ->setBody($body_template);
+            ->setBody($body_template);
 
         return $this;
     }

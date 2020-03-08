@@ -162,7 +162,8 @@ class ContactMailer extends Mailer
                 $variables['autobill'] = $invoice->present()->autoBillEmailMessage();
             }
             if (empty($invitation->contact->password) && $account->isClientPortalPasswordEnabled() &&
-                $account->send_portal_password) {
+                $account->send_portal_password
+            ) {
                 // The contact needs a password
                 $variables['password'] = $password = $this->generatePassword();
                 $invitation->contact->password = bcrypt($password);
@@ -372,7 +373,7 @@ class ContactMailer extends Mailer
                 Mail::raw('Account Throttle: ' . $account->account_key,
                     function ($message) use ($errorEmail, $account) {
                         $message->to($errorEmail)->from(CONTACT_EMAIL)
-                                ->subject("Email throttle triggered for account " . $account->id);
+                            ->subject("Email throttle triggered for account " . $account->id);
                     });
             }
             Cache::put("throttle_notified:{$key}", true, 60 * 24);

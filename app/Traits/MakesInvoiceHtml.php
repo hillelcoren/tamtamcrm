@@ -13,7 +13,6 @@ use Throwable;
 /**
  * Class MakesInvoiceHtml.
  */
-
 trait MakesInvoiceHtml
 {
 
@@ -22,7 +21,7 @@ trait MakesInvoiceHtml
      * and generating the final invoice HTML
      *
      * @param  string $design either the path to the design template, OR the full design template string
-     * @param  Collection $invoice  The invoice object
+     * @param  Collection $invoice The invoice object
      *
      * @return string           The invoice string in HTML format
      */
@@ -30,9 +29,9 @@ trait MakesInvoiceHtml
     {
         //$variables = array_merge($invoice->makeLabels(), $invoice->makeValues());
         //$design = str_replace(array_keys($variables), array_values($variables), $design);
-        $invoice->load('client');
+        $invoice->load('customer');
 
-        $client = $invoice->client;
+        $client = $invoice->customer;
 
         App::setLocale($client->preferredLocale());
 
@@ -60,7 +59,7 @@ trait MakesInvoiceHtml
     {
 
         $entity->load('customer');
-        
+
         $client = $entity->customer;
 
         App::setLocale($client->preferredLocale());
@@ -68,7 +67,7 @@ trait MakesInvoiceHtml
         $labels = $entity->makeLabels();
         $values = $entity->makeValues($contact);
 
-        $css_url = url('').'/css/design/'.$designer->design_name.'.css';
+        $css_url = url('') . '/css/design/' . $designer->design_name . '.css';
         $css_url = "<link href=\"{$css_url}\" rel=\"stylesheet\">";
 
         $data = [];
@@ -81,7 +80,6 @@ trait MakesInvoiceHtml
         $data['product'] = $this->parseLabelsAndValues($labels, $values, $designer->init()->getProductTable());
         $data['task'] = $this->parseLabelsAndValues($labels, $values, $designer->init()->getTaskTable());
         $data['footer'] = $this->parseLabelsAndValues($labels, $values, $designer->init()->getFooter()->getHtml());
-
 
 
         return view('pdf.stub', $data)->render();
@@ -98,7 +96,7 @@ trait MakesInvoiceHtml
      * Parses the blade file string and processes the template variables
      *
      * @param  string $string The Blade file string
-     * @param  array $data   The array of template variables
+     * @param  array $data The array of template variables
      * @return string         The return HTML string
      *
      */

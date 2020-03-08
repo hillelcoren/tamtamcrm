@@ -13,7 +13,9 @@ interface NotificationRepositoryInterface
      * @param string $orderBy
      * @param string $sortBy
      */
-    public function listNotifications($columns = array('*'),
+    public function listNotifications(
+        $columns = array('*'),
         string $orderBy = 'id',
-        string $sortBy = 'asc'): Collection;
+        string $sortBy = 'asc'
+    ): Collection;
 }

@@ -63,24 +63,24 @@ class StoreInvoice implements ShouldQueue
             InvoiceNotification::dispatch($this->invoice, $this->invoice->account);
         }
 
-        if (isset($this->data['mark_paid']) && (bool)$this->data['mark_paid']) {
-            $this->invoice = $invoice_repo->markSent($this->invoice);
+if (isset($this->data['mark_paid']) && (bool)$this->data['mark_paid']) {
+    $this->invoice = $invoice_repo->markSent($this->invoice);
 
-            // generate a manual payment against the invoice
-            // the PAYMENT class will update the INVOICE status.
-            //$payment =
-        }
+    // generate a manual payment against the invoice
+    // the PAYMENT class will update the INVOICE status.
+    //$payment =
+}
 
-        /* Payment Notifications */
-        if ($payment) {
-            //fire payment notifications here
-            PaymentNotification::dispatch($payment, $payment->account);
-        }
+/* Payment Notifications */
+if ($payment) {
+    //fire payment notifications here
+    PaymentNotification::dispatch($payment, $payment->account);
+}
 
-        if (isset($data['download_invoice']) && (bool)$this->data['download_invoice']) {
-            //fire invoice download and return PDF response from here
-        }
+if (isset($data['download_invoice']) && (bool)$this->data['download_invoice']) {
+    //fire invoice download and return PDF response from here
+}
 
-        return $this->invoice;
-    }
+return $this->invoice;
+}
 }

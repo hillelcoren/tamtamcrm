@@ -29,6 +29,7 @@ trait QuoteTransformable
         $prop->total = $quote->total;
         $prop->balance = (float)$quote->balance;
         $prop->status_id = $quote->status_id;
+        $prop->design_id = (int)$quote->design_id;
         $prop->next_send_date = $quote->date ?: '';
 
         $prop->sub_total = $quote->sub_total;

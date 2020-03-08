@@ -17,7 +17,7 @@ trait CustomerGroupSettingsSaver
      *
      * Works for groups|clients|companies
      * @param  array $settings The request input settings array
-     * @param  object $entity   The entity which the settings belongs to
+     * @param  object $entity The entity which the settings belongs to
      * @return void
      */
     public function saveSettings($settings, $entity)
@@ -81,7 +81,7 @@ trait CustomerGroupSettingsSaver
         }
 
         foreach ($casts as $key => $value) {
-            if(in_array($key, SettingsSaver::$string_casts)) {
+            if (in_array($key, SettingsSaver::$string_casts)) {
                 $value = "string";
 
                 if (!property_exists($settings, $key)) {
@@ -91,8 +91,7 @@ trait CustomerGroupSettingsSaver
                 }
 
                 continue;
-            }
-            /*Separate loop if it is a _id field which is an integer cast as a string*/
+            } /*Separate loop if it is a _id field which is an integer cast as a string*/
             elseif (substr($key, -3) == '_id' || substr($key, -14) == 'number_counter') {
                 $value = "integer";
 
@@ -106,7 +105,9 @@ trait CustomerGroupSettingsSaver
             }
 
             /* Handles unset settings or blank strings */
-            if (!property_exists($settings, $key) || is_null($settings->{$key}) || !isset($settings->{$key}) || $settings->{$key} == '') {
+            if (!property_exists($settings,
+                    $key) || is_null($settings->{$key}) || !isset($settings->{$key}) || $settings->{$key} == ''
+            ) {
                 continue;
             }
 
@@ -158,7 +159,9 @@ trait CustomerGroupSettingsSaver
             }
 
             /* Handles unset settings or blank strings */
-            if (!property_exists($settings, $key) || is_null($settings->{$key}) || !isset($settings->{$key}) || $settings->{$key} == '') {
+            if (!property_exists($settings,
+                    $key) || is_null($settings->{$key}) || !isset($settings->{$key}) || $settings->{$key} == ''
+            ) {
                 continue;
             }
 
@@ -179,7 +182,7 @@ trait CustomerGroupSettingsSaver
 
     /**
      * Type checks a object property.
-     * @param  string $key   The type
+     * @param  string $key The type
      * @param  string $value The object property
      * @return bool        TRUE if the property is the expected type
      */
@@ -197,7 +200,7 @@ trait CustomerGroupSettingsSaver
                 return method_exists($value, '__toString') || is_null($value) || is_string($value);
             case 'bool':
             case 'boolean':
-                return is_bool($value) || (int) filter_var($value, FILTER_VALIDATE_BOOLEAN);
+                return is_bool($value) || (int)filter_var($value, FILTER_VALIDATE_BOOLEAN);
             case 'object':
                 return is_object($value);
             case 'array':

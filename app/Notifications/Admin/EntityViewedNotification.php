@@ -84,12 +84,12 @@ class EntityViewedNotification extends Notification implements ShouldQueue
         $amount = Number::formatMoney($this->entity->amount, $this->entity->client);
 
         return (new SlackMessage)->from(trans('texts.notification_bot'))->success()
-                                 ->image('https://app.invoiceninja.com/favicon-v2.png')
-                                 ->content(trans("texts.notification_{$this->entity_name}_viewed", [
-                                     'amount' => $amount,
-                                     'client' => $this->contact->present()->name(),
-                                     $this->entity_name => $this->entity->number
-                                 ]))->attachment(function ($attachment) use ($amount) {
+            ->image('https://app.invoiceninja.com/favicon-v2.png')
+            ->content(trans("texts.notification_{$this->entity_name}_viewed", [
+                'amount' => $amount,
+                'client' => $this->contact->present()->name(),
+                $this->entity_name => $this->entity->number
+            ]))->attachment(function ($attachment) use ($amount) {
                 $attachment->title(trans('texts.entity_number_placeholder',
                     ['entity' => ucfirst($this->entity_name), 'entity_number' => $this->entity->number]),
                     $this->invitation->getAdminLink())->fields([
