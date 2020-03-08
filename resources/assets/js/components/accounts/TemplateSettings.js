@@ -79,8 +79,6 @@ class TemplateSettings extends Component {
         const subjectKey = `email_subject_${this.state.template_type}`
         const bodyKey = `email_template_${this.state.template_type}`
 
-        alert(this.state.settings[subjectKey] + ' ' + this.state.settings[bodyKey])
-
         if (!this.state.settings[subjectKey] || !this.state.settings[bodyKey]) {
             return false
         }

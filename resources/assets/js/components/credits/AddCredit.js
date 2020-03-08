@@ -62,8 +62,6 @@ class AddCredit extends React.Component {
             return
         }
 
-        alert(e.target.name + ' ' + e.target.value)
-
         this.setState({
             [e.target.name]: e.target.value
         })
