@@ -38,6 +38,8 @@ import GroupSettings from './accounts/GroupSettings'
 import Expenses from './expenses/Expenses'
 import Designs from './designs/Designs'
 import Integrations from './accounts/IntegrationSettings'
+import Notifications from './accounts/Notifications'
+import Modules from './accounts/ModuleSettings'
 
 // https://github.com/ReactTraining/react-router/tree/master/packages/react-router-config
 const routes = [
@@ -207,6 +209,16 @@ const routes = [
         path: '/integrations',
         name: 'Integrations',
         component: Integrations
+    },
+    {
+        path: '/notifications',
+        name: 'Notifications',
+        component: Notifications
+    },
+    {
+        path: '/modules',
+        name: 'Modules',
+        component: Modules
     },
     {
         path: '/recurring-quotes',

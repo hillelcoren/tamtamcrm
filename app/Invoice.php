@@ -246,7 +246,7 @@ class Invoice extends Model
     public function credits()
     {
         return $this->belongsToMany(Credit::class)->using(Paymentable::class)->withPivot('amount', 'refunded')
-            ->withTimestamps();
+                    ->withTimestamps();
     }
 
     public function payments()

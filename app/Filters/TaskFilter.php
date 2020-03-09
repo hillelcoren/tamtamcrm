@@ -85,11 +85,11 @@ class TaskFilter extends QueryFilter
         }
         return $this->query->where(function ($query) use ($filter) {
             $query->where('title', 'like', '%' . $filter . '%')->orWhere('content', 'like', '%' . $filter . '%')
-                ->orWhere('rating', 'like', '%' . $filter . '%')
-                ->orWhere('custom_value1', 'like', '%' . $filter . '%')
-                ->orWhere('custom_value2', 'like', '%' . $filter . '%')
-                ->orWhere('custom_value3', 'like', '%' . $filter . '%')
-                ->orWhere('custom_value4', 'like', '%' . $filter . '%');
+                  ->orWhere('rating', 'like', '%' . $filter . '%')
+                  ->orWhere('custom_value1', 'like', '%' . $filter . '%')
+                  ->orWhere('custom_value2', 'like', '%' . $filter . '%')
+                  ->orWhere('custom_value3', 'like', '%' . $filter . '%')
+                  ->orWhere('custom_value4', 'like', '%' . $filter . '%');
         });
     }
 
@@ -125,7 +125,7 @@ class TaskFilter extends QueryFilter
     public function filterBySearchCriteria($filters, int $task_type, int $account_id)
     {
         $this->query = $this->model->select('tasks.id as id', 'tasks.*')
-            ->leftJoin('task_user', 'tasks.id', '=', 'task_user.task_id');
+                                   ->leftJoin('task_user', 'tasks.id', '=', 'task_user.task_id');
         $this->query = $this->query->where('is_completed', 0)->where('task_type', $task_type)->where('parent_id', 0);
 
         foreach ($filters as $column => $value) {

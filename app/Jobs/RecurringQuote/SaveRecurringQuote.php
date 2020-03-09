@@ -49,6 +49,6 @@ class SaveRecurringQuote
             return $recurringQuote;
         }
 
-return null;
-}
+        return null;
+    }
 }

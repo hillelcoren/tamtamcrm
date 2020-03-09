@@ -28,7 +28,7 @@ class CreateCreditInvitation implements ShouldQueue
 
         $contacts->each(function ($contact) use ($credit) {
             $invitation = InvoiceInvitation::whereAccountId($credit->account_id)->whereClientContactId($contact->id)
-                ->whereCreditId($credit->id)->first();
+                                           ->whereCreditId($credit->id)->first();
 
             if (!$invitation && $contact->send_credit) {
                 $ii = CreditInvitationFactory::create($credit->account_id, $credit->user_id);

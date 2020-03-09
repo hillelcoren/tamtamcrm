@@ -36,7 +36,7 @@ class TemplateController extends Controller
     public function show()
     {
         if (request()->has('entity') && request()->has('entity_id')) {
-            $class = 'App\\'.ucfirst(request()->input('entity'));
+            $class = 'App\\' . ucfirst(request()->input('entity'));
             $entity_obj = $class::whereId(request()->input('entity_id'))->first();
         }
 
@@ -54,6 +54,6 @@ class TemplateController extends Controller
         ];
 
         return response()->json($data, 200);
-        
+
     }
 }

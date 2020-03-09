@@ -85,7 +85,7 @@ class NewLeadNotification extends Notification implements ShouldQueue
 
         return (new SlackMessage)->success()
             //->to("#devv2")
-            ->from("System")->image($logo)->content(trans('texts.notification__deal',
+                                 ->from("System")->image($logo)->content(trans('texts.notification__deal',
                 ['client' => $this->lead->present()->name()]));
     }
 

@@ -70,6 +70,16 @@ export default {
                     name: 'Integrations',
                     url: '/integrations',
                     icon: 'fa fa-dashboard'
+                },
+                {
+                    name: 'Modules',
+                    url: '/modules',
+                    icon: 'fa fa-dashboard'
+                },
+                {
+                    name: 'Notifications',
+                    url: '/notifications',
+                    icon: 'fa fa-dashboard'
                 }
             ]
         },

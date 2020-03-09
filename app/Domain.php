@@ -127,7 +127,7 @@ class Domain extends Model
             // Pro; No trial allowed, unless they're trialing enterprise with an active pro plan
             case self::FEATURE_MORE_CLIENTS:
                 return $self_host ||
-                !empty($plan_details) && (!$plan_details['trial'] || !empty($this->getPlanDetails(false, false)));
+                    !empty($plan_details) && (!$plan_details['trial'] || !empty($this->getPlanDetails(false, false)));
 
             // White Label
             case self::FEATURE_WHITE_LABEL:
@@ -151,7 +151,7 @@ class Domain extends Model
             case self::FEATURE_DOCUMENTS:
             case self::FEATURE_USER_PERMISSIONS:
                 return $selfHost ||
-                !empty($planDetails) && $planDetails['plan'] == self::PLAN_ENTERPRISE && !$planDetails['trial'];
+                    !empty($planDetails) && $planDetails['plan'] == self::PLAN_ENTERPRISE && !$planDetails['trial'];
 
             default:
                 return false;

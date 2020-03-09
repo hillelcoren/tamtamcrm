@@ -143,20 +143,17 @@ class TestInvoiceEmail extends Command
         } else {
             if ($customer->getSetting('enable_reminder1') !== false &&
                 $this->inReminderWindow($invoice, $customer->getSetting('schedule_reminder1'),
-                    $customer->getSetting('num_days_reminder1'))
-            ) {
+                    $customer->getSetting('num_days_reminder1'))) {
                 return 'template1';
             } else {
                 if ($customer->getSetting('enable_reminder2') !== false &&
                     $this->inReminderWindow($invoice, $customer->getSetting('schedule_reminder2'),
-                        $customer->getSetting('num_days_reminder2'))
-                ) {
+                        $customer->getSetting('num_days_reminder2'))) {
                     return 'template2';
                 } else {
                     if ($customer->getSetting('enable_reminder3') !== false &&
                         $this->inReminderWindow($invoice, $customer->getSetting('schedule_reminder3'),
-                            $customer->getSetting('num_days_reminder3'))
-                    ) {
+                            $customer->getSetting('num_days_reminder3'))) {
                         return 'template3';
                     }
                 }
@@ -172,15 +169,15 @@ class TestInvoiceEmail extends Command
         switch ($schedule_reminder) {
             case 'after_invoice_date':
                 return Carbon::parse($invoice->date)->addDays($num_days_reminder)->startOfDay()->eq(Carbon::now()
-                    ->startOfDay());
+                                                                                                          ->startOfDay());
                 break;
             case 'before_due_date':
                 return Carbon::parse($invoice->due_date)->subDays($num_days_reminder)->startOfDay()->eq(Carbon::now()
-                    ->startOfDay());
+                                                                                                              ->startOfDay());
                 break;
             case 'after_due_date':
                 return Carbon::parse($invoice->due_date)->addDays($num_days_reminder)->startOfDay()->eq(Carbon::now()
-                    ->startOfDay());
+                                                                                                              ->startOfDay());
                 break;
             default:
                 # code...

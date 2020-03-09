@@ -70,8 +70,7 @@ class PaymentMethod extends Model
         ];
         $cardName = strtolower(str_replace([' ', '-', '_'], '', $cardName));
         if (empty($cardTypes[$cardName]) &&
-            1 == preg_match('/^(' . implode('|', array_keys($cardTypes)) . ')/', $cardName, $matches)
-        ) {
+            1 == preg_match('/^(' . implode('|', array_keys($cardTypes)) . ')/', $cardName, $matches)) {
             // Some gateways return extra stuff after the card name
             $cardName = $matches[1];
         }

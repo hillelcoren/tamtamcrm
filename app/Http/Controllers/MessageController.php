@@ -40,11 +40,10 @@ class MessageController extends Controller
      * CustomerRepositoryInterface $customerRepository
      * UserRepositoryInterface $userRepository
      */
-    public function __construct(
-        MessageRepositoryInterface $messageRepository,
+    public function __construct(MessageRepositoryInterface $messageRepository,
         CustomerRepositoryInterface $customerRepository,
-        UserRepositoryInterface $userRepository
-    ) {
+        UserRepositoryInterface $userRepository)
+    {
         $this->messageRepo = $messageRepository;
         $this->customerRepo = $customerRepository;
         $this->userRepo = $userRepository;

@@ -100,12 +100,12 @@ class InvoiceSentNotification extends Notification implements ShouldQueue
         $amount = Number::formatMoney($this->invoice->amount, $this->invoice->customer);
 
         return (new SlackMessage)->from(trans('texts.notification_bot'))->success()
-            ->image('https://app.invoiceninja.com/favicon-v2.png')
-            ->content(trans('texts.notification_invoice_sent_subject', [
-                'amount' => $amount,
-                'client' => $this->contact->present()->name(),
-                'invoice' => $this->invoice->number
-            ]))->attachment(function ($attachment) use ($amount) {
+                                 ->image('https://app.invoiceninja.com/favicon-v2.png')
+                                 ->content(trans('texts.notification_invoice_sent_subject', [
+                                     'amount' => $amount,
+                                     'client' => $this->contact->present()->name(),
+                                     'invoice' => $this->invoice->number
+                                 ]))->attachment(function ($attachment) use ($amount) {
                 $attachment->title(trans('texts.invoice_number_placeholder', ['invoice' => $this->invoice->number]),
                     $this->invitation->getAdminLink())->fields([
                     trans('texts.client') => $this->contact->present()->name(),

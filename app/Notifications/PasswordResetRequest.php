@@ -45,9 +45,9 @@ class PasswordResetRequest extends Notification
     {
         $url = url('/api/password/find/' . $this->token);
         return (new MailMessage)->subject(__('passwords.email_password_reset_request_subject'))
-            ->line(__('passwords.email_password_reset_request_line1'))
-            ->action(__('passwords.email_password_reset_request_action'), url($url))
-            ->line(__('passwords.email_password_reset_request_line2'));
+                                ->line(__('passwords.email_password_reset_request_line1'))
+                                ->action(__('passwords.email_password_reset_request_action'), url($url))
+                                ->line(__('passwords.email_password_reset_request_line2'));
     }
 
     /**

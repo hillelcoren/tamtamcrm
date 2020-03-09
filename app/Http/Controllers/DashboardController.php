@@ -31,10 +31,9 @@ class DashboardController extends Controller
      *
      * TaskRepositoryInterface $taskRepository
      */
-    public function __construct(
-        TaskRepositoryInterface $taskRepository,
-        CustomerRepositoryInterface $customerRepository
-    ) {
+    public function __construct(TaskRepositoryInterface $taskRepository,
+        CustomerRepositoryInterface $customerRepository)
+    {
         $this->taskRepository = $taskRepository;
         $this->customerRepository = $customerRepository;
     }

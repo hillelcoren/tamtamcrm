@@ -33,13 +33,12 @@ class CreateDeal extends AbstractService
      * @param TaskRepository $task_repo
      * @param $is_deal
      */
-    public function __construct(
-        $task,
+    public function __construct($task,
         Request $request,
         CustomerRepository $customer_repo,
         TaskRepository $task_repo,
-        $is_deal
-    ) {
+        $is_deal)
+    {
         $this->task = $task;
         $this->request = $request;
         $this->customer_repo = $customer_repo;

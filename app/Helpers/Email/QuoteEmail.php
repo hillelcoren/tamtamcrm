@@ -50,8 +50,8 @@ class QuoteEmail extends EmailBuilder
         }
 
         $this->setTemplate($quote->customer->getSetting('email_style'))->setContact($contact)
-            ->setFooter("<a href='{$invitation->getLink()}'>Quote Link</a>")
-            ->setVariables($quote->makeValues($contact))->setSubject($subject_template)->setBody($body_template);
+             ->setFooter("<a href='{$invitation->getLink()}'>Quote Link</a>")
+             ->setVariables($quote->makeValues($contact))->setSubject($subject_template)->setBody($body_template);
 
         if ($client->getSetting('pdf_email_attachment') !== false) {
             $this->attachments = $quote->pdf_file_path();

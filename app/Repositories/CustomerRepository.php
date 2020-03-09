@@ -75,80 +75,73 @@ class CustomerRepository extends BaseRepository implements CustomerRepositoryInt
             CustomerFactory::create(auth()->user()->account_user()->account_id, auth()->user()->id));
     }
 
-/**
- * Delete a customer
- *
- * @return bool
- * @throws Exception
- */
-public
-function deleteCustomer(): bool
-{
-    return $this->delete();
-}
-
-/**
- * @param string $text
- * @return mixed
- */
-public
-function searchCustomer(string $text = null): Collection
-{
-    if (is_null($text)) {
-        return $this->all();
+    /**
+     * Delete a customer
+     *
+     * @return bool
+     * @throws Exception
+     */
+    public function deleteCustomer(): bool
+    {
+        return $this->delete();
     }
-    return $this->model->searchCustomer($text)->get();
-}
 
-public
-function getModel()
-{
-    return $this->model;
-}
+    /**
+     * @param string $text
+     * @return mixed
+     */
+    public function searchCustomer(string $text = null): Collection
+    {
+        if (is_null($text)) {
+            return $this->all();
+        }
+        return $this->model->searchCustomer($text)->get();
+    }
 
-/**
- *
- * @param int $number_of_days
- * @return type
- */
-public
-function getRecentCustomers(int $number_of_days, int $account_id)
-{
+    public function getModel()
+    {
+        return $this->model;
+    }
 
-    $date = Carbon::today()->subDays($number_of_days);
-    $result = $this->model->select(DB::raw('count(*) as total'))->where('created_at', '>=', $date)
-        ->where('account_id', '=', $account_id)->get();
+    /**
+     *
+     * @param int $number_of_days
+     * @return type
+     */
+    public function getRecentCustomers(int $number_of_days, int $account_id)
+    {
 
-    return !empty($result[0]) ? $result[0]['total'] : 0;
-}
+        $date = Carbon::today()->subDays($number_of_days);
+        $result = $this->model->select(DB::raw('count(*) as total'))->where('created_at', '>=', $date)
+                              ->where('account_id', '=', $account_id)->get();
 
-public
-function addAddressForCustomer(array $arrData)
-{
-    $this->model->addresses()->updateOrCreate(['customer_id' => $this->model->id], $arrData);
-}
+        return !empty($result[0]) ? $result[0]['total'] : 0;
+    }
 
-/**
- * Find the address attached to the customer
- *
- * @return mixed
- */
-public
-function findAddresses(): Support
-{
-    return $this->model->addresses;
-}
+    public function addAddressForCustomer(array $arrData)
+    {
+        $this->model->addresses()->updateOrCreate(['customer_id' => $this->model->id], $arrData);
+    }
 
-/**
- * Saves the client and its contacts
- *
- * @param array $data The data
- * @param Client $client The client
- *
- * @return     Client|Client|null  Client Object
- */
-public
-function save(array $data, Customer $customer): ?Customer
+    /**
+     * Find the address attached to the customer
+     *
+     * @return mixed
+     */
+    public function findAddresses(): Support
+    {
+        return $this->model->addresses;
+    }
+
+    /**
+     * Saves the client and its contacts
+     *
+     * @param array $data The data
+     * @param Client $client The client
+     *
+     * @return     Client|Client|null  Client Object
+     */
+    public function save(array $data, Customer $customer): ?Customer
     {
         $customer->fill($data);
         $customer->save();

@@ -37,11 +37,9 @@ class UploadAvatar implements ShouldQueue
         //return file path
         if ($url) {
             return $url;
+        } else {
+            return null;
         }
 
-else {
-    return null;
-}
-
-}
+    }
 }

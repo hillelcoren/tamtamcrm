@@ -48,8 +48,8 @@ class LoginController extends Controller
             $this->fireLockoutEvent($request);
 
             return response()->json(['message' => 'Too many login attempts, you are being throttled'], 401)
-                ->header('X-App-Version', config('ninja.app_version'))
-                ->header('X-Api-Version', config('ninja.api_version'));
+                             ->header('X-App-Version', config('ninja.app_version'))
+                             ->header('X-Api-Version', config('ninja.api_version'));
         }
 
         if ($token = auth()->attempt($request->all())) {

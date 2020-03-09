@@ -20,7 +20,8 @@ class AccountUser extends Pivot
         'created_at' => 'timestamp',
         'deleted_at' => 'timestamp',
         'settings' => 'object',
-        'notifications' => 'object'
+        'notifications' => 'object',
+        'permissions' => 'object',
     ];
     protected $fillable = [
         'notifications',
@@ -40,12 +41,14 @@ class AccountUser extends Pivot
 
     public function user_pivot()
     {
-        return $this->hasOne(User::class)->withPivot('permissions', 'settings', 'is_admin', 'is_owner', 'is_locked','slack_webhook_url');
+        return $this->hasOne(User::class)
+                    ->withPivot('permissions', 'settings', 'is_admin', 'is_owner', 'is_locked', 'slack_webhook_url');
     }
 
     public function account_pivot()
     {
-        return $this->hasOne(Account::class)->withPivot('permissions', 'settings', 'is_admin', 'is_owner', 'is_locked','slack_webhook_url');
+        return $this->hasOne(Account::class)
+                    ->withPivot('permissions', 'settings', 'is_admin', 'is_owner', 'is_locked', 'slack_webhook_url');
     }
 
     public function user()

@@ -30,7 +30,7 @@ class UpdateInvoicePayment
                 $this->payment->ledger()->updatePaymentBalance($invoice->balance * -1);
 
                 $this->payment->customer->service()->updateBalance($invoice->balance * -1)
-                    ->updatePaidToDate($invoice->balance)->save();
+                                        ->updatePaidToDate($invoice->balance)->save();
 
                 $invoice->pivot->amount = $invoice->balance;
                 $invoice->pivot->save();
@@ -57,19 +57,19 @@ class UpdateInvoicePayment
                         $this->payment->ledger()->updatePaymentBalance($invoice->partial * -1);
 
                         $this->payment->customer->service()->updateBalance($invoice->partial * -1)
-                            ->updatePaidToDate($invoice->partial)->save();
+                                                ->updatePaidToDate($invoice->partial)->save();
 
                         $invoice->pivot->amount = $invoice->partial;
                         $invoice->pivot->save();
 
                         $invoice->service()->updateBalance($invoice->partial * -1)->clearPartial()->setDueDate()
-                            ->setStatus(Invoice::STATUS_PARTIAL)->save();
+                                ->setStatus(Invoice::STATUS_PARTIAL)->save();
                     } else {
 
                         $this->payment->ledger()->updatePaymentBalance($invoice->balance * -1);
 
                         $this->payment->customer->service()->updateBalance($invoice->balance * -1)
-                            ->updatePaidToDate($invoice->balance)->save();
+                                                ->updatePaidToDate($invoice->balance)->save();
 
                         $invoice->pivot->amount = $invoice->balance;
                         $invoice->pivot->save();

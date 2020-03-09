@@ -180,10 +180,11 @@ class QuoteController extends Controller
 
                 break;
             case 'approve':
-                if($quote->status_id != Quote::STATUS_SENT)
-                     return response()->json(['message' => 'Unable to approve this quote as it has expired.'], 400);
+                if ($quote->status_id != Quote::STATUS_SENT) {
+                    return response()->json(['message' => 'Unable to approve this quote as it has expired.'], 400);
+                }
 
-                 return response()->json($quote->service()->approve()->save());
+                return response()->json($quote->service()->approve()->save());
                 break;
             case 'convert':
                 //convert  quote to an invoice make sure we link the two entities!!!

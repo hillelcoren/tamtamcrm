@@ -106,101 +106,100 @@ class InvoiceRepository extends BaseRepository implements InvoiceRepositoryInter
             $invoice->uses_inclusive_taxes = $customer->getSetting('inclusive_taxes');
         }
 
-$invoice->fill($data);
+        $invoice->fill($data);
 
-$invoice->save();
-if (isset($data['client_contacts'])) {
-    foreach ($data['client_contacts'] as $contact) {
-        if ($contact['send_email'] == 1) {
-            $client_contact = ClientContact::find($contact['id']);
-            $client_contact->send_email = true;
-            $client_contact->save();
-        }
-    }
-}
-
-
-if (isset($data['invitations'])) {
-    $invitations = collect($data['invitations']);
-
-    /* Get array of Keys which have been removed from the invitations array and soft delete each invitation */
-    $invoice->invitations->pluck('key')->diff($invitations->pluck('key'))->each(function ($invitation) {
-
-        $invite = $this->getInvitationByKey($invitation);
-
-        if ($invite) {
-            $invite->forceDelete();
-        }
-
-    });
-
-    foreach ($data['invitations'] as $invitation) {
-        $inv = false;
-
-        if (array_key_exists('key', $invitation)) {
-            $inv = $this->getInvitationByKey($invitation['key']);
-        }
-
-        if (!$inv) {
-
-            if (isset($invitation['id'])) {
-                unset($invitation['id']);
-            }
-
-            //make sure we are creating an invite for a contact who belongs to the client only!
-            $contact = ClientContact::find($invitation['client_contact_id']);
-
-            if ($invoice->customer_id == $contact->customer_id) {
-
-                $new_invitation = InvoiceInvitationFactory::create($invoice->account_id, $invoice->user_id);
-                //$new_invitation->fill($invitation);
-                $new_invitation->invoice_id = $invoice->id;
-                $new_invitation->client_contact_id = $invitation['client_contact_id'];
-                $new_invitation->save();
-
+        $invoice->save();
+        if (isset($data['client_contacts'])) {
+            foreach ($data['client_contacts'] as $contact) {
+                if ($contact['send_email'] == 1) {
+                    $client_contact = ClientContact::find($contact['id']);
+                    $client_contact->send_email = true;
+                    $client_contact->save();
+                }
             }
         }
-    }
-}
 
-$invoice->load('invitations');
 
-/* If no invitations have been created, this is our fail safe to maintain state*/
-if ($invoice->invitations->count() == 0) {
-    $invoice->service()->createInvitations();
-}
-$invoice = $invoice->calc()->getInvoice();
+        if (isset($data['invitations'])) {
+            $invitations = collect($data['invitations']);
+
+            /* Get array of Keys which have been removed from the invitations array and soft delete each invitation */
+            $invoice->invitations->pluck('key')->diff($invitations->pluck('key'))->each(function ($invitation) {
+
+                $invite = $this->getInvitationByKey($invitation);
+
+                if ($invite) {
+                    $invite->forceDelete();
+                }
+
+            });
+
+            foreach ($data['invitations'] as $invitation) {
+                $inv = false;
+
+                if (array_key_exists('key', $invitation)) {
+                    $inv = $this->getInvitationByKey($invitation['key']);
+                }
+
+                if (!$inv) {
+
+                    if (isset($invitation['id'])) {
+                        unset($invitation['id']);
+                    }
+
+                    //make sure we are creating an invite for a contact who belongs to the client only!
+                    $contact = ClientContact::find($invitation['client_contact_id']);
+
+                    if ($invoice->customer_id == $contact->customer_id) {
+
+                        $new_invitation = InvoiceInvitationFactory::create($invoice->account_id, $invoice->user_id);
+                        //$new_invitation->fill($invitation);
+                        $new_invitation->invoice_id = $invoice->id;
+                        $new_invitation->client_contact_id = $invitation['client_contact_id'];
+                        $new_invitation->save();
+
+                    }
+                }
+            }
+        }
+
+        $invoice->load('invitations');
+
+        /* If no invitations have been created, this is our fail safe to maintain state*/
+        if ($invoice->invitations->count() == 0) {
+            $invoice->service()->createInvitations();
+        }
+        $invoice = $invoice->calc()->getInvoice();
 
 //$invoice_calc = new InvoiceSum($invoice, $invoice->settings);
 //$invoice = $invoice_calc->build()->getInvoice();
-$invoice->save();
-$finished_amount = $invoice->total;
+        $invoice->save();
+        $finished_amount = $invoice->total;
 
-/**/
-if ($finished_amount != $starting_amount) {
-    $invoice->ledger()->updateInvoiceBalance(($finished_amount - $starting_amount));
-}
+        /**/
+        if ($finished_amount != $starting_amount) {
+            $invoice->ledger()->updateInvoiceBalance(($finished_amount - $starting_amount));
+        }
 
-$invoice = $invoice->service()->applyNumber()->save();
+        $invoice = $invoice->service()->applyNumber()->save();
 
-if (!empty($invoice->line_items) && $invoice->account->update_products !== false) {
+        if (!empty($invoice->line_items) && $invoice->account->update_products !== false) {
 
-    UpdateOrCreateProduct::dispatch($invoice->line_items, $invoice);
-}
+            UpdateOrCreateProduct::dispatch($invoice->line_items, $invoice);
+        }
 
-return $invoice->fresh();
-}
+        return $invoice->fresh();
+    }
 
 
-/**
- * Mark the invoice as sent.
- *
- * @param \App\Models\Invoice $invoice The invoice
- *
- * @return     Invoice|\App\Models\Invoice|null  Return the invoice object
- */
-public
-function markSent(Invoice $invoice): ?Invoice
+    /**
+     * Mark the invoice as sent.
+     *
+     * @param \App\Models\Invoice $invoice The invoice
+     *
+     * @return     Invoice|\App\Models\Invoice|null  Return the invoice object
+     */
+    public function markSent(Invoice $invoice): ?Invoice
     {
         return $invoice->service()->markSent()->save();
     }

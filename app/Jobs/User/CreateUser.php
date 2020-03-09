@@ -2,13 +2,10 @@
 
 namespace App\Jobs\User;
 
-use App\DataMapper\DefaultSettings;
+use App\DataMapper\CompanySettings;
 use App\Events\User\UserWasCreated;
-use App\AccountUser;
 use App\User;
 use Illuminate\Foundation\Bus\Dispatchable;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
 
 class CreateUser
 {
@@ -52,6 +49,7 @@ class CreateUser
             'is_admin' => 1,
             'is_locked' => 0,
             'permissions' => '',
+            'notifications' => CompanySettings::notificationDefaults(),
             //'settings' => DefaultSettings::userSettings(),
         ]);
         event(new UserWasCreated($user, $this->account));

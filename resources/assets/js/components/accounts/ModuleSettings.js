@@ -70,59 +70,60 @@ class ModuleSettings extends Component {
         }
 
         this.customInputSwitched = this.customInputSwitched.bind(this)
+        this.handleAllChecked = this.handleAllChecked.bind(this)
     }
 
-  handleAllChecked = (event) => {
-      const modules = this.state.modules
-      modules.forEach(module => module.isChecked = event.target.checked)
-      this.setState({ modules: modules })
-  }
+    handleAllChecked (event) {
+        const modules = this.state.modules
+        modules.forEach(module => module.isChecked = event.target.checked)
+        this.setState({ modules: modules })
+    }
 
-  customInputSwitched (buttonName, e) {
-      const checked = e.target.checked
-      const modules = this.state.modules
+    customInputSwitched (buttonName, e) {
+        const checked = e.target.checked
+        const modules = this.state.modules
 
-      modules.forEach(module => {
-          if (module.value === buttonName) {
-              module.isChecked = checked
-          }
-      })
-      this.setState({ modules: modules }, () => {
-          console.log('test', this.state.modules)
-      })
-  }
+        modules.forEach(module => {
+            if (module.value === buttonName) {
+                module.isChecked = checked
+            }
+        })
+        this.setState({ modules: modules }, () => {
+            console.log('test', this.state.modules)
+        })
+    }
 
-  render () {
-      return (
-          <div>
-              <p>Start editing to see some magic happen :)</p>
-              <Form>
-                  <FormGroup>
-                      <Label for="exampleCheckbox">Switches <input type="checkbox" onClick={this.handleAllChecked} />Check all </Label>
-                      {this.state.modules.map((module, index) => {
-                          // console.log(disease, index);
-                          const idName = 'exampleCustomSwitch' + index
+    render () {
+        return (
+            <div>
+                <p>Start editing to see some magic happen :)</p>
+                <Form>
+                    <FormGroup>
+                        <Label for="exampleCheckbox">Switches <input type="checkbox" onClick={this.handleAllChecked} />Check all </Label>
+                        {this.state.modules.map((module, index) => {
+                            // console.log(disease, index);
+                            const idName = 'exampleCustomSwitch' + index
 
-                          return (
-                              <div key={index}>
-                                  <CustomInput
-                                      checked={module.isChecked}
-                                      type="switch"
-                                      id={idName}
-                                      name="customSwitch"
-                                      label={module.label}
-                                      onChange={this.customInputSwitched.bind(this, module.value)}
-                                  />
-                              </div>
-                          )
-                      }
-                      )}
-                  </FormGroup>
-              </Form>
-              {this.state.log}
-          </div>
-      )
-  }
+                            return (
+                                <div key={index}>
+                                    <CustomInput
+                                        checked={module.isChecked}
+                                        type="switch"
+                                        id={idName}
+                                        name="customSwitch"
+                                        label={module.label}
+                                        onChange={this.customInputSwitched.bind(this, module.value)}
+                                    />
+                                </div>
+                            )
+                        }
+                        )}
+                    </FormGroup>
+                </Form>
+                {this.state.log}
+            </div>
+        )
+    }
 }
 
 export default ModuleSettings

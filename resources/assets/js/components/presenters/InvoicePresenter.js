@@ -27,8 +27,13 @@ export default function InvoicePresenter (props) {
 
     const { field, entity } = props
 
+    const dueDate = moment(entity.due_date).format('YYYY-MM-DD')
+
+    const is_late = moment().isAfter(dueDate)
+    const entity_status = is_late === true ? '-1' : entity.status_id
+
     const status = !entity.deleted_at
-        ? <Badge color={colors[entity.status_id]}>{statuses[entity.status_id]}</Badge>
+        ? <Badge color={colors[entity_status]}>{statuses[entity_status]}</Badge>
         : <Badge className="mr-2" color="warning">Archived</Badge>
 
     switch (field) {

@@ -20,12 +20,12 @@ trait MakesInvoiceHtml
      * Generate the HTML invoice parsing variables
      * and generating the final invoice HTML
      *
-     * @param  string $design either the path to the design template, OR the full design template string
-     * @param  Collection $invoice The invoice object
+     * @param string $design either the path to the design template, OR the full design template string
+     * @param Collection $invoice The invoice object
      *
      * @return string           The invoice string in HTML format
      */
-    public function generateInvoiceHtml($design, $invoice, $contact = null) :string
+    public function generateInvoiceHtml($design, $invoice, $contact = null): string
     {
         //$variables = array_merge($invoice->makeLabels(), $invoice->makeValues());
         //$design = str_replace(array_keys($variables), array_values($variables), $design);
@@ -37,7 +37,7 @@ trait MakesInvoiceHtml
 
         $labels = $invoice->makeLabels();
         $values = $invoice->makeValues($contact);
-
+        
         $design = str_replace(array_keys($labels), array_values($labels), $design);
         $design = str_replace(array_keys($values), array_values($values), $design);
 
@@ -55,7 +55,7 @@ trait MakesInvoiceHtml
      * @param null $contact
      * @return string
      */
-    public function generateEntityHtml(Designer $designer, $entity, $contact = null) :string
+    public function generateEntityHtml(Designer $designer, $entity, $contact = null): string
     {
 
         $entity->load('customer');
@@ -85,7 +85,7 @@ trait MakesInvoiceHtml
         return view('pdf.stub', $data)->render();
     }
 
-    private function parseLabelsAndValues($labels, $values, $section) :string
+    private function parseLabelsAndValues($labels, $values, $section): string
     {
         $section = str_replace(array_keys($labels), array_values($labels), $section);
         $section = str_replace(array_keys($values), array_values($values), $section);
@@ -95,12 +95,12 @@ trait MakesInvoiceHtml
     /**
      * Parses the blade file string and processes the template variables
      *
-     * @param  string $string The Blade file string
-     * @param  array $data The array of template variables
+     * @param string $string The Blade file string
+     * @param array $data The array of template variables
      * @return string         The return HTML string
      *
      */
-    public function renderView($string, $data = []) :string
+    public function renderView($string, $data = []): string
     {
 
         $data['__env'] = app(\Illuminate\View\Factory::class);

@@ -102,7 +102,7 @@ class EventRepository extends BaseRepository implements EventRepositoryInterface
     {
 
         return $this->model->join('event_task', 'event_task.event_id', '=', 'events.id')->select('events.*')
-            ->where('event_task.task_id', $objTask->id)->groupBy('events.id')->get();
+                           ->where('event_task.task_id', $objTask->id)->groupBy('events.id')->get();
     }
 
     /**
@@ -113,8 +113,8 @@ class EventRepository extends BaseRepository implements EventRepositoryInterface
     public function getEventsForUser(User $objUser, int $account_id): Collection
     {
         return $this->model->join('event_user', 'event_user.event_id', '=', 'events.id')
-            ->select('events.*', 'event_user.status')->where('events.account_id', $account_id)
-            ->where('event_user.user_id', $objUser->id)->get();
+                           ->select('events.*', 'event_user.status')->where('events.account_id', $account_id)
+                           ->where('event_user.user_id', $objUser->id)->get();
     }
 
     /**
@@ -142,11 +142,11 @@ class EventRepository extends BaseRepository implements EventRepositoryInterface
         }
 
 
-if (!empty($data['task_id'])) {
-    $this->syncTask($event, $data['task_id']);
-}
+        if (!empty($data['task_id'])) {
+            $this->syncTask($event, $data['task_id']);
+        }
 
-return $event->fresh();
+        return $event->fresh();
 
-}
+    }
 }

@@ -74,6 +74,6 @@ class FileRepository extends BaseRepository implements FileRepositoryInterface
     {
 
         return File::where('documentable_id', $entity->id)->where('documentable_type', get_class($entity))
-            ->orderBy('created_at', 'desc')->with('user')->get();
+                   ->orderBy('created_at', 'desc')->with('user')->get();
     }
 }

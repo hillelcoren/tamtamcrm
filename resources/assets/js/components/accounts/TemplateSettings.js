@@ -79,11 +79,10 @@ class TemplateSettings extends Component {
         const subjectKey = `email_subject_${this.state.template_type}`
         const bodyKey = `email_template_${this.state.template_type}`
 
-        if (!this.state.settings[subjectKey] || !this.state.settings[bodyKey]) {
-            return false
-        }
+        const subject = !this.state.settings[subjectKey] ? 'Subject Here' : this.state.settings[subjectKey]
+        const body = !this.state.settings[bodyKey] ? 'Body Here' : this.state.settings[bodyKey]
 
-        axios.post('api/template', { subject: this.state.settings[subjectKey], body: this.state.settings[bodyKey] })
+        axios.post('api/template', { subject: subject, body: body })
             .then((r) => {
                 this.setState({
                     loaded: true,

@@ -60,8 +60,8 @@ class CreateInvoicePdf implements ShouldQueue
 
         $design = Design::find($this->invoice->customer->getSetting('invoice_design_id'));
 
-        $designer = new Designer($this->invoice, $design, $this->invoice->customer->getSetting('pdf_variables'),
-            'invoice');
+        $designer =
+            new Designer($this->invoice, $design, $this->invoice->customer->getSetting('pdf_variables'), 'invoice');
 
         //get invoice design
         //$html = $this->generateInvoiceHtml($designer->build()->getHtml(), $this->invoice, $this->contact);

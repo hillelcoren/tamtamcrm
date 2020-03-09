@@ -42,9 +42,9 @@ class PasswordResetSuccess extends Notification
     public function toMail($notifiable)
     {
         return (new MailMessage)->subject(__('passwords.email_password_reset_success_subject'))
-            ->line(__('passwords.email_password_reset_success_line1'))
-            ->line(__('passwords.email_password_reset_success_line2'))
-            ->line(__('passwords.email_password_reset_success_line3'));
+                                ->line(__('passwords.email_password_reset_success_line1'))
+                                ->line(__('passwords.email_password_reset_success_line2'))
+                                ->line(__('passwords.email_password_reset_success_line3'));
     }
 
     /**

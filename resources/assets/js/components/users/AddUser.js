@@ -12,7 +12,12 @@ import {
     CardBody,
     CardHeader,
     Row,
-    Col
+    Col,
+    Nav,
+    NavItem,
+    NavLink,
+    TabContent,
+    TabPane
 } from 'reactstrap'
 import axios from 'axios'
 import DropdownDate from '../common/DropdownDate'
@@ -20,6 +25,7 @@ import DepartmentDropdown from '../common/DepartmentDropdown'
 import RoleDropdown from '../common/RoleDropdown'
 import FormBuilder from '../accounts/FormBuilder'
 import AddButtons from '../common/AddButtons'
+import Notifications from '../common/Notifications'
 
 class AddUser extends React.Component {
     constructor (props) {
@@ -42,14 +48,18 @@ class AddUser extends React.Component {
             roles: [],
             selectedAccounts: [],
             selectedRoles: [],
+            notifications: [],
             message: '',
             custom_value1: '',
             custom_value2: '',
             custom_value3: '',
             custom_value4: '',
-            is_admin: false
+            is_admin: false,
+            activeTab: '1'
         }
+
         this.toggle = this.toggle.bind(this)
+        this.toggleTab = this.toggleTab.bind(this)
         this.hasErrorFor = this.hasErrorFor.bind(this)
         this.renderErrorFor = this.renderErrorFor.bind(this)
         this.handleMultiSelect = this.handleMultiSelect.bind(this)
@@ -58,6 +68,7 @@ class AddUser extends React.Component {
         this.buildGenderDropdown = this.buildGenderDropdown.bind(this)
         this.handleInput = this.handleInput.bind(this)
         this.handleCheck = this.handleCheck.bind(this)
+        this.setNotifications = this.setNotifications.bind(this)
 
         this.defaultValues = {
             year: 'Select Year',
@@ -71,6 +82,8 @@ class AddUser extends React.Component {
             monthContainer: 'col-md-4 mb-3',
             dayContainer: 'col-md-4 mb-3'
         }
+
+        this.account_id = JSON.parse(localStorage.getItem('appState')).user.account_id
     }
 
     componentDidMount () {
@@ -80,28 +93,35 @@ class AddUser extends React.Component {
         }
     }
 
+    setNotifications (notifications) {
+
+        this.setState(prevState => ({
+            selectedAccounts: {
+                ...prevState.selectedAccounts,
+                notifications: notifications,
+                account_id: this.account_id
+            }
+        }))
+    }
+
+    toggleTab (tab) {
+        if (this.state.activeTab !== tab) {
+            this.setState({ activeTab: tab })
+        }
+    }
+
     handleCheck (e) {
         const account_id = parseInt(e.target.value)
         const checked = e.target.checked
         const name = e.target.name
 
-        const index = this.state.selectedAccounts.findIndex(selectedAccount => selectedAccount.account_id === account_id)
-
-        if (index > -1) {
-            const selectedAccounts = [...this.state.selectedAccounts]
-
-            if (name === 'is_checked' && checked === false) {
-                selectedAccounts.splice(index, 1)
-            } else {
-                selectedAccounts[index][name] = checked
+        this.setState(prevState => ({
+            selectedAccounts: {
+                ...prevState.selectedAccounts,
+                [name]: checked,
+                account_id: account_id
             }
-
-            this.setState({ selectedAccounts }, () => console.log('accounts', this.state.selectedAccounts))
-        } else {
-            this.setState(prevState => ({
-                selectedAccounts: [...prevState.selectedAccounts, { account_id: account_id, [name]: checked }]
-            }), () => console.log('accounts', this.state.selectedAccounts))
-        }
+        }))
     }
 
     hasErrorFor (field) {
@@ -260,25 +280,18 @@ class AddUser extends React.Component {
             formFieldsRows={customFields}
         /> : null
 
-        const accountList = this.props.accounts.map((account) => {
-            const assignedAccounts = this.state.selectedAccounts && this.state.selectedAccounts.length ? this.state.selectedAccounts.filter(selectedAccount => selectedAccount.account_id === account.id) : []
+        const account = this.props.accounts.filter(account => account.id === this.account_id)
+        console.log('current account', account)
 
-            const checked = assignedAccounts.length > 0
-            const is_admin = assignedAccounts.length > 0 && assignedAccounts[0].is_admin === true
+            //const checked = assignedAccounts.length > 0
+            const is_admin = this.selectedAccounts && this.selectedAccounts.is_admin === true
 
-            return (
-                <React.Fragment key={account.id}>
+            const accountList = (
+                <React.Fragment key={account[0].id}>
                     <div>
                         <FormGroup check inline>
                             <Label check>
-                                <Input name="is_checked" checked={checked} key={account.id} value={account.id}
-                                    onChange={this.handleCheck} type="checkbox"/>
-                                {account.settings.name}
-                            </Label>
-                        </FormGroup>
-                        <FormGroup check inline>
-                            <Label check>
-                                <Input name="is_admin" checked={is_admin} value={account.id} onChange={this.handleCheck}
+                                <Input name="is_admin" checked={is_admin} value={account[0].id} onChange={this.handleCheck}
                                     type="checkbox"/>
                                 Administrator
                             </Label>
@@ -286,7 +299,6 @@ class AddUser extends React.Component {
                     </div>
                 </React.Fragment>
             )
-        })
 
         return (
             <React.Fragment>
@@ -301,163 +313,230 @@ class AddUser extends React.Component {
                             {message}
                         </div>}
 
-                        <Card>
-                            <CardHeader>User</CardHeader>
-                            <CardBody>
-                                <Row form>
-                                    <Col md={6}>
+                        <Nav tabs>
+                            <NavItem>
+                                <NavLink
+                                    className={this.state.activeTab === '1' ? 'active' : ''}
+                                    onClick={() => {
+                                        this.toggleTab('1')
+                                    }}>
+                                    Details
+                                </NavLink>
+                            </NavItem>
+                            <NavItem>
+                                <NavLink
+                                    className={this.state.activeTab === '2' ? 'active' : ''}
+                                    onClick={() => {
+                                        this.toggleTab('2')
+                                    }}>
+                                    Permissions
+                                </NavLink>
+                            </NavItem>
+
+                            <NavItem>
+                                <NavLink
+                                    className={this.state.activeTab === '3' ? 'active' : ''}
+                                    onClick={() => {
+                                        this.toggleTab('3')
+                                    }}>
+                                    Notifications
+                                </NavLink>
+                            </NavItem>
+
+                            <NavItem>
+                                <NavLink
+                                    className={this.state.activeTab === '4' ? 'active' : ''}
+                                    onClick={() => {
+                                        this.toggleTab('4')
+                                    }}>
+                                    Settings
+                                </NavLink>
+                            </NavItem>
+                        </Nav>
+
+                        <TabContent activeTab={this.state.activeTab}>
+                            <TabPane tabId="1">
+                                <Card>
+                                    <CardHeader>Details</CardHeader>
+                                    <CardBody>
+                                        <Row form>
+                                            <Col md={6}>
+                                                <FormGroup>
+                                                    <Label for="username">Username(*):</Label>
+                                                    <Input className={this.hasErrorFor('username') ? 'is-invalid' : ''}
+                                                        placeholder="Username"
+                                                        type="text"
+                                                        name="username"
+                                                        value={this.state.username}
+                                                        onChange={this.handleInput.bind(this)}/>
+                                                    <small className="form-text text-muted">Your username must be
+                                                        "firstname"."lastname"
+                                                        eg
+                                                        joe.bloggs.
+                                                    </small>
+                                                    {this.renderErrorFor('username')}
+                                                </FormGroup>
+                                            </Col>
+
+                                            <Col md={6}>
+                                                <FormGroup>
+                                                    <Label for="email">Email(*):</Label>
+                                                    <Input className={this.hasErrorFor('email') ? 'is-invalid' : ''}
+                                                        placeholder="Email"
+                                                        type="email"
+                                                        name="email"
+                                                        value={this.state.email}
+                                                        onChange={this.handleInput.bind(this)}/>
+                                                    {this.renderErrorFor('email')}
+                                                </FormGroup>
+                                            </Col>
+                                        </Row>
+
+                                        <Row form>
+                                            <Col md={6}>
+                                                <FormGroup>
+                                                    <Label for="first_name">First Name(*):</Label>
+                                                    <Input className={this.hasErrorFor('first_name') ? 'is-invalid' : ''}
+                                                        type="text"
+                                                        name="first_name"
+                                                        value={this.state.first_name}
+                                                        placeholder="First Name"
+                                                        onChange={this.handleInput.bind(this)}/>
+                                                    {this.renderErrorFor('first_name')}
+                                                </FormGroup>
+                                            </Col>
+
+                                            <Col md={6}>
+                                                <FormGroup>
+                                                    <Label for="last_name">Last Name(*):</Label>
+                                                    <Input className={this.hasErrorFor('last_name') ? 'is-invalid' : ''}
+                                                        type="text"
+                                                        value={this.state.last_name}
+                                                        placeholder="Last Name"
+                                                        name="last_name"
+                                                        onChange={this.handleInput.bind(this)}/>
+                                                    {this.renderErrorFor('last_name')}
+                                                </FormGroup>
+                                            </Col>
+                                        </Row>
+
+                                        <Row form>
+                                            <Col md={6}>
+                                                {genderList}
+                                            </Col>
+
+                                            <Col md={6}>
+                                                <DropdownDate classes={this.classes} defaultValues={this.defaultValues}
+                                                    onDateChange={this.setDate}/>
+                                            </Col>
+                                        </Row>
+
+                                        <Row form>
+                                            <Col md={4}>
+                                                <FormGroup>
+                                                    <Label for="phone_number">Phone Number:</Label>
+                                                    <Input className={this.hasErrorFor('phone_number') ? 'is-invalid' : ''}
+                                                        value={this.state.phone_number}
+                                                        type="tel"
+                                                        name="phone_number"
+                                                        onChange={this.handleInput.bind(this)}/>
+                                                    {this.renderErrorFor('phone_number')}
+                                                </FormGroup>
+                                            </Col>
+
+                                            <Col md={4}>
+                                                <FormGroup>
+                                                    <Label for="job_description">Job Description:</Label>
+                                                    <Input className={this.hasErrorFor('job_description') ? 'is-invalid' : ''}
+                                                        type="text"
+                                                        placeholder="Job Description"
+                                                        value={this.state.job_description}
+                                                        name="job_description"
+                                                        onChange={this.handleInput.bind(this)}/>
+                                                    {this.renderErrorFor('job_description')}
+                                                </FormGroup>
+                                            </Col>
+
+                                            <Col md={4}>
+                                                <FormGroup>
+                                                    <Label for="password">Password:</Label>
+                                                    <Input className={this.hasErrorFor('password') ? 'is-invalid' : ''}
+                                                        value={this.state.password}
+                                                        type="password"
+                                                        name="password" onChange={this.handleInput.bind(this)}/>
+                                                    <small className="form-text text-muted">Your password must be more than 8
+                                                        characters
+                                                        long,
+                                                        should contain at-least 1 Uppercase, 1 Lowercase, 1 Numeric and 1
+                                                        special
+                                                        character..
+                                                    </small>
+                                                    {this.renderErrorFor('password')}
+                                                </FormGroup>
+                                            </Col>
+                                        </Row>
+
+                                        {customForm}
+                                    </CardBody>
+                                </Card>
+                            </TabPane>
+
+                            <TabPane tabId="2">
+                                <Card>
+                                    <CardHeader>Permissions</CardHeader>
+                                    <CardBody>
+                                        <Row form>
+                                            <Col md={6}>
+                                                <Label for="job_description">Department:</Label>
+                                                <DepartmentDropdown
+                                                    departments={this.props.departments}
+                                                    name="department"
+                                                    errors={this.state.errors}
+                                                    handleInputChanges={this.handleInput}
+                                                />
+                                            </Col>
+
+                                            <Col md={6}>
+                                                <RoleDropdown
+                                                    name="role"
+                                                    multiple={true}
+                                                    errors={this.state.errors}
+                                                    handleInputChanges={this.handleMultiSelect}
+                                                    role={this.state.selectedRoles}
+                                                />
+                                            </Col>
+                                        </Row>
+
+                                        <Row form>
+                                            <h4>Accounts</h4>
+                                            <Col md={6}>
+                                                {accountList}
+                                            </Col>
+                                        </Row>
+                                    </CardBody>
+                                </Card>
+                            </TabPane>
+
+                            <TabPane tabId="3">
+                                <Card>
+                                    <CardHeader>Notifications</CardHeader>
+                                    <CardBody>
                                         <FormGroup>
-                                            <Label for="username">Username(*):</Label>
-                                            <Input className={this.hasErrorFor('username') ? 'is-invalid' : ''}
-                                                placeholder="Username"
-                                                type="text"
-                                                name="username"
-                                                value={this.state.username}
-                                                onChange={this.handleInput.bind(this)}/>
-                                            <small className="form-text text-muted">Your username must be
-                                                "firstname"."lastname"
-                                                eg
-                                                joe.bloggs.
-                                            </small>
-                                            {this.renderErrorFor('username')}
+                                            <Notifications onChange={this.setNotifications} />
                                         </FormGroup>
-                                    </Col>
+                                    </CardBody>
+                                </Card>
+                            </TabPane>
 
-                                    <Col md={6}>
-                                        <FormGroup>
-                                            <Label for="email">Email(*):</Label>
-                                            <Input className={this.hasErrorFor('email') ? 'is-invalid' : ''}
-                                                placeholder="Email"
-                                                type="email"
-                                                name="email"
-                                                value={this.state.email}
-                                                onChange={this.handleInput.bind(this)}/>
-                                            {this.renderErrorFor('email')}
-                                        </FormGroup>
-                                    </Col>
-                                </Row>
-
-                                <Row form>
-                                    <Col md={6}>
-                                        <FormGroup>
-                                            <Label for="first_name">First Name(*):</Label>
-                                            <Input className={this.hasErrorFor('first_name') ? 'is-invalid' : ''}
-                                                type="text"
-                                                name="first_name"
-                                                value={this.state.first_name}
-                                                placeholder="First Name"
-                                                onChange={this.handleInput.bind(this)}/>
-                                            {this.renderErrorFor('first_name')}
-                                        </FormGroup>
-                                    </Col>
-
-                                    <Col md={6}>
-                                        <FormGroup>
-                                            <Label for="last_name">Last Name(*):</Label>
-                                            <Input className={this.hasErrorFor('last_name') ? 'is-invalid' : ''}
-                                                type="text"
-                                                value={this.state.last_name}
-                                                placeholder="Last Name"
-                                                name="last_name"
-                                                onChange={this.handleInput.bind(this)}/>
-                                            {this.renderErrorFor('last_name')}
-                                        </FormGroup>
-                                    </Col>
-                                </Row>
-
-                                <Row form>
-                                    <Col md={6}>
-                                        {genderList}
-                                    </Col>
-
-                                    <Col md={6}>
-                                        <DropdownDate classes={this.classes} defaultValues={this.defaultValues}
-                                            onDateChange={this.setDate}/>
-                                    </Col>
-                                </Row>
-
-                                <Row form>
-                                    <Col md={6}>
-                                        <FormGroup>
-                                            <Label for="phone_number">Phone Number:</Label>
-                                            <Input className={this.hasErrorFor('phone_number') ? 'is-invalid' : ''}
-                                                value={this.state.phone_number}
-                                                type="tel"
-                                                name="phone_number"
-                                                onChange={this.handleInput.bind(this)}/>
-                                            {this.renderErrorFor('phone_number')}
-                                        </FormGroup>
-                                    </Col>
-
-                                    <Col md={6}>
-                                        <FormGroup>
-                                            <Label for="password">Password:</Label>
-                                            <Input className={this.hasErrorFor('password') ? 'is-invalid' : ''}
-                                                value={this.state.password}
-                                                type="password"
-                                                name="password" onChange={this.handleInput.bind(this)}/>
-                                            <small className="form-text text-muted">Your password must be more than 8
-                                                characters
-                                                long,
-                                                should contain at-least 1 Uppercase, 1 Lowercase, 1 Numeric and 1
-                                                special
-                                                character..
-                                            </small>
-                                            {this.renderErrorFor('password')}
-                                        </FormGroup>
-                                    </Col>
-                                </Row>
-                            </CardBody>
-                        </Card>
-
-                        {customForm}
-
-                        <Card>
-                            <CardHeader>Permissions</CardHeader>
-                            <CardBody>
-
-                                <FormGroup>
-                                    <Label for="job_description">Job Description:</Label>
-                                    <Input className={this.hasErrorFor('job_description') ? 'is-invalid' : ''}
-                                        type="text"
-                                        placeholder="Job Description"
-                                        value={this.state.job_description}
-                                        name="job_description"
-                                        onChange={this.handleInput.bind(this)}/>
-                                    {this.renderErrorFor('job_description')}
-                                </FormGroup>
-
-                                <Row form>
-                                    <Col md={6}>
-                                        <Label for="job_description">Department:</Label>
-                                        <DepartmentDropdown
-                                            departments={this.props.departments}
-                                            name="department"
-                                            errors={this.state.errors}
-                                            handleInputChanges={this.handleInput}
-                                        />
-                                    </Col>
-
-                                    <Col md={6}>
-                                        <RoleDropdown
-                                            name="role"
-                                            multiple={true}
-                                            errors={this.state.errors}
-                                            handleInputChanges={this.handleMultiSelect}
-                                            role={this.state.selectedRoles}
-                                        />
-                                    </Col>
-                                </Row>
-
-                                <Row form>
-                                    <h4>Accounts</h4>
-                                    <Col md={6}>
-                                        {accountList}
-                                    </Col>
-                                </Row>
-                            </CardBody>
-                        </Card>
-
+                            <TabPane tabId="4">
+                                <Card>
+                                    <CardHeader>Settings</CardHeader>
+                                    <CardBody>
+                                        <FormGroup />
+                                    </CardBody>
+                                </Card>
+                            </TabPane>
+                        </TabContent>
                     </ModalBody>
 
                     <ModalFooter>

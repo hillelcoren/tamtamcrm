@@ -39,7 +39,7 @@ class ProductFilter extends QueryFilter
         $orderDir = !$request->order ? 'asc' : $request->order;
 
         $this->query = $this->model->select('products.id as id', 'products.*')
-            ->leftJoin('category_product', 'products.id', '=', 'category_product.product_id');
+                                   ->leftJoin('category_product', 'products.id', '=', 'category_product.product_id');
 
         if ($request->has('status')) {
             $this->status($request->status);
@@ -109,12 +109,12 @@ class ProductFilter extends QueryFilter
         }
         return $this->query->where(function ($query) use ($filter) {
             $query->where('products.sku', 'like', '%' . $filter . '%')
-                ->orWhere('products.name', 'like', '%' . $filter . '%')
-                ->orWhere('products.notes', 'like', '%' . $filter . '%')
-                ->orWhere('products.custom_value1', 'like', '%' . $filter . '%')
-                ->orWhere('products.custom_value2', 'like', '%' . $filter . '%')
-                ->orWhere('products.custom_value3', 'like', '%' . $filter . '%')
-                ->orWhere('products.custom_value4', 'like', '%' . $filter . '%');
+                  ->orWhere('products.name', 'like', '%' . $filter . '%')
+                  ->orWhere('products.notes', 'like', '%' . $filter . '%')
+                  ->orWhere('products.custom_value1', 'like', '%' . $filter . '%')
+                  ->orWhere('products.custom_value2', 'like', '%' . $filter . '%')
+                  ->orWhere('products.custom_value3', 'like', '%' . $filter . '%')
+                  ->orWhere('products.custom_value4', 'like', '%' . $filter . '%');
         });
     }
 

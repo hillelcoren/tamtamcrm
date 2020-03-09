@@ -36,7 +36,7 @@ class PreviewController extends Controller
     {
 
         if (request()->has('entity') && request()->has('entity_id') && request()->has('design')) {
-            
+
             $invoice_design = new Custom((object)request()->input('design'));
 
             $entity = ucfirst(request()->input('entity'));

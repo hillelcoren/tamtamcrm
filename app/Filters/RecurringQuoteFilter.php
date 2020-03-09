@@ -94,9 +94,9 @@ class RecurringQuoteFilter extends QueryFilter
         }
         return $this->query->where(function ($query) use ($filter) {
             $query->where('recurring_quotes.custom_value1', 'like', '%' . $filter . '%')
-                ->orWhere('recurring_quotes.custom_value2', 'like', '%' . $filter . '%')
-                ->orWhere('recurring_quotes.custom_value3', 'like', '%' . $filter . '%')
-                ->orWhere('recurring_quotes.custom_value4', 'like', '%' . $filter . '%');
+                  ->orWhere('recurring_quotes.custom_value2', 'like', '%' . $filter . '%')
+                  ->orWhere('recurring_quotes.custom_value3', 'like', '%' . $filter . '%')
+                  ->orWhere('recurring_quotes.custom_value4', 'like', '%' . $filter . '%');
         });
     }
 

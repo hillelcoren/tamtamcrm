@@ -21,8 +21,6 @@ class Business extends AbstractDesign
     public function includes()
     {
         return '
-        <!DOCTYPE html>
-            <html lang="en">
                 <head>
                     <title>$number</title>
                     <meta charset="utf-8">
@@ -534,10 +532,8 @@ float: left;
 
  
 			        </style>
-                </head>
-                <body>
-                
-                <style>
+			        
+			         <style>
                     @page  
                     { 
                         size: auto;
@@ -550,6 +546,8 @@ float: left;
                         border-top-right-radius: 0.5rem;
                     }
                 </style>
+                </head>
+                <body>
         ';
     }
 

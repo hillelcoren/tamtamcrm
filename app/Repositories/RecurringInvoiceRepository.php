@@ -38,44 +38,41 @@ class RecurringInvoiceRepository extends BaseRepository
             $invoice->number = $this->getNextRecurringInvoiceNumber($invoice->customer);
         }
 
-$invoice->save();
+        $invoice->save();
 //fire events here that cascading from the saving of an invoice
 //ie. client balance update...
 
-return $invoice;
-}
+        return $invoice;
+    }
 
-/**
- * List all the invoices
- *
- * @param string $order
- * @param string $sort
- * @param array $columns
- * @return \Illuminate\Support\Collection
- */
-public
-function listInvoices(string $order = 'id', string $sort = 'desc', array $columns = ['*']): Collection
-{
-    return $this->all($columns, $order, $sort);
-}
+    /**
+     * List all the invoices
+     *
+     * @param string $order
+     * @param string $sort
+     * @param array $columns
+     * @return \Illuminate\Support\Collection
+     */
+    public function listInvoices(string $order = 'id', string $sort = 'desc', array $columns = ['*']): Collection
+    {
+        return $this->all($columns, $order, $sort);
+    }
 
-/**
- * Find the product by ID
- *
- * @param int $id
- *
- * @return Product
- * @throws ProductNotFoundException
- */
-public
-function findInvoiceById(int $id): RecurringInvoice
-{
-    return $this->findOneOrFail($id);
-}
+    /**
+     * Find the product by ID
+     *
+     * @param int $id
+     *
+     * @return Product
+     * @throws ProductNotFoundException
+     */
+    public function findInvoiceById(int $id): RecurringInvoice
+    {
+        return $this->findOneOrFail($id);
+    }
 
-public
-function getModel()
-{
-    return $this->model;
-}
+    public function getModel()
+    {
+        return $this->model;
+    }
 }

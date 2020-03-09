@@ -46,6 +46,6 @@ class GroupSettingRepository extends BaseRepository
             $group_setting->save();
         }
 
-return $group_setting;
-}
+        return $group_setting;
+    }
 }

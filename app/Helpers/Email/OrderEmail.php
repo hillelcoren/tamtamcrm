@@ -36,7 +36,7 @@ class OrderEmail extends EmailBuilder
         }
 
         $this->setTemplate($task->customer->getSetting('email_style'))->setSubject($subject_template)
-            ->setBody($body_template);
+             ->setBody($body_template);
 
         return $this;
     }

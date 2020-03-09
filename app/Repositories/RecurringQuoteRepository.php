@@ -38,47 +38,44 @@ class RecurringQuoteRepository extends BaseRepository
             $quote->number = $this->getNextRecurringQuoteNumber($quote->customer);
         }
 
-$quote->save();
+        $quote->save();
 
 //fire events here that cascading from the saving of an invoice
 //ie. client balance update...
 
-return $quote;
-}
+        return $quote;
+    }
 
-/**
- * Find the product by ID
- *
- * @param int $id
- *
- * @return Product
- * @throws ProductNotFoundException
- */
-public
-function findQuoteById(int $id): RecurringQuote
-{
-    return $this->findOneOrFail($id);
-}
-
-
-/**
- * List all the invoices
- *
- * @param string $order
- * @param string $sort
- * @param array $columns
- * @return \Illuminate\Support\Collection
- */
-public
-function listQuotes(string $order = 'id', string $sort = 'desc', array $columns = ['*']): Collection
-{
-    return $this->all($columns, $order, $sort);
-}
+    /**
+     * Find the product by ID
+     *
+     * @param int $id
+     *
+     * @return Product
+     * @throws ProductNotFoundException
+     */
+    public function findQuoteById(int $id): RecurringQuote
+    {
+        return $this->findOneOrFail($id);
+    }
 
 
-public
-function getModel()
-{
-    return $this->model;
-}
+    /**
+     * List all the invoices
+     *
+     * @param string $order
+     * @param string $sort
+     * @param array $columns
+     * @return \Illuminate\Support\Collection
+     */
+    public function listQuotes(string $order = 'id', string $sort = 'desc', array $columns = ['*']): Collection
+    {
+        return $this->all($columns, $order, $sort);
+    }
+
+
+    public function getModel()
+    {
+        return $this->model;
+    }
 }

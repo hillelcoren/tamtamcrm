@@ -35,7 +35,7 @@ class UpdateCompanyLedgerWithInvoice
         $balance = 0;
         $ledger =
             CompanyLedger::whereCustomerId($this->invoice->customer_id)->whereAccountId($this->invoice->account_id)
-                ->orderBy('id', 'DESC')->first();
+                         ->orderBy('id', 'DESC')->first();
         if ($ledger) {
             $balance = $ledger->balance;
         }

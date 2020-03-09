@@ -240,21 +240,22 @@ class Customer extends Model implements HasLocalePreference
     {
 
         /*Client Settings*/
-        if ($this->settings && property_exists($this->settings, $setting) && isset($this->settings->{$setting}) ) {
-            /*need to catch empty string here*/ 
-            if (is_string($this->settings->{$setting}) && (iconv_strlen($this->settings->{$setting}) >=1)) {
+        if ($this->settings && property_exists($this->settings, $setting) && isset($this->settings->{$setting})) {
+            /*need to catch empty string here*/
+            if (is_string($this->settings->{$setting}) && (iconv_strlen($this->settings->{$setting}) >= 1)) {
                 return $this->settings->{$setting};
             }
         }
 
         /*Group Settings*/
-        if ($this->group_settings && (property_exists($this->group_settings->settings, $setting) !== false) && (isset($this->group_settings->settings->{$setting}) !== false)) {
+        if ($this->group_settings && (property_exists($this->group_settings->settings, $setting) !== false) &&
+            (isset($this->group_settings->settings->{$setting}) !== false)) {
             return $this->group_settings->settings->{$setting};
-        }
-
-        /*Company Settings*/
-        else if ((property_exists($this->account->settings, $setting) != false) && (isset($this->account->settings->{$setting}) !== false)) {
-            return $this->account->settings->{$setting};
+        } /*Company Settings*/ else {
+            if ((property_exists($this->account->settings, $setting) != false) &&
+                (isset($this->account->settings->{$setting}) !== false)) {
+                return $this->account->settings->{$setting};
+            }
         }
 
         throw new \Exception("Settings corrupted", 1);
@@ -264,8 +265,7 @@ class Customer extends Model implements HasLocalePreference
     {
         /*Client Settings*/
         if ($this->settings && (property_exists($this->settings, $setting) !== false) &&
-            (isset($this->settings->{$setting}) !== false)
-        ) {
+            (isset($this->settings->{$setting}) !== false)) {
             /*need to catch empty string here*/
             if (is_string($this->settings->{$setting}) && (iconv_strlen($this->settings->{$setting}) >= 1)) {
                 return $this;
@@ -274,15 +274,13 @@ class Customer extends Model implements HasLocalePreference
 
         /*Group Settings*/
         if ($this->group_settings && (property_exists($this->group_settings->settings, $setting) !== false) &&
-            (isset($this->group_settings->settings->{$setting}) !== false)
-        ) {
+            (isset($this->group_settings->settings->{$setting}) !== false)) {
             return $this->group_settings;
         }
 
         /*Company Settings*/
         if ((property_exists($this->account->settings, $setting) != false) &&
-            (isset($this->account->settings->{$setting}) !== false)
-        ) {
+            (isset($this->account->settings->{$setting}) !== false)) {
             return $this->account;
         }
 
@@ -303,16 +301,15 @@ class Customer extends Model implements HasLocalePreference
             return null;
         }
 
-if ($this->group_settings !== null) {
-    $group_settings = CustomerSettings::buildCustomerSettings($this->group_settings->settings, $this->settings);
-    return CustomerSettings::buildCustomerSettings($this->account->settings, $group_settings);
-}
-return CompanySettings::setProperties(CustomerSettings::buildCustomerSettings($this->account->settings,
-    $this->settings));
-}
+        if ($this->group_settings !== null) {
+            $group_settings = CustomerSettings::buildCustomerSettings($this->group_settings->settings, $this->settings);
+            return CustomerSettings::buildCustomerSettings($this->account->settings, $group_settings);
+        }
+        return CompanySettings::setProperties(CustomerSettings::buildCustomerSettings($this->account->settings,
+            $this->settings));
+    }
 
-public
-function getCountryId(): ?Country
+    public function getCountryId(): ?Country
     {
         $address = Address::where('address_type', '=', 1)->where('customer_id', '=', $this->id)->first();
 
@@ -339,52 +336,52 @@ function getCountryId(): ?Country
      * @return array         Array of payment labels and urls
      */
     public function getPaymentMethods($amount): array
-{
+    {
 //this method will get all the possible gateways a client can pay with
 //but we also need to consider payment methods that are already stored
 //so we MUST filter the company gateways and remove duplicates.
 //
 //Also need to harvest the list of client gateway tokens and present these
 //for instant payment
-    $company_gateways = $this->getSetting('company_gateway_ids');
-    if ($company_gateways) {
-        $gateways = $this->company->company_gateways->whereIn('id', $payment_gateways);
-    } else {
-        $gateways = $this->account->company_gateways;
-    }
-    $gateways->filter(function ($method) use ($amount) {
-        if ($method->min_limit !== null && $amount < $method->min_limit) {
-            return false;
+        $company_gateways = $this->getSetting('company_gateway_ids');
+        if ($company_gateways) {
+            $gateways = $this->company->company_gateways->whereIn('id', $payment_gateways);
+        } else {
+            $gateways = $this->account->company_gateways;
         }
-        if ($method->max_limit !== null && $amount > $method->min_limit) {
-            return false;
+        $gateways->filter(function ($method) use ($amount) {
+            if ($method->min_limit !== null && $amount < $method->min_limit) {
+                return false;
+            }
+            if ($method->max_limit !== null && $amount > $method->min_limit) {
+                return false;
+            }
+        });
+        $payment_methods = [];
+        foreach ($gateways as $gateway) {
+            foreach ($gateway->driver($this)->gatewayTypes() as $type) {
+                $payment_methods[] = [$gateway->id => $type];
+            }
         }
-    });
-    $payment_methods = [];
-    foreach ($gateways as $gateway) {
-        foreach ($gateway->driver($this)->gatewayTypes() as $type) {
-            $payment_methods[] = [$gateway->id => $type];
-        }
-    }
 
-    $payment_methods_collections = collect($payment_methods);
-    //** Plucks the remaining keys into its own collection
-    $payment_methods_intersect =
-        $payment_methods_collections->intersectByKeys($payment_methods_collections->flatten(1)->unique());
-    $payment_urls = [];
-    foreach ($payment_methods_intersect as $key => $child_array) {
-        foreach ($child_array as $gateway_id => $gateway_type_id) {
-            $gateway = $gateways->where('id', $gateway_id)->first();
-            $fee_label = $gateway->calcGatewayFeeLabel($amount, $this);
-            $payment_urls[] = [
-                'label' => ctrans('texts.' . $gateway->getTypeAlias($gateway_type_id)) . $fee_label,
-                'company_gateway_id' => $gateway_id,
-                'gateway_type_id' => $gateway_type_id
-            ];
+        $payment_methods_collections = collect($payment_methods);
+        //** Plucks the remaining keys into its own collection
+        $payment_methods_intersect =
+            $payment_methods_collections->intersectByKeys($payment_methods_collections->flatten(1)->unique());
+        $payment_urls = [];
+        foreach ($payment_methods_intersect as $key => $child_array) {
+            foreach ($child_array as $gateway_id => $gateway_type_id) {
+                $gateway = $gateways->where('id', $gateway_id)->first();
+                $fee_label = $gateway->calcGatewayFeeLabel($amount, $this);
+                $payment_urls[] = [
+                    'label' => ctrans('texts.' . $gateway->getTypeAlias($gateway_type_id)) . $fee_label,
+                    'company_gateway_id' => $gateway_id,
+                    'gateway_type_id' => $gateway_type_id
+                ];
+            }
         }
+        return $payment_urls;
     }
-    return $payment_urls;
-}
 
     /**
      * Returns the first Credit Card Gateway
@@ -409,29 +406,29 @@ function getCountryId(): ?Country
     }
 
     public function gateway_tokens()
-{
-    return $this->hasMany(ClientGatewayToken::class);
-}
+    {
+        return $this->hasMany(ClientGatewayToken::class);
+    }
 
     public function invoice_filepath()
-{
-    return $this->account->id . '/' . $this->id . '/invoices/';
-}
+    {
+        return $this->account->id . '/' . $this->id . '/invoices/';
+    }
 
     public function quote_filepath()
-{
-    return $this->account->id . '/' . $this->id . '/quotes/';
-}
+    {
+        return $this->account->id . '/' . $this->id . '/quotes/';
+    }
 
     public function credit_filepath()
-{
-    return $this->account->id . '/' . $this->id . '/credits/';
-}
+    {
+        return $this->account->id . '/' . $this->id . '/credits/';
+    }
 
     public function company_filepath()
-{
-    return $this->account->id . '/';
-}
+    {
+        return $this->account->id . '/';
+    }
 
     /**
      * Retrieves the specific payment token per
@@ -445,22 +442,25 @@ function getCountryId(): ?Country
      * @return ClientGatewayToken       The client token record
      */
     public function gateway_token($company_gateway_id, $payment_method_id)
-{
-    return $this->gateway_tokens()->whereCompanyGatewayId($company_gateway_id)
-        ->whereGatewayTypeId($payment_method_id)->first();
-}
+    {
+        return $this->gateway_tokens()->whereCompanyGatewayId($company_gateway_id)
+                    ->whereGatewayTypeId($payment_method_id)->first();
+    }
 
     public function setCompanyDefaults($data, $entity_name)
     {
 
-        if(!(array_key_exists('terms', $data) && strlen($data['terms']) > 1))
-            $data['terms'] = $this->getSetting($entity_name.'_terms');
+        if (!(array_key_exists('terms', $data) && strlen($data['terms']) > 1)) {
+            $data['terms'] = $this->getSetting($entity_name . '_terms');
+        }
 
-        if(!(array_key_exists('footer', $data) && strlen($data['footer']) > 1))
-            $data['footer'] = $this->getSetting($entity_name.'_footer');
+        if (!(array_key_exists('footer', $data) && strlen($data['footer']) > 1)) {
+            $data['footer'] = $this->getSetting($entity_name . '_footer');
+        }
 
-        if(strlen($this->public_notes) >=1)
+        if (strlen($this->public_notes) >= 1) {
             $data['public_notes'] = $this->public_notes;
+        }
 
         return $data;
     }

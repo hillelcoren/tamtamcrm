@@ -68,7 +68,7 @@ class EventFilter extends QueryFilter
         }
         return $this->query->where(function ($query) use ($filter) {
             $query->where('location', 'like', '%' . $filter . '%')->orWhere('title', 'like', '%' . $filter . '%')
-                ->orWhere('description', 'like', '%' . $filter . '%');
+                  ->orWhere('description', 'like', '%' . $filter . '%');
         });
     }
 

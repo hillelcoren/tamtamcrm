@@ -434,6 +434,15 @@ class CompanySettings extends BaseSettings
         return $settings;
     }
 
+    public static function notificationDefaults()
+    {
+
+        $notification = new \stdClass;
+        $notification->email = ['all_notifications'];
+
+        return $notification;
+    }
+
     public static function getEntityVariableDefaults()
     {
         $variables = [

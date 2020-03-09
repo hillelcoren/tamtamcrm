@@ -44,14 +44,11 @@ class SaveTaskTimes
     {
         if (isset($this->data['time_log'])) {
             $timeLog = json_decode($this->data['time_log']);
+        } elseif ($this->task->time_log) {
+            $timeLog = json_decode($this->task->time_log);
+        } else {
+            $timeLog = [];
         }
-
-elseif
-($this->task->time_log) {
-    $timeLog = json_decode($this->task->time_log);
-} else {
-    $timeLog = [];
-}
         array_multisort($timeLog);
         if (isset($this->data['action'])) {
             if ($this->data['action'] == 'start') {
